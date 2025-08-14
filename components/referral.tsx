@@ -60,8 +60,8 @@ export function Referral({ variant = "dashboard", className }: ReferralProps) {
     if (navigator.share) {
       try {
         await navigator.share({
-          title: "Join MYBYN",
-          text: "Join me on MYBYN and discover amazing collaboration opportunities!",
+          title: "Join KOLLABIT",
+          text: "Join me on KOLLABIT and discover amazing collaboration opportunities!",
           url: referralUrl,
         });
       } catch (error) {
@@ -125,7 +125,7 @@ export function Referral({ variant = "dashboard", className }: ReferralProps) {
         <p className="text-sm text-default-600">
           Share your referral link and earn{" "}
           <strong>{POINTS.REFERRAL_REWARD} points</strong> when friends join
-          MYBYN through your link.
+          KOLLABIT through your link.
         </p>
 
         <div className="space-y-2">

@@ -20,7 +20,7 @@ export function DashboardSidebar({ view }: { view: "business" | "creator" }) {
     <div className="hidden md:flex w-32 bg-content  h-screen flex-col">
       <div className="p-4">
         <Link className="flex items-center justify-center gap-2 h-10" href="/">
-          <span className="font-bold text-xl">MYBYN</span>
+          <span className="font-bold text-xl">KOLLABIT</span>
         </Link>
       </div>
 

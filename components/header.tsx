@@ -57,7 +57,7 @@ export function DashboardHeader() {
             className="flex md:hidden items-center justify-center gap-2 h-10"
             href="/"
           >
-            <span className="font-bold text-xl">MYBYN</span>
+            <span className="font-bold text-xl">KOLLABIT</span>
           </Link>
         </div>
 
