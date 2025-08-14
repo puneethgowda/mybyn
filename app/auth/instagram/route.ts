@@ -77,8 +77,6 @@ export async function GET(request: Request) {
         instagram_handle: instagramUserDetails.username,
       });
 
-      console.log(error);
-
       if (error) {
         return NextResponse.redirect(`${origin}/auth/instagram/error`);
       }

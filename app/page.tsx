@@ -1,6 +1,7 @@
 import { Link } from "@heroui/link";
 import { Card, CardBody } from "@heroui/card";
 import { button as buttonStyles } from "@heroui/theme";
+import { Button } from "@heroui/button";
 
 import { title, subtitle } from "@/components/primitives";
 
@@ -11,6 +12,62 @@ export default async function Home() {
   // if (data && !error) {
   //   redirect("/dashboard");
   // }
+
+  return (
+    <section className="">
+      <div className="grid items-center grid-cols-1 gap-12 lg:grid-cols-2">
+        <div>
+          <p className="text-base font-semibold tracking-wider text-primary uppercase">
+            Built for collabs
+          </p>
+          <h1 className="mt-4 text-3xl font-bold  lg:mt-8 sm:text-5xl xl:text-8xl">
+            Where creators &amp; brands connect
+          </h1>
+          <p className="mt-4 text-base  lg:mt-8 sm:text-xl">
+            Grow your brand. Grow your influence. Grow together
+          </p>
+          {/*<p className="mt-4 text-base  lg:mt-8 sm:text-xl">*/}
+          {/*  Discover the right partners. Create bigger impact. Together.*/}
+          {/*</p>*/}
+
+          <Button as={Link} className="mt-8" color="primary" href="/login">
+            Join for free
+            <svg
+              className="w-6 h-6 ml-8 -mr-2"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M13 9l3 3m0 0l-3 3m3-3H8m13 0a9 9 0 11-18 0 9 9 0 0118 0z"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="1.5"
+              />
+            </svg>
+          </Button>
+          <p className="mt-5 text-default-500">
+            Already joined us?{" "}
+            <Link
+              className="transition-all duration-200 hover:underline"
+              href="/"
+              title=""
+            >
+              Log in
+            </Link>
+          </p>
+        </div>
+        <div>
+          <img
+            alt=""
+            className="w-full"
+            src="https://cdn.rareblocks.xyz/collection/celebration/images/hero/1/hero-img.png"
+          />
+        </div>
+      </div>
+    </section>
+  );
 
   return (
     <section className="flex flex-col items-center gap-8 py-8 md:py-10">
