@@ -1,8 +1,9 @@
 export type SiteConfig = typeof siteConfig;
 
 export const siteConfig = {
-  name: "Next.js + HeroUI",
-  description: "Make beautiful websites regardless of your design experience.",
+  name: "Kollabit | Your collab, made simple",
+  description:
+    "Connecting creators, influencers, and brands to create, collaborate, and grow",
   navItems: [
     {
       label: "Discover",
