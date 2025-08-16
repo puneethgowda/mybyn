@@ -1,15 +1,12 @@
 import "./globals.css";
 import { Metadata, Viewport } from "next";
 import clsx from "clsx";
-import { cn } from "@heroui/theme";
 import { headers } from "next/headers";
 
 import { Providers } from "./providers";
 
 import { siteConfig } from "@/config/site";
-import { fontSans } from "@/config/fonts";
-import { Navbar } from "@/components/navbar";
-import Footer from "@/components/footer";
+import { onest, moSans } from "@/config/fonts";
 
 export const metadata: Metadata = {
   title: {
@@ -46,22 +43,14 @@ export default async function RootLayout({
       <head />
       <body
         className={clsx(
-          "min-h-dvh text-foreground bg-background font-sans antialiased",
-          fontSans.variable,
+          "min-h-dvh text-foreground bg-background font-onest antialiased",
+          onest.variable,
+          moSans.variable,
         )}
       >
         <Providers themeProps={{ attribute: "class", defaultTheme: "light" }}>
           <div className="relative flex flex-col h-dvh supports-[height:100dvh]:h-dvh">
-            {(isWebsiteRoute || isLogin) && <Navbar />}
-            <div
-              className={cn({
-                "container mx-auto max-w-7xl pt-16 px-6 grow": isWebsiteRoute,
-                "h-full": !isWebsiteRoute,
-              })}
-            >
-              {children}
-            </div>
-            {isWebsiteRoute && <Footer />}
+            {children}
           </div>
         </Providers>
       </body>

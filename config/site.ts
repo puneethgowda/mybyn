@@ -3,33 +3,29 @@ export type SiteConfig = typeof siteConfig;
 export const siteConfig = {
   name: "Kollabit | Your collab, made simple",
   description:
-    "Connecting creators, influencers, and brands to create, collaborate, and grow",
+    "Connecting creators, influencers, and business to create, collaborate, and grow",
   navItems: [
     {
-      label: "Discover",
-      href: "/discover",
-    },
-    {
-      label: "For business",
+      label: "Business",
       href: "/business",
     },
     {
-      label: "For influencers",
-      href: "/influencers",
+      label: "Creators",
+      href: "/creators",
     },
   ],
   navMenuItems: [
     {
-      label: "Discover",
-      href: "/discover",
+      label: "Home",
+      href: "/",
     },
     {
-      label: "For business",
+      label: "Business",
       href: "/business",
     },
     {
-      label: "For influencers",
-      href: "/influencers",
+      label: "Creators",
+      href: "/creators",
     },
   ],
   links: {

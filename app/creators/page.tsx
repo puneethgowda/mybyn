@@ -1,209 +1,267 @@
 import { Button } from "@heroui/button";
-import { Card, CardBody } from "@heroui/card";
 import { Link } from "@heroui/link";
+import Image from "next/image";
 
-import { title, subtitle } from "@/components/primitives";
+import { Marquee } from "@/components/magicui/marquee";
+import { WobbleCard } from "@/components/magicui/wobble-card";
+import LayoutSkeleton from "@/components/layout-skeleton";
+
+const TEXTS = [
+  "Paid Collaborations",
+  "Verified Brands",
+  "Flexible Projects",
+  "Seamless Workflow",
+];
+const campaignSteps = [
+  {
+    title: "Create your profile",
+    description: "Showcase your work, niche, and audience.",
+  },
+  {
+    title: "Apply to collabs",
+    description: "Browse live opportunities from verified brands.",
+  },
+  {
+    title: "Collaborate & get paid",
+    description: "Work seamlessly and grow your reputation.",
+  },
+];
 
 export default function ForInfluencersPage() {
   return (
-    <section className="flex flex-col gap-12 py-8">
-      {/* Hero Section */}
-      <div className="text-center max-w-3xl mx-auto">
-        <h1 className={title()}>Monetize Your Influence</h1>
-        <p className={subtitle({ class: "mt-4" })}>
-          Connect with brands that align with your values and create authentic
-          content that resonates with your audience
-        </p>
-        <Button
-          as={Link}
-          className="mt-8"
-          color="primary"
-          href="/login"
-          size="lg"
-        >
-          Connect Instagram
-        </Button>
-      </div>
+    <LayoutSkeleton>
+      <section className="flex flex-col  items-center gap-20 sm:gap-20 xl:gap-40 py-8 md:py-10">
+        {/* Hero Section */}
+        <section className="px-6 mx-auto max-w-7xl">
+          <div className="grid items-center grid-cols-1 gap-12 lg:grid-cols-2">
+            <div>
+              <p className="text-base font-semibold tracking-wider text-primary uppercase">
+                Built for Creators
+              </p>
+              <h1 className="mt-2 text-3xl font-medium font-mosans lg:mt-4 sm:text-5xl xl:text-8xl">
+                Turn Your Influence into Opportunity
+              </h1>
+              <p className="mt-2 text-base  lg:mt-4 sm:text-xl">
+                Create, collaborate, and earn from your influence
+              </p>
+              {/*<p className="mt-4 text-base  lg:mt-8 sm:text-xl">*/}
+              {/*  Discover the right partners. Create bigger impact. Together.*/}
+              {/*</p>*/}
 
-      {/* Benefits */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-8">
-        {[
-          {
-            title: "Find Aligned Brands",
-            description:
-              "Connect with brands that share your values and resonate with your audience",
-          },
-          {
-            title: "Monetize Your Content",
-            description:
-              "Turn your passion into income with paid collaborations and partnerships",
-          },
-          {
-            title: "Grow Your Platform",
-            description:
-              "Expand your reach and build your personal brand through strategic partnerships",
-          },
-        ].map((benefit, index) => (
-          <Card key={index} className="p-4">
-            <CardBody>
-              <div className="w-12 h-12 bg-primary/20 rounded-full flex items-center justify-center mb-4">
+              <Button
+                as={Link}
+                className="mt-8"
+                color="primary"
+                href="/login"
+                size="lg"
+              >
+                Apply for collab
                 <svg
-                  className="w-6 h-6 text-primary"
+                  className="w-6 h-6 ml-8 -mr-2"
                   fill="none"
                   stroke="currentColor"
-                  strokeWidth={1.5}
                   viewBox="0 0 24 24"
                   xmlns="http://www.w3.org/2000/svg"
                 >
                   <path
-                    d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+                    d="M13 9l3 3m0 0l-3 3m3-3H8m13 0a9 9 0 11-18 0 9 9 0 0118 0z"
                     strokeLinecap="round"
                     strokeLinejoin="round"
+                    strokeWidth="1.5"
                   />
                 </svg>
-              </div>
-              <h3 className="text-xl font-bold mb-2">{benefit.title}</h3>
-              <p className="text-default-500">{benefit.description}</p>
-            </CardBody>
-          </Card>
-        ))}
-      </div>
-
-      {/* How It Works */}
-      <div className="mt-12">
-        <h2 className={title({ size: "sm", class: "text-center" })}>
-          How It Works
-        </h2>
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8  mt-12">
-          {[
-            {
-              step: 1,
-              title: "Create Profile",
-              description:
-                "Sign up and connect your Instagram account to showcase your content",
-            },
-            {
-              step: 2,
-              title: "Complete Profile",
-              description:
-                "Add your niche, interests, and collaboration preferences",
-            },
-            {
-              step: 3,
-              title: "Apply to Campaigns",
-              description:
-                "Browse and apply to campaigns that match your style and audience",
-            },
-            {
-              step: 4,
-              title: "Create & Earn",
-              description:
-                "Create authentic content, delight your audience, and get paid",
-            },
-          ].map((step) => (
-            <div
-              key={step.step}
-              className="flex flex-col items-center text-center"
-            >
-              <div className="w-12 h-12 bg-primary text-white rounded-full flex items-center justify-center mb-4">
-                {step.step}
-              </div>
-              <h3 className="text-xl font-bold mb-2">{step.title}</h3>
-              <p className="text-default-500">{step.description}</p>
+              </Button>
+              <p className="mt-5 text-default-500">
+                Are you a creator?{" "}
+                <Link
+                  className="transition-all duration-200 hover:underline"
+                  href="/login"
+                  title=""
+                >
+                  Join Kollabit
+                </Link>
+              </p>
             </div>
-          ))}
-        </div>
-      </div>
-
-      {/* Success Story */}
-      <div className="bg-primary/10 p-8 rounded-xl mt-12">
-        <div className="max-w-3xl mx-auto">
-          <h2 className="text-2xl font-bold mb-4">
-            Success Story: Alex Rivera
-          </h2>
-          <p className="mb-4">
-            Before joining this platform, I was struggling to monetize my
-            content despite having a decent following. Within just two months, I
-            secured partnerships with three major brands that perfectly aligned
-            with my content style. I&apos;ve been able to increase my income by
-            70% while creating content I&apos;m truly proud of.
-          </p>
-          <p className="font-semibold">
-            - Alex Rivera, Lifestyle Influencer (150K followers)
-          </p>
-
-          <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
-            <div className="bg-background p-4 rounded-lg">
-              <p className="text-3xl font-bold text-primary">70%</p>
-              <p className="text-sm">Income Increase</p>
-            </div>
-            <div className="bg-background p-4 rounded-lg">
-              <p className="text-3xl font-bold text-primary">12</p>
-              <p className="text-sm">Brand Partnerships</p>
-            </div>
-            <div className="bg-background p-4 rounded-lg">
-              <p className="text-3xl font-bold text-primary">35%</p>
-              <p className="text-sm">Follower Growth</p>
+            <div>
+              <Image
+                alt=""
+                className="w-full"
+                height={600}
+                src="/assets/creator-hero.png"
+                width={600}
+              />
             </div>
           </div>
-        </div>
-      </div>
+        </section>
 
-      {/* Featured Brands */}
-      <div className="mt-12">
-        <h2 className={title({ size: "sm", class: "text-center" })}>
-          Top Brands on Our Platform
-        </h2>
-        <div className="flex flex-wrap justify-center gap-8  mt-8">
-          {["Brand 1", "Brand 2", "Brand 3", "Brand 4", "Brand 5"].map(
-            (brand, index) => (
+        {/* Marquee Section */}
+        <section className="max-w-full">
+          <Marquee
+            pauseOnHover
+            className="[--duration:20s] [--gap:2rem] sm:[--gap:4rem] [gap:var(--gap)]"
+          >
+            {TEXTS.map((text, index) => (
               <div
                 key={index}
-                className="w-32 h-32 bg-default-100 rounded-lg flex items-center justify-center"
+                className="flex items-center gap-[2rem] sm:gap-[4rem] text-default-300"
               >
-                <p className="font-bold text-default-500">{brand}</p>
+                <div className="w-6 h-6">
+                  <svg
+                    className="e-font-icon-svg e-fab-diaspora"
+                    fill="currentColor"
+                    viewBox="0 0 512 512"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path d="M251.64 354.55c-1.4 0-88 119.9-88.7 119.9S76.34 414 76 413.25s86.6-125.7 86.6-127.4c0-2.2-129.6-44-137.6-47.1-1.3-.5 31.4-101.8 31.7-102.1.6-.7 144.4 47 145.5 47 .4 0 .9-.6 1-1.3.4-2 1-148.6 1.7-149.6.8-1.2 104.5-.7 105.1-.3 1.5 1 3.5 156.1 6.1 156.1 1.4 0 138.7-47 139.3-46.3.8.9 31.9 102.2 31.5 102.6-.9.9-140.2 47.1-140.6 48.8-.3 1.4 82.8 122.1 82.5 122.9s-85.5 63.5-86.3 63.5c-1-.2-89-125.5-90.9-125.5z" />
+                  </svg>
+                </div>
+                <div className="font-medium font-mosans text-xl sm:text-3xl xl:text-6xl">
+                  {text}
+                </div>
               </div>
-            ),
-          )}
-        </div>
-      </div>
+            ))}
+          </Marquee>
+        </section>
 
-      {/* FAQs */}
-      {/*<div className="mt-12">*/}
-      {/*  <h2 className={title({ size: "sm", class: "text-center mb-8" })}>Frequently Asked Questions</h2>*/}
-      {/*  <Accordion variant="splitted" className="max-w-3xl mx-auto">*/}
-      {/*    <AccordionItem key="1" title="Is there a minimum follower count required?">*/}
-      {/*      We welcome influencers of all sizes, including micro and nano influencers. What matters most is */}
-      {/*      your engagement rate and the authenticity of your content.*/}
-      {/*    </AccordionItem>*/}
-      {/*    <AccordionItem key="2" title="How do I get paid for collaborations?">*/}
-      {/*      Payment terms are set by each brand and clearly stated in the campaign details. Most payments */}
-      {/*      are processed through our secure platform once the content is approved.*/}
-      {/*    </AccordionItem>*/}
-      {/*    <AccordionItem key="3" title="Can I choose which brands to work with?">*/}
-      {/*      Absolutely! You have complete control over which campaigns you apply for and which brands you */}
-      {/*      collaborate with. We encourage you to only work with brands that align with your values.*/}
-      {/*    </AccordionItem>*/}
-      {/*    <AccordionItem key="4" title="What if I can't meet a campaign deadline?">*/}
-      {/*      Communication is key. If you're facing challenges meeting a deadline, reach out to the brand */}
-      {/*      through our platform as soon as possible to discuss alternatives.*/}
-      {/*    </AccordionItem>*/}
-      {/*  </Accordion>*/}
-      {/*</div>*/}
+        {/*How it works*/}
+        <section className="w-full px-6 max-w-7xl mx-auto">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+            {/* Left Section */}
+            <div className="space-y-8">
+              {/* Main Image */}
+              <div className="rounded-2xl overflow-hidden">
+                <Image
+                  alt="Professional in studio"
+                  className="w-full h-64 object-cover"
+                  height={500}
+                  src="/assets/creator-how-it-works.png"
+                  width={500}
+                />
+              </div>
 
-      {/* CTA */}
-      <div className="text-center mt-12 bg-linear-to-r from-primary/20 to-secondary/20 p-12 rounded-xl">
-        <h2 className="text-2xl font-bold mb-4">
-          Ready to turn your influence into income?
-        </h2>
-        <p className="text-default-600 max-w-2xl mx-auto mb-8">
-          Join thousands of influencers already creating authentic content and
-          building their careers
-        </p>
-        <Button as={Link} color="primary" href="/login" size="lg">
-          Sign Up as Influencer
-        </Button>
-      </div>
-    </section>
+              {/* Heading */}
+              <div className="space-y-4">
+                <h1 className="text-4xl lg:text-5xl font-mosans font-medium leading-tight">
+                  How it works
+                </h1>
+
+                <p className="text-gray-600 text-lg leading-relaxed">
+                  Get started in 3 simple steps—your next collab is closer than
+                  you think.
+                </p>
+              </div>
+            </div>
+
+            {/* Right Section */}
+            <div className="space-y-8">
+              {campaignSteps.map((step, index) => (
+                <div
+                  key={index}
+                  className="flex items-center justify-between group"
+                >
+                  <div className="flex space-x-6">
+                    <span className="text-2xl sm:text-6xl xl:text-6xl font-light text-default-500 w-6 sm:w-20">
+                      {String(index + 1).padStart(2, "0")}
+                    </span>
+                    <div>
+                      <h3 className="text-2xl sm:text-6xl xl:text-6xl font-mosans font-medium group-hover:text-primary transition-colors">
+                        {step.title}
+                      </h3>
+                      <p className="text-default-500 mt-2">
+                        {step.description}
+                      </p>
+                    </div>
+                  </div>
+                  {/*<Button className="w-12 h-12 bg-purple-200 hover:bg-purple-300 flex items-center justify-center transition-colors group-hover:scale-110 transform duration-200">*/}
+                  {/*  <ArrowUpRight className="w-5 h-5 text-purple-700" />*/}
+                  {/*</Button>*/}
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Features Section */}
+        <section className="grid grid-cols-1 lg:grid-cols-3 gap-4 max-w-7xl mx-auto w-full px-6">
+          <WobbleCard
+            className=""
+            containerClassName="col-span-1 lg:col-span-2 h-full bg-[#f6f6f4] min-h-[500px] lg:min-h-[300px]"
+          >
+            <div className="max-w-xs">
+              <h2 className="text-left text-balance font-mosans font-medium text-xl md:text-3xl lg:text-5xl tracking-[-0.015em] ">
+                Turn Creativity into Income
+              </h2>
+              <p className="mt-4 text-left  text-lg text-default-500">
+                Access campaigns from verified brands who value your work.
+              </p>
+            </div>
+            <Image
+              alt="linear demo image"
+              className="absolute -right-4 lg:-right-[40%] grayscale filter -bottom-10 object-contain rounded-2xl"
+              height={500}
+              src="/assets/creator.png"
+              width={500}
+            />
+          </WobbleCard>
+          <WobbleCard containerClassName="col-span-1 min-h-[300px] bg-[#f6f6f4]">
+            <h2 className="max-w-80  text-left text-balance  font-mosans font-medium text-xl md:text-3xl lg:text-5xl tracking-[-0.015em] ">
+              Build Your Portfolio
+            </h2>
+            <p className="mt-4 max-w-[26rem] text-left  text-lg text-default-500">
+              Showcase collaborations and attract bigger opportunities.
+            </p>
+          </WobbleCard>
+          <WobbleCard containerClassName="col-span-1 lg:col-span-3 bg-[#f6f6f4] min-h-[500px] lg:min-h-[600px] xl:min-h-[300px]">
+            <div className="max-w-sm">
+              <h2 className="max-w-sm md:max-w-lg  text-left text-balance  font-mosans font-medium text-xl md:text-3xl lg:text-5xl tracking-[-0.015em] ">
+                Collaborate Seamlessly
+              </h2>
+              <p className="mt-4 max-w-[26rem] text-left   text-lg text-default-500">
+                From chat to campaign delivery—everything in one place.
+              </p>
+            </div>
+            <Image
+              alt="linear demo image"
+              className="absolute -right-10 md:-right-[40%] lg:-right-[10%] -bottom-10 object-contain rounded-2xl"
+              height={500}
+              src="/assets/creator.png"
+              width={500}
+            />
+          </WobbleCard>
+        </section>
+
+        {/* CTA */}
+        <section className=" bg-yellow-300 w-full rounded-4xl">
+          <div className="flex items-center justify-center flex-col py-20">
+            <h1 className="font-mosans font-medium  text-2xl sm:text-2xl xl:text-5xl text-center">
+              Ready to land your next collab?
+            </h1>
+            <Button
+              as={Link}
+              className="mt-8"
+              color="primary"
+              href="/login"
+              size="lg"
+            >
+              Join as a Creator
+              <svg
+                className="w-6 h-6 ml-8 -mr-2"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M13 9l3 3m0 0l-3 3m3-3H8m13 0a9 9 0 11-18 0 9 9 0 0118 0z"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="1.5"
+                />
+              </svg>
+            </Button>
+          </div>
+        </section>
+      </section>
+    </LayoutSkeleton>
   );
 }

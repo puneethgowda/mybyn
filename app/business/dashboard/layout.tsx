@@ -25,7 +25,6 @@ export default async function DashboardLayout({
       getBusinessProfileOptions(supabase, user?.id as string),
     );
   } catch (e) {
-    console.log(e);
     redirect("/dashboard");
   }
 

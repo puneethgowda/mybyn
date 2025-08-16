@@ -2,7 +2,6 @@
 
 import { Card, CardBody, CardHeader } from "@heroui/card";
 import { Button } from "@heroui/button";
-import { Progress } from "@heroui/progress";
 import { Chip } from "@heroui/chip";
 import { Avatar } from "@heroui/avatar";
 import {
@@ -133,28 +132,28 @@ export function BusinessDashboard({
       </div>
 
       {/* Profile Completion (if not complete) */}
-      {stats.profileCompletion < 100 && (
-        <Card>
-          <CardBody className="gap-2">
-            <div className="flex flex-col md:flex-row justify-between items-center gap-2 md:gap-4">
-              <div className="flex-1 w-full">
-                <p className="text-sm md:text-base text-default-500">
-                  Profile Completion
-                </p>
-                <Progress
-                  className="mt-2"
-                  color={stats.profileCompletion < 70 ? "warning" : "success"}
-                  value={stats.profileCompletion}
-                />
-                <p className="text-sm text-right">{stats.profileCompletion}%</p>
-              </div>
-              <Button as={Link} href="/dashboard/business-profile" size="sm">
-                Complete Profile
-              </Button>
-            </div>
-          </CardBody>
-        </Card>
-      )}
+      {/*{stats.profileCompletion < 100 && (*/}
+      {/*  <Card>*/}
+      {/*    <CardBody className="gap-2">*/}
+      {/*      <div className="flex flex-col md:flex-row justify-between items-center gap-2 md:gap-4">*/}
+      {/*        <div className="flex-1 w-full">*/}
+      {/*          <p className="text-sm md:text-base text-default-500">*/}
+      {/*            Profile Completion*/}
+      {/*          </p>*/}
+      {/*          <Progress*/}
+      {/*            className="mt-2"*/}
+      {/*            color={stats.profileCompletion < 70 ? "warning" : "success"}*/}
+      {/*            value={stats.profileCompletion}*/}
+      {/*          />*/}
+      {/*          <p className="text-sm text-right">{stats.profileCompletion}%</p>*/}
+      {/*        </div>*/}
+      {/*        <Button as={Link} href="/dashboard/business-profile" size="sm">*/}
+      {/*          Complete Profile*/}
+      {/*        </Button>*/}
+      {/*      </div>*/}
+      {/*    </CardBody>*/}
+      {/*  </Card>*/}
+      {/*)}*/}
 
       {/* Quick Stats */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
