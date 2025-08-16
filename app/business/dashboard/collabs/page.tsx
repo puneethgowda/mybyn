@@ -134,11 +134,6 @@ export default function CollabsPage() {
     }
   };
 
-  // Handle share collab
-  const handleShareCollab = (id: string) => {
-    alert(`Share link for collab #${id} copied to clipboard!`);
-  };
-
   return (
     <div className="space-y-6">
       {/* Header */}

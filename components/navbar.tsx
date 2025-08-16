@@ -8,30 +8,26 @@ import {
   NavbarMenuToggle,
 } from "@heroui/navbar";
 import { Button } from "@heroui/button";
-import { Link } from "@heroui/link";
+import Link from "next/link";
 import { link as linkStyles } from "@heroui/theme";
 import NextLink from "next/link";
 import clsx from "clsx";
 
 import { siteConfig } from "@/config/site";
-import { Logo } from "@/components/icons";
 
 export const Navbar = () => {
   return (
-    <HeroUINavbar maxWidth="full" position="sticky">
-      <NavbarContent className="basis-1/5 sm:basis-full" justify="start">
+    <HeroUINavbar maxWidth="xl" position="sticky">
+      <NavbarContent className="" justify="start">
         <NavbarBrand as="li" className="gap-3 max-w-fit">
           <NextLink className="flex justify-start items-center gap-1" href="/">
-            <Logo size={40} />
+            {/*<Logo size={40} />*/}
             <p className="text-xl font-bold text-inherit">KOLLABIT</p>
           </NextLink>
         </NavbarBrand>
       </NavbarContent>
 
-      <NavbarContent
-        className="hidden sm:flex basis-1/5 sm:basis-full"
-        justify="end"
-      >
+      <NavbarContent className="hidden sm:flex" justify="center">
         <NavbarItem className="hidden md:flex">
           <ul className="hidden lg:flex gap-4 justify-start ml-2">
             {siteConfig.navItems.map((item) => (
@@ -39,7 +35,7 @@ export const Navbar = () => {
                 <NextLink
                   className={clsx(
                     linkStyles({ color: "foreground" }),
-                    "data-[active=true]:text-primary data-[active=true]:font-medium",
+                    "font-semibold data-[active=true]:text-primary data-[active=true]:font-bold",
                   )}
                   color="foreground"
                   href={item.href}
@@ -52,10 +48,7 @@ export const Navbar = () => {
         </NavbarItem>
       </NavbarContent>
 
-      <NavbarContent
-        className="hidden sm:flex basis-1/5 sm:basis-full"
-        justify="end"
-      >
+      <NavbarContent className="hidden sm:flex" justify="end">
         <NavbarItem className="hidden md:flex">
           <Button as={Link} color="primary" href="/login">
             Login
@@ -64,26 +57,20 @@ export const Navbar = () => {
       </NavbarContent>
 
       <NavbarContent className="sm:hidden basis-1 pl-4" justify="end">
+        <Button as={Link} href="/login">
+          Login
+        </Button>
         <NavbarMenuToggle />
       </NavbarContent>
 
       <NavbarMenu>
         <div className="mx-4 mt-2 flex flex-col gap-2">
           {siteConfig.navMenuItems.map((item, index) => (
-            <NavbarMenuItem key={`${item}-${index}`}>
-              <Link
-                color={
-                  index === 2
-                    ? "primary"
-                    : index === siteConfig.navMenuItems.length - 1
-                      ? "danger"
-                      : "foreground"
-                }
-                href="#"
-                size="lg"
-              >
-                {item.label}
-              </Link>
+            <NavbarMenuItem
+              key={`${item}-${index}`}
+              className="text-center font-bold text-2xl"
+            >
+              <Link href={item.href}>{item.label}</Link>
             </NavbarMenuItem>
           ))}
         </div>

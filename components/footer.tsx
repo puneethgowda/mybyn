@@ -6,8 +6,8 @@ import { DiscordIcon, GithubIcon, TwitterIcon } from "@/components/icons";
 
 const Footer = () => {
   return (
-    <footer className="w-full border-t border-divider py-8 mt-8">
-      <div className="container mx-auto max-w-7xl px-6">
+    <footer className="w-full px-6 bg-[#141414] text-white rounded-4xl  py-8 mt-8">
+      <div className="container mx-auto max-w-7xl">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div>
             <h3 className="font-bold text-lg mb-4">KOLLABIT</h3>
