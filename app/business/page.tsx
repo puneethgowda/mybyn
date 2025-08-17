@@ -66,7 +66,7 @@ export default function ForBusinessPage() {
                   />
                 </svg>
               </Button>
-              <p className="mt-5 text-default-500">
+              <p className="mt-5 text-muted-foreground">
                 Are you a business?{" "}
                 <Link
                   className="transition-all duration-200 hover:underline"
@@ -155,14 +155,14 @@ export default function ForBusinessPage() {
                   className="flex items-center justify-between group"
                 >
                   <div className="flex space-x-6">
-                    <span className="text-2xl sm:text-6xl xl:text-6xl font-light text-default-500 w-6 sm:w-20">
+                    <span className="text-2xl sm:text-6xl xl:text-6xl font-light text-muted-foreground w-6 sm:w-20">
                       {String(index + 1).padStart(2, "0")}
                     </span>
                     <div>
                       <h3 className="text-2xl sm:text-6xl xl:text-6xl font-mosans font-medium group-hover:text-primary transition-colors">
                         {step.title}
                       </h3>
-                      <p className="text-default-500 mt-2">
+                      <p className="text-muted-foreground mt-2">
                         {step.description}
                       </p>
                     </div>
@@ -186,7 +186,7 @@ export default function ForBusinessPage() {
               <h2 className="text-left text-balance font-mosans font-medium text-lg md:text-3xl lg:text-5xl tracking-[-0.015em] ">
                 Effortless Campaign Setup
               </h2>
-              <p className="mt-4 text-left  text-lg text-default-500">
+              <p className="mt-4 text-left  text-lg text-muted-foreground">
                 Post your campaign brief in minutes and start receiving creator
                 applications instantly.
               </p>
@@ -203,7 +203,7 @@ export default function ForBusinessPage() {
             <h2 className="max-w-80  text-left text-balance  font-mosans font-medium text-lg md:text-3xl lg:text-5xl tracking-[-0.015em] ">
               Access to Verified Creators
             </h2>
-            <p className="mt-4 max-w-[26rem] text-left  text-lg text-default-500">
+            <p className="mt-4 max-w-[26rem] text-left  text-lg text-muted-foreground">
               Connect with a growing network of quality creators who are ready
               to bring your brand to life.
             </p>
@@ -213,7 +213,7 @@ export default function ForBusinessPage() {
               <h2 className="max-w-sm md:max-w-lg  text-left text-balance  font-mosans font-medium text-lg md:text-3xl lg:text-5xl tracking-[-0.015em] ">
                 Streamlined Collaboration
               </h2>
-              <p className="mt-4 max-w-[26rem] text-left   text-lg text-default-500">
+              <p className="mt-4 max-w-[26rem] text-left   text-lg text-muted-foreground">
                 One chat. Total clarity. Faster results.
               </p>
             </div>

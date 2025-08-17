@@ -31,7 +31,7 @@ export default function InfluencerProfilePage() {
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
           <h1 className="text-base lg:text-xl font-bold">Influencer Profile</h1>
-          <p className="text-default-500 text-xs md:text-sm">
+          <p className="text-muted-foreground text-xs md:text-sm">
             Manage your profile information and preferences
           </p>
         </div>
@@ -52,7 +52,7 @@ export default function InfluencerProfilePage() {
                     {instagramConnected ? "Connected" : "Not Connected"}
                   </p>
                   {instagramConnected && (
-                    <p className="text-default-500 text-sm">
+                    <p className="text-muted-foreground text-sm">
                       {creatorProfile?.instagram_handle} •{" "}
                       {creatorProfile?.followers_count?.toLocaleString()}{" "}
                       followers

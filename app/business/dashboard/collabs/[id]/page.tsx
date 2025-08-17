@@ -199,7 +199,7 @@ export default function CollabDetailsPage() {
         <h2 className="text-lg md:text-xl font-semibold">
           Collaboration not found
         </h2>
-        <p className="text-sm md:text-base text-default-500 mt-2">
+        <p className="text-sm md:text-base text-muted-foreground mt-2">
           The collaboration you&#39;re looking for doesn&#39;t exist or has been
           removed.
         </p>
@@ -226,7 +226,7 @@ export default function CollabDetailsPage() {
             </h1>
             {renderStatusBadge(collab.status)}
           </div>
-          <p className="text-sm md:text-base text-default-500">
+          <p className="text-sm md:text-base text-muted-foreground">
             Posted {formatDateForDisplay(collab.created_at)} (
             {timeAgo(collab.created_at)})
           </p>
@@ -258,17 +258,21 @@ export default function CollabDetailsPage() {
         <CardBody>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             <div>
-              <h3 className="text-sm font-medium text-default-500">
+              <h3 className="text-sm font-medium text-muted-foreground">
                 Collab Type
               </h3>
               <p className="font-medium">{COLLAB_TYPE[collab?.collab_type]}</p>
             </div>
             <div>
-              <h3 className="text-sm font-medium text-default-500">Location</h3>
+              <h3 className="text-sm font-medium text-muted-foreground">
+                Location
+              </h3>
               <p className="font-medium">location</p>
             </div>
             <div>
-              <h3 className="text-sm font-medium text-default-500">Format</h3>
+              <h3 className="text-sm font-medium text-muted-foreground">
+                Format
+              </h3>
               <div className="flex flex-wrap gap-1 mt-1">
                 {/*{collab.formats.map((format) => (*/}
                 {/*  <Chip key={format} size="sm" variant="flat">*/}
@@ -278,7 +282,7 @@ export default function CollabDetailsPage() {
               </div>
             </div>
             <div>
-              <h3 className="text-sm font-medium text-default-500">
+              <h3 className="text-sm font-medium text-muted-foreground">
                 {collab.collab_type === COLLAB_TYPE.BARTER
                   ? "Value"
                   : "Amount Offered"}
@@ -294,7 +298,7 @@ export default function CollabDetailsPage() {
           <Divider className="my-4" />
 
           <div>
-            <h3 className="text-sm font-medium text-default-500 mb-2">
+            <h3 className="text-sm font-medium text-muted-foreground mb-2">
               Description
             </h3>
             <p className="text-foreground">{collab.description}</p>
@@ -358,7 +362,7 @@ export default function CollabDetailsPage() {
                             </h3>
                             {renderStatusBadge(applicant.status)}
                           </div>
-                          <p className="text-sm md:text-base text-default-500">
+                          <p className="text-sm md:text-base text-muted-foreground">
                             <Link
                               href={`https://instagram.com/${applicant?.creator_profile?.instagram_handle}`}
                               target="_blank"
@@ -386,14 +390,14 @@ export default function CollabDetailsPage() {
 
                       {/* Applied date - mobile */}
                       <div className="md:hidden mt-2">
-                        <p className="text-xs text-default-500">
+                        <p className="text-xs text-muted-foreground">
                           Applied {timeAgo(applicant.created_at)}
                         </p>
                       </div>
 
                       {/* Applied date - desktop */}
                       <div className="hidden md:block ml-auto text-right">
-                        <p className="text-sm text-default-500">
+                        <p className="text-sm text-muted-foreground">
                           Applied {timeAgo(applicant.created_at)}
                         </p>
                       </div>
@@ -402,7 +406,7 @@ export default function CollabDetailsPage() {
                     {/* Message */}
                     {applicant.message && (
                       <div className="mt-4">
-                        <h4 className="text-sm font-medium text-default-500 mb-1">
+                        <h4 className="text-sm font-medium text-muted-foreground mb-1">
                           Message
                         </h4>
                         <p className="text-foreground">{applicant.message}</p>
@@ -463,7 +467,7 @@ export default function CollabDetailsPage() {
             <CardBody className="py-12 flex flex-col items-center justify-center">
               <SpockHandGesture className="text-default-300 size-16" />
               <h3 className="text-xl font-medium mt-6">No applicants found</h3>
-              <p className="text-default-500 mt-2 text-center max-w-md">
+              <p className="text-muted-foreground mt-2 text-center max-w-md">
                 {statusFilter !== "all"
                   ? `No ${statusFilter.toLowerCase()} applicants found. Try a different filter.`
                   : "No one has applied to this collab yet. Share it on your socials to get noticed!"}

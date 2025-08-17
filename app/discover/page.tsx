@@ -122,7 +122,7 @@ export default function DiscoverPage() {
                   {listing.budget}
                 </Chip>
               </div>
-              <p className="text-default-500">{listing.description}</p>
+              <p className="text-muted-foreground">{listing.description}</p>
               <div className="flex gap-2 mt-2">
                 <Chip size="sm" variant="flat">
                   {listing.category}

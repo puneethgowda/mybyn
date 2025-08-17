@@ -137,7 +137,7 @@ export function BusinessDashboard({
       {/*    <CardBody className="gap-2">*/}
       {/*      <div className="flex flex-col md:flex-row justify-between items-center gap-2 md:gap-4">*/}
       {/*        <div className="flex-1 w-full">*/}
-      {/*          <p className="text-sm md:text-base text-default-500">*/}
+      {/*          <p className="text-sm md:text-base text-muted-foreground">*/}
       {/*            Profile Completion*/}
       {/*          </p>*/}
       {/*          <Progress*/}
@@ -228,7 +228,7 @@ export function BusinessDashboard({
                             <p className="font-medium">
                               {application.creator_profile.name}
                             </p>
-                            <div className="flex items-center text-xs text-default-500">
+                            <div className="flex items-center text-xs text-muted-foreground">
                               <span>
                                 {application.creator_profile.instagram_handle}
                               </span>
@@ -245,7 +245,7 @@ export function BusinessDashboard({
                         <p className="font-medium">
                           {toTitleCase(application.collab.title)}
                         </p>
-                        <p className="text-xs text-default-500">
+                        <p className="text-xs text-muted-foreground">
                           {timeAgo(application.created_at)}
                         </p>
                       </TableCell>
@@ -267,11 +267,11 @@ export function BusinessDashboard({
               </Table>
             ) : (
               <div className="flex flex-col items-center justify-center py-8">
-                <Group className="size-12 text-default-500" />
+                <Group className="size-12 text-muted-foreground" />
                 <h3 className="text-lg md:text-xl font-medium mt-4">
                   No applicants yet
                 </h3>
-                <p className="text-sm md:text-base text-default-500 mt-2 text-center">
+                <p className="text-sm md:text-base text-muted-foreground mt-2 text-center">
                   Share your collab on Instagram to attract more influencers!
                 </p>
               </div>
@@ -283,7 +283,7 @@ export function BusinessDashboard({
         <Card className="bg-linear-to-br from-primary-100/30 to-secondary-100/30">
           <CardBody className="flex flex-col items-center justify-center py-8 gap-2 md:gap-4">
             <div className="p-4 bg-background rounded-full">
-              <Plus className="size-8 text-default-500" />
+              <Plus className="size-8 text-muted-foreground" />
             </div>
             <h3 className="text-lg md:text-xl font-bold text-center">
               Create New Collab
@@ -394,9 +394,9 @@ export function BusinessDashboard({
             </div>
           ) : (
             <div className="flex flex-col items-center justify-center py-8">
-              <Suitcase className="size-12 text-default-500" />
+              <Suitcase className="size-12 text-muted-foreground" />
               <h3 className="text-xl font-medium mt-4">No active collabs</h3>
-              <p className="text-default-500 mt-2 text-center">
+              <p className="text-muted-foreground mt-2 text-center">
                 Create your first collaboration to connect with influencers
               </p>
               <Button

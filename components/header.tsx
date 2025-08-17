@@ -1,26 +1,21 @@
 "use client";
 
-import {
-  Dropdown,
-  DropdownItem,
-  DropdownMenu,
-  DropdownTrigger,
-} from "@heroui/dropdown";
-import { Avatar } from "@heroui/avatar";
-import { Button } from "@heroui/button";
 import { usePathname, useRouter } from "next/navigation";
-import { PlusIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
 import { useQuery } from "@tanstack/react-query";
-import { SparkSolid } from "iconoir-react";
-import { Chip } from "@heroui/chip";
+import { RiAddBoxLine, RiFlashlightLine } from "@remixicon/react";
 
+import { Badge } from "./ui/badge";
+
+import { Button } from "@/components/ui/button";
 import { createClient } from "@/supabase/client";
 import { getUserOptions } from "@/utils/react-query/user";
 import { getUserProfileOptions } from "@/utils/react-query/user";
 import { getBusinessProfileOptions } from "@/utils/react-query/business/profile";
 import SplashScreen from "@/components/splash-screen";
 import { POINTS } from "@/utils/constants";
+import { SidebarTrigger } from "@/components/ui/sidebar";
+import UserDropdown from "@/components/user-dropdown";
 
 export function DashboardHeader() {
   const router = useRouter();
@@ -46,101 +41,44 @@ export function DashboardHeader() {
     points < Math.max(POINTS.CREATE_COLLAB, POINTS.APPLY_COLLAB);
 
   return (
-    <header className="bg-background px-4 md:px-6 md:pr-10 py-4">
-      <div className="flex flex-row justify-between items-center gap-0 md:gap-4">
-        <div>
-          <h1 className="hidden md:block text-xl font-bold">
-            {!isCreator && "Business Dashboard"}
-            {isCreator && "Creator Dashboard"}
-          </h1>
-          <Link
-            className="flex md:hidden items-center justify-center gap-2 h-10"
-            href="/"
-          >
-            <span className="font-bold text-xl">KOLLABIT</span>
-          </Link>
-        </div>
-
-        {/* Role Switcher */}
-        {user && (
-          <div className="flex items-center gap-4">
-            {/* Points Display */}
-            <Chip
-              className="hidden sm:flex"
-              color={hasLowBalance ? "warning" : "success"}
-              startContent={<SparkSolid className="size-4 text-yellow-400" />}
-              variant="bordered"
-            >
-              {points.toLocaleString()} pts
-            </Chip>
-
-            <div className="">
-              {isCreator ? (
-                !!businessProfile ? (
-                  <Link href="/business/dashboard">
-                    <Chip color="primary" size="md" variant="bordered">
-                      Switch to Business
-                    </Chip>
-                  </Link>
-                ) : (
-                  <Link href="/business/onboarding">
-                    <Chip
-                      color="primary"
-                      size="sm"
-                      startContent={<PlusIcon className="size-4" />}
-                    />
-                    Create Collab
-                  </Link>
-                )
-              ) : (
-                <Link href="/dashboard">
-                  <Chip color="primary" size="md" variant="bordered">
-                    Switch to Creator
-                  </Chip>
+    <header className="dark flex h-16 shrink-0 items-center gap-2 px-4 md:px-6 lg:px-8 bg-sidebar text-sidebar-foreground relative before:absolute before:inset-y-3 before:-left-px before:w-px before:bg-gradient-to-b before:from-white/5 before:via-white/15 before:to-white/5 before:z-50">
+      <SidebarTrigger className="-ms-2" />
+      <h1 className="hidden md:block text-sm font-medium">
+        {!isCreator && "Business Dashboard"}
+        {isCreator && "Creator Dashboard"}
+      </h1>
+      <div className="flex items-center gap-8 ml-auto">
+        <nav className="flex items-center gap-4 text-sm font-medium max-sm:hidden">
+          <div className="">
+            {isCreator ? (
+              !!businessProfile ? (
+                <Link href="/business/dashboard">
+                  <Button>Switch to Business</Button>
                 </Link>
-              )}
-            </div>
-            {!!user && (
-              <Dropdown>
-                <DropdownTrigger>
-                  <Button
-                    className="gap-0 md:gap-2 p-0 justify-end md:justify-center min-w-fit"
-                    variant="light"
-                  >
-                    <Avatar
-                      name={user.user_metadata.name}
-                      size="sm"
-                      src={user.user_metadata.avatar_url}
-                    />
-                    {/*<span className="hidden md:block">*/}
-                    {/*  {user.user_metadata.name || user.email?.split("@")[0]}*/}
-                    {/*</span>*/}
+              ) : (
+                <Link href="/business/onboarding">
+                  <Button size="sm">
+                    <RiAddBoxLine />
+                    Create Collab
                   </Button>
-                </DropdownTrigger>
-                <DropdownMenu aria-label="User actions">
-                  <DropdownItem
-                    key="profile"
-                    onClick={() => {
-                      router.push("/dashboard/profile");
-                    }}
-                  >
-                    My Profile
-                  </DropdownItem>
-                  <DropdownItem
-                    key="logout"
-                    color="danger"
-                    onClick={async () => {
-                      await supabase.auth.signOut();
-                      router.push("/login");
-                    }}
-                  >
-                    Sign Out
-                  </DropdownItem>
-                </DropdownMenu>
-              </Dropdown>
+                </Link>
+              )
+            ) : (
+              <Link href="/dashboard">
+                <Button>Switch to Creator</Button>
+              </Link>
             )}
           </div>
-        )}
+          <Badge>
+            <RiFlashlightLine
+              aria-hidden="true"
+              className="-ms-0.5 opacity-60"
+              size={12}
+            />
+            {points.toLocaleString()} Credits
+          </Badge>
+        </nav>
+        <UserDropdown user={user} />
       </div>
       {isPending || (isBusinessPending && <SplashScreen />)}
     </header>

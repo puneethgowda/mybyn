@@ -428,7 +428,7 @@ export function BusinessProfileForm() {
           <span className="text-sm font-medium">
             Step {currentStep} of {totalSteps}
           </span>
-          <span className="text-sm text-default-500">
+          <span className="text-sm text-muted-foreground">
             {Math.round((currentStep / totalSteps) * 100)}% Complete
           </span>
         </div>

@@ -118,7 +118,7 @@ export default function BusinessProfilePage() {
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
           <h1 className="text-base lg:text-xl font-bold">Business Profile</h1>
-          <p className="text-default-500 text-xs md:text-sm">
+          <p className="text-muted-foreground text-xs md:text-sm">
             Manage your business information and preferences
           </p>
         </div>

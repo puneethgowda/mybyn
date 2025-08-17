@@ -105,7 +105,7 @@ export default function SignupPage() {
             <h1 className="text-4xl font-medium font-mosans">
               Sign in to KOLLABIT
             </h1>
-            <p className="text-default-500">Your collab, made simple.</p>
+            <p className="text-muted-foreground">Your collab, made simple.</p>
           </div>
           {/* Terms and Conditions */}
           <Checkbox

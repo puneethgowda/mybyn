@@ -9,6 +9,7 @@ import {
   getCreatorStatsOptions,
 } from "@/utils/react-query/creator";
 import { getUserOptions } from "@/utils/react-query/user";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 export default async function Dashboard() {
   const queryClient = getQueryClient();
@@ -26,9 +27,11 @@ export default async function Dashboard() {
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
-      <div className="space-y-8">
-        <CreatorDashboard userId={user?.id as string} />
-      </div>
+      <ScrollArea className="flex-1 [&>div>div]:h-full w-full shadow-md md:rounded-s-[inherit] min-[1024px]:rounded-e-3xl bg-background">
+        <div className="h-full flex flex-col px-4 md:px-6 lg:px-8">
+          <CreatorDashboard userId={user?.id as string} />
+        </div>
+      </ScrollArea>
     </HydrationBoundary>
   );
 }

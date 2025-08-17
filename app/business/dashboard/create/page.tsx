@@ -9,7 +9,7 @@ export default function CreateCollabPage() {
         <h1 className="text-base lg:text-xl font-bold">
           Create New Collaboration
         </h1>
-        <p className="text-default-500 text-xs md:text-sm">
+        <p className="text-muted-foreground text-xs md:text-sm">
           Post an opportunity for influencers to collaborate with your business
         </p>
       </div>

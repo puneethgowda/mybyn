@@ -124,7 +124,7 @@ export default async function Home() {
                   />
                 </svg>
               </Button>
-              <p className="mt-5 text-default-500">
+              <p className="mt-5 text-muted-foreground">
                 Already joined us?{" "}
                 <Link
                   className="transition-all duration-200 hover:underline"
@@ -193,7 +193,7 @@ export default async function Home() {
               For Businesses
             </h1>
 
-            <p className="text-2xl sm:text-2xl xl:text-5xl mt-4  text-default-500">
+            <p className="text-2xl sm:text-2xl xl:text-5xl mt-4  text-muted-foreground">
               Find the right creators, manage both paid and barter
               collaborations
             </p>
@@ -229,7 +229,7 @@ export default async function Home() {
             <h1 className="font-mosans font-medium text-2xl sm:text-2xl xl:text-5xl">
               For Creators
             </h1>
-            <p className="text-2xl sm:text-2xl xl:text-5xl mt-4 text-default-500">
+            <p className="text-2xl sm:text-2xl xl:text-5xl mt-4 text-muted-foreground">
               Discover collabs from brands looking for creators. Apply today,
               collaborate today.
             </p>

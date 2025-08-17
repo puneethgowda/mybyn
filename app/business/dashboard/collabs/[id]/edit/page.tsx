@@ -51,7 +51,7 @@ export default function EditCollabPage() {
     <div className="max-w-3xl mx-auto px-0 md:px-4 py-6">
       <div className="mb-8">
         <h1 className="text-base lg:text-xl font-bold">Edit Collaboration</h1>
-        <p className="text-default-500 text-xs md:text-sm">
+        <p className="text-muted-foreground text-xs md:text-sm">
           Update the details of your collaboration opportunity
         </p>
       </div>

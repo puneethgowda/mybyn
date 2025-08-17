@@ -54,7 +54,7 @@ export default function BusinessMessagesPage() {
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
           <h1 className="text-base lg:text-xl font-bold">Creators Messages</h1>
-          <p className="text-default-500 text-xs md:text-sm">
+          <p className="text-muted-foreground text-xs md:text-sm">
             Communicate with creators about your collaborations
           </p>
         </div>
@@ -122,7 +122,7 @@ export default function BusinessMessagesPage() {
                               href={`https://instagram.com/${room.creator_profile?.instagram_handle}`}
                               target="_blank"
                             >
-                              <span className="text-default-500 text-xs">
+                              <span className="text-muted-foreground text-xs">
                                 ({room.creator_profile?.instagram_handle})
                               </span>
                             </Link>

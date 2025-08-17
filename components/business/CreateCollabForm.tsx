@@ -414,7 +414,7 @@ export function CreateCollabForm({
                 onValueChange={(value) => handleChange("amount", Number(value))}
               />
             ) : (
-              <div className="text-default-500 space-y-4">
+              <div className="text-muted-foreground space-y-4">
                 <p>
                   Since this is a barter collaboration, you can describe your
                   offer in the description section.
@@ -486,14 +486,14 @@ export function CreateCollabForm({
             <Card className="bg-content1/50">
               <CardBody className="gap-4">
                 <div>
-                  <h3 className="text-sm font-medium text-default-500">
+                  <h3 className="text-sm font-medium text-muted-foreground">
                     Title
                   </h3>
                   <p className="text-foreground">{formData.title}</p>
                 </div>
 
                 <div>
-                  <h3 className="text-sm font-medium text-default-500">
+                  <h3 className="text-sm font-medium text-muted-foreground">
                     Description
                   </h3>
                   <p className="text-foreground">{formData.description}</p>
@@ -501,14 +501,14 @@ export function CreateCollabForm({
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <h3 className="text-sm font-medium text-default-500">
+                    <h3 className="text-sm font-medium text-muted-foreground">
                       Platform
                     </h3>
                     <p className="text-foreground">{formData.platform}</p>
                   </div>
 
                   <div>
-                    <h3 className="text-sm font-medium text-default-500">
+                    <h3 className="text-sm font-medium text-muted-foreground">
                       Collaboration Type
                     </h3>
                     <p className="text-foreground">
@@ -518,7 +518,7 @@ export function CreateCollabForm({
 
                   {formData.collab_type !== "BARTER" && (
                     <div>
-                      <h3 className="text-sm font-medium text-default-500">
+                      <h3 className="text-sm font-medium text-muted-foreground">
                         Budget
                       </h3>
                       <p className="text-foreground">
@@ -528,7 +528,7 @@ export function CreateCollabForm({
                   )}
 
                   <div>
-                    <h3 className="text-sm font-medium text-default-500">
+                    <h3 className="text-sm font-medium text-muted-foreground">
                       Languages
                     </h3>
                     <div className="flex flex-wrap gap-1 mt-1">
@@ -566,7 +566,7 @@ export function CreateCollabForm({
           <span className="text-sm font-medium">
             Step {currentStep} of {totalSteps}
           </span>
-          <span className="text-sm text-default-500">
+          <span className="text-sm text-muted-foreground">
             {Math.round((currentStep / totalSteps) * 100)}% Complete
           </span>
         </div>

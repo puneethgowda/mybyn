@@ -142,7 +142,7 @@ export default function CollabsPage() {
           <h1 className="text-base lg:text-xl font-bold">
             Your Collaborations
           </h1>
-          <p className="text-default-500 text-xs md:text-sm">
+          <p className="text-muted-foreground text-xs md:text-sm">
             Manage all your collaboration opportunities
           </p>
         </div>
@@ -268,7 +268,7 @@ export default function CollabsPage() {
 
                     {/* Description */}
                     <div className="flex items-start gap-2">
-                      <h3 className="text-sm line-clamp-2 text-default-500">
+                      <h3 className="text-sm line-clamp-2 text-muted-foreground">
                         {collab.description}
                       </h3>
                     </div>
@@ -290,7 +290,7 @@ export default function CollabsPage() {
                     </div>
 
                     {/* Posted Date and Applicants */}
-                    <div className="flex items-center gap-3 text-sm text-default-500">
+                    <div className="flex items-center gap-3 text-sm text-muted-foreground">
                       <span>Posted {timeAgo(collab.created_at)}</span>
                       <span>•</span>
                       {/*<Chip*/}
@@ -388,7 +388,7 @@ export default function CollabsPage() {
             <h3 className="text-xl font-medium mt-6">
               No collaborations found
             </h3>
-            <p className="text-default-500 mt-2 text-center max-w-md">
+            <p className="text-muted-foreground mt-2 text-center max-w-md">
               {searchQuery || statusFilter !== "ALL"
                 ? "No collaborations match your search criteria. Try adjusting your filters."
                 : "You haven't posted any collabs yet. Click below to create your first one."}
