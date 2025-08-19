@@ -4,8 +4,8 @@ import { useState, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
-import { Message } from "iconoir-react";
 import * as React from "react";
+import { RiChat1Line } from "@remixicon/react";
 
 import { Card, CardContent } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -170,7 +170,7 @@ export default function BusinessMessagesPage() {
               // Empty state
               <Card className="w-full shadow-none">
                 <CardContent className="py-12 flex flex-col items-center justify-center">
-                  <Message className="text-default-300" />
+                  <RiChat1Line className="text-default-300" />
                   <h3 className="font-medium mt-2">No conversations found</h3>
                   <p className="text-muted-foreground text-center">
                     {searchQuery

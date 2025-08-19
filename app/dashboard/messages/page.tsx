@@ -3,8 +3,8 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
-import { Message } from "iconoir-react";
 import * as React from "react";
+import { RiChat1Line } from "@remixicon/react";
 
 import { Card, CardContent } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -154,7 +154,7 @@ export default function MessagesPage() {
             ) : (
               <Card className="w-full shadow-none">
                 <CardContent className="py-12 flex flex-col items-center justify-center">
-                  <Message className="size-10" />
+                  <RiChat1Line className="size-10" />
                   <h3 className="text-lg md:text-xl font-medium mt-4">
                     No conversations found
                   </h3>

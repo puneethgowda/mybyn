@@ -3,10 +3,15 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
-import { Message, Suitcase } from "iconoir-react";
 import * as React from "react";
 import Image from "next/image";
-import { RiCalendarLine, RiChat3Line, RiWalletLine } from "@remixicon/react";
+import {
+  RiBriefcase3Line,
+  RiCalendarLine,
+  RiChat1Line,
+  RiChat3Line,
+  RiWalletLine,
+} from "@remixicon/react";
 
 import { createClient } from "@/supabase/client";
 import { APPLICATION_STATUS, COLLAB_TYPE } from "@/utils/enums";
@@ -226,7 +231,7 @@ const CollabApplicationsPage = () => {
                               size="sm"
                               onClick={() => navigateToChat(application.id)}
                             >
-                              <Message className="mr-2 h-4 w-4" />
+                              <RiChat1Line className="mr-2 h-4 w-4" />
                               Message
                             </Button>
                           ) : application.status ===
@@ -261,7 +266,7 @@ const CollabApplicationsPage = () => {
                 // Empty state
                 <div className="text-center py-12">
                   <div className="mx-auto w-12 h-12 mb-4 flex items-center justify-center rounded-full bg-muted">
-                    <Suitcase className="h-6 w-6" />
+                    <RiBriefcase3Line className="h-6 w-6" />
                   </div>
                   <h3 className="text-base font-semibold">
                     No applications found

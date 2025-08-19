@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { ArrowLeft, MoreHoriz } from "iconoir-react";
+import { RiArrowLeftLine, RiMoreLine } from "@remixicon/react";
 
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -30,7 +30,7 @@ export function ChatHeader({
     <div className="py-5 bg-background sticky top-0 z-10 before:absolute before:inset-x-0 before:bottom-0 before:h-px before:bg-gradient-to-r before:from-black/[0.06] before:via-black/10 before:to-black/[0.06]">
       <div className="max-w-4xl mx-auto flex items-center gap-2">
         <Button size="icon" variant="ghost" onClick={() => router.back()}>
-          <ArrowLeft />
+          <RiArrowLeftLine />
         </Button>
 
         <Avatar className="size-10 rounded-md">
@@ -57,7 +57,7 @@ export function ChatHeader({
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button size="icon" variant="secondary">
-              <MoreHoriz />
+              <RiMoreLine />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">

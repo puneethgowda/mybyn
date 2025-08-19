@@ -194,29 +194,26 @@ export default async function Home() {
               Find the right creators, manage both paid and barter
               collaborations
             </p>
-            <Button
-              as={Link}
-              className="mt-8"
-              color="secondary"
-              href="/business"
-              size="lg"
-            >
-              Learn More
-              <svg
-                className="w-6 h-6 ml-8 -mr-2"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M13 9l3 3m0 0l-3 3m3-3H8m13 0a9 9 0 11-18 0 9 9 0 0118 0z"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="1.5"
-                />
-              </svg>
-            </Button>
+
+            <Link href="/business">
+              <Button className="mt-8" color="secondary" size="lg">
+                Learn More
+                <svg
+                  className="w-6 h-6 ml-8 -mr-2"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M13 9l3 3m0 0l-3 3m3-3H8m13 0a9 9 0 11-18 0 9 9 0 0118 0z"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="1.5"
+                  />
+                </svg>
+              </Button>
+            </Link>
           </div>
         </section>
 
@@ -230,29 +227,26 @@ export default async function Home() {
               Discover collabs from brands looking for creators. Apply today,
               collaborate today.
             </p>
-            <Button
-              as={Link}
-              className="mt-8"
-              color="secondary"
-              href="/business"
-              size="lg"
-            >
-              Learn More
-              <svg
-                className="w-6 h-6 ml-8 -mr-2"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M13 9l3 3m0 0l-3 3m3-3H8m13 0a9 9 0 11-18 0 9 9 0 0118 0z"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="1.5"
-                />
-              </svg>
-            </Button>
+
+            <Link href="/business">
+              <Button className="mt-8" color="secondary" size="lg">
+                Learn More
+                <svg
+                  className="w-6 h-6 ml-8 -mr-2"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M13 9l3 3m0 0l-3 3m3-3H8m13 0a9 9 0 11-18 0 9 9 0 0118 0z"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="1.5"
+                  />
+                </svg>
+              </Button>
+            </Link>
           </div>
           <div className="">
             <div className="relative bg-pink-200 rounded-2xl h-80">
@@ -285,29 +279,25 @@ export default async function Home() {
             <h1 className="font-mosans font-medium  text-2xl sm:text-2xl xl:text-5xl text-center">
               Meet the right partner
             </h1>
-            <Button
-              as={Link}
-              className="mt-8"
-              color="primary"
-              href="/login"
-              size="lg"
-            >
-              Join for free
-              <svg
-                className="w-6 h-6 ml-8 -mr-2"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M13 9l3 3m0 0l-3 3m3-3H8m13 0a9 9 0 11-18 0 9 9 0 0118 0z"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="1.5"
-                />
-              </svg>
-            </Button>{" "}
+            <Link href="/login">
+              <Button className="mt-8" color="primary" size="lg">
+                Join for free
+                <svg
+                  className="w-6 h-6 ml-8 -mr-2"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M13 9l3 3m0 0l-3 3m3-3H8m13 0a9 9 0 11-18 0 9 9 0 0118 0z"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="1.5"
+                  />
+                </svg>
+              </Button>
+            </Link>
           </div>
         </section>
       </section>

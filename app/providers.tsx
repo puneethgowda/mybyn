@@ -16,6 +16,7 @@ export interface ProvidersProps {
   themeProps?: ThemeProviderProps;
 }
 
+// @ts-ignore
 declare module "@react-types/shared" {
   interface RouterConfig {
     routerOptions: NonNullable<
