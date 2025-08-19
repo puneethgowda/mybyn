@@ -1,36 +1,29 @@
 "use client";
 
-import { Card, CardBody, CardHeader } from "@heroui/card";
-import { Button } from "@heroui/button";
-import { Chip } from "@heroui/chip";
-import { Avatar } from "@heroui/avatar";
+import Link from "next/link";
+import { useSuspenseQuery } from "@tanstack/react-query";
+import { RiBriefcase3Line, RiFileAddLine, RiGroupLine } from "@remixicon/react";
+import * as React from "react";
+
+import { Badge } from "@/components/ui/badge";
 import {
   Table,
   TableHeader,
-  TableColumn,
   TableBody,
   TableRow,
   TableCell,
-} from "@heroui/table";
-import Link from "next/link";
-import { useSuspenseQuery } from "@tanstack/react-query";
-import {
-  Box3dPoint,
-  DoubleCheck,
-  Group,
-  Plus,
-  Suitcase,
-  Xmark,
-} from "iconoir-react";
-
-import ApplicationStatsCard from "../dashboard/home/application-stats-card";
-
+  TableHead,
+} from "@/components/ui/table";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { APPLICATION_STATUS, COLLAB_STATUS, COLLAB_TYPE } from "@/utils/enums";
 import { createClient } from "@/supabase/client";
 import { getBusinessDashboardDataOptions } from "@/utils/react-query/business/collabs";
-import { timeAgo } from "@/utils/date";
 import { getBusinessProfileOptions } from "@/utils/react-query/business/profile";
+import { StatsGrid } from "@/components/stats-grid";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { toTitleCase } from "@/utils/string";
+import { timeAgo } from "@/utils/date";
 
 export function BusinessDashboard({
   businessId,
@@ -66,350 +59,405 @@ export function BusinessDashboard({
     switch (status) {
       case APPLICATION_STATUS.PENDING:
         return (
-          <Chip color="warning" size="sm" variant="flat">
+          <Badge color="warning" variant="outline">
             Pending
-          </Chip>
+          </Badge>
         );
       case APPLICATION_STATUS.ACCEPTED:
         return (
-          <Chip color="success" size="sm" variant="flat">
+          <Badge color="success" variant="outline">
             Accepted
-          </Chip>
+          </Badge>
         );
       case APPLICATION_STATUS.REJECTED:
         return (
-          <Chip color="danger" size="sm" variant="flat">
+          <Badge color="danger" variant="outline">
             Rejected
-          </Chip>
+          </Badge>
         );
       case COLLAB_STATUS.ACTIVE:
         return (
-          <Chip color="success" size="sm" variant="flat">
+          <Badge color="success" variant="outline">
             Active
-          </Chip>
+          </Badge>
         );
       case "draft":
         return (
-          <Chip color="warning" size="sm" variant="flat">
+          <Badge color="warning" variant="outline">
             Draft
-          </Chip>
+          </Badge>
         );
       default:
-        return (
-          <Chip size="sm" variant="flat">
-            {status}
-          </Chip>
-        );
+        return <Badge variant="outline">{status}</Badge>;
     }
   };
 
   return (
     <div className="space-y-6">
       {/* Welcome Section */}
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-linear-to-r from-primary-100/40 to-secondary-100/40 p-6 rounded-xl">
-        <div>
-          <h1 className="text-lg md:text-2xl font-bold">
-            Welcome back,{" "}
-            {businessProfile?.name?.toUpperCase() || "Business Owner"} 👋
-          </h1>
-          <p className="text-default-600 mt-1 text-xs md:text-base">
-            Manage your collaborations and applications
-          </p>
+      <div className="flex flex-1 flex-col gap-4 lg:gap-6 py-4 lg:py-6">
+        {/* Page intro */}
+        <div className="flex items-center justify-between gap-4">
+          <div className="space-y-1">
+            <h1 className="text-2xl font-semibold">
+              Welcome back,{" "}
+              {businessProfile?.name?.toUpperCase() || "Business Owner"} 👋
+            </h1>
+            <p className="text-sm text-muted-foreground">
+              Manage your collaborations and applications
+            </p>
+          </div>
         </div>
-
-        {/* Instagram Connection Status */}
-        {/*{!stats.instagramConnected && (*/}
-        {/*  <Button*/}
-        {/*    as={Link}*/}
-        {/*    className="flex items-center gap-2"*/}
-        {/*    color="primary"*/}
-        {/*    href="/dashboard/connect-instagram"*/}
-        {/*  >*/}
-        {/*    <Instagram />*/}
-        {/*    Connect Instagram*/}
-        {/*  </Button>*/}
-        {/*)}*/}
       </div>
 
-      {/* Profile Completion (if not complete) */}
-      {/*{stats.profileCompletion < 100 && (*/}
-      {/*  <Card>*/}
-      {/*    <CardBody className="gap-2">*/}
-      {/*      <div className="flex flex-col md:flex-row justify-between items-center gap-2 md:gap-4">*/}
-      {/*        <div className="flex-1 w-full">*/}
-      {/*          <p className="text-sm md:text-base text-muted-foreground">*/}
-      {/*            Profile Completion*/}
-      {/*          </p>*/}
-      {/*          <Progress*/}
-      {/*            className="mt-2"*/}
-      {/*            color={stats.profileCompletion < 70 ? "warning" : "success"}*/}
-      {/*            value={stats.profileCompletion}*/}
-      {/*          />*/}
-      {/*          <p className="text-sm text-right">{stats.profileCompletion}%</p>*/}
-      {/*        </div>*/}
-      {/*        <Button as={Link} href="/dashboard/business-profile" size="sm">*/}
-      {/*          Complete Profile*/}
-      {/*        </Button>*/}
-      {/*      </div>*/}
-      {/*    </CardBody>*/}
-      {/*  </Card>*/}
-      {/*)}*/}
-
-      {/* Quick Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        <ApplicationStatsCard
-          count={stats.activeCampaigns}
-          icon={<Box3dPoint className="size-5 text-primary" />}
-          title="Total Collabs Posted"
-        />
-        <ApplicationStatsCard
-          count={stats.totalApplications}
-          icon={<Group className="size-5 text-secondary" />}
-          title="Interest Received"
-        />
-
-        <ApplicationStatsCard
-          count={stats.acceptedCollabs}
-          icon={<DoubleCheck className="size-5 text-success" />}
-          title="Collabs Accepted"
-        />
-
-        <ApplicationStatsCard
-          count={stats.rejectedCollabs}
-          icon={<Xmark className="size-5 text-danger" />}
-          title="Collabs Rejected"
-        />
-      </div>
+      {/* Numbers */}
+      <StatsGrid
+        stats={[
+          {
+            title: "Collabs Posted",
+            value: stats.activeCampaigns.toString(),
+            icon: (
+              <svg
+                fill="currentColor"
+                height={20}
+                width={20}
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path d="M9 0v2.013a8.001 8.001 0 1 0 5.905 14.258l1.424 1.422A9.958 9.958 0 0 1 10 19.951c-5.523 0-10-4.478-10-10C0 4.765 3.947.5 9 0Zm10.95 10.95a9.954 9.954 0 0 1-2.207 5.329l-1.423-1.423a7.96 7.96 0 0 0 1.618-3.905h2.013ZM11.002 0c4.724.47 8.48 4.227 8.95 8.95h-2.013a8.004 8.004 0 0 0-6.937-6.937V0Z" />
+              </svg>
+            ),
+          },
+          {
+            title: "Interest Received",
+            value: stats.totalApplications.toString(),
+            // change: {
+            //   value: "+42%",
+            //   trend: "up",
+            // },
+            icon: (
+              <svg
+                fill="currentColor"
+                height={19}
+                width={18}
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path d="M2 9.5c0 .313.461.858 1.53 1.393C4.914 11.585 6.877 12 9 12c2.123 0 4.086-.415 5.47-1.107C15.538 10.358 16 9.813 16 9.5V7.329C14.35 8.349 11.827 9 9 9s-5.35-.652-7-1.671V9.5Zm14 2.829C14.35 13.349 11.827 14 9 14s-5.35-.652-7-1.671V14.5c0 .313.461.858 1.53 1.393C4.914 16.585 6.877 17 9 17c2.123 0 4.086-.415 5.47-1.107 1.069-.535 1.53-1.08 1.53-1.393v-2.171ZM0 14.5v-10C0 2.015 4.03 0 9 0s9 2.015 9 4.5v10c0 2.485-4.03 4.5-9 4.5s-9-2.015-9-4.5ZM9 7c2.123 0 4.086-.415 5.47-1.107C15.538 5.358 16 4.813 16 4.5c0-.313-.461-.858-1.53-1.393C13.085 2.415 11.123 2 9 2c-2.123 0-4.086.415-5.47 1.107C2.461 3.642 2 4.187 2 4.5c0 .313.461.858 1.53 1.393C4.914 6.585 6.877 7 9 7Z" />
+              </svg>
+            ),
+          },
+          {
+            title: "Collabs Accepted",
+            value: stats.acceptedCollabs.toString(),
+            icon: (
+              <svg
+                fill="currentColor"
+                height={20}
+                width={20}
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path d="M10 0c5.523 0 10 4.477 10 10s-4.477 10-10 10S0 15.523 0 10 4.477 0 10 0Zm0 2a8 8 0 1 0 0 16 8 8 0 0 0 0-16Zm3.833 3.337a.596.596 0 0 1 .763.067.59.59 0 0 1 .063.76c-2.18 3.046-3.38 4.678-3.598 4.897a1.5 1.5 0 0 1-2.122-2.122c.374-.373 2.005-1.574 4.894-3.602ZM15.5 9a1 1 0 1 1 0 2 1 1 0 0 1 0-2Zm-11 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2Zm2.318-3.596a1 1 0 1 1-1.414 1.414 1 1 0 0 1 1.414-1.414ZM10 3.5a1 1 0 1 1 0 2 1 1 0 0 1 0-2Z" />
+              </svg>
+            ),
+          },
+          {
+            title: "Collabs Rejected",
+            value: stats.rejectedCollabs.toString(),
+            icon: (
+              <svg
+                fill="currentColor"
+                height={20}
+                width={20}
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path d="M10 0c5.523 0 10 4.477 10 10s-4.477 10-10 10S0 15.523 0 10 4.477 0 10 0Zm0 2a8 8 0 1 0 0 16 8 8 0 0 0 0-16Zm3.833 3.337a.596.596 0 0 1 .763.067.59.59 0 0 1 .063.76c-2.18 3.046-3.38 4.678-3.598 4.897a1.5 1.5 0 0 1-2.122-2.122c.374-.373 2.005-1.574 4.894-3.602ZM15.5 9a1 1 0 1 1 0 2 1 1 0 0 1 0-2Zm-11 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2Zm2.318-3.596a1 1 0 1 1-1.414 1.414 1 1 0 0 1 1.414-1.414ZM10 3.5a1 1 0 1 1 0 2 1 1 0 0 1 0-2Z" />
+              </svg>
+            ),
+          },
+        ]}
+      />
 
       {/* Main Content */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Recent Applications */}
-        <Card className="lg:col-span-2">
+        <Card className="lg:col-span-2 shadow-none">
           <CardHeader className="flex justify-between items-center">
-            <h3 className="text-sm md:text-lg font-bold">
-              <span className="mr-2">🧑‍💻</span>
-              Recent Applications
-            </h3>
-            <Button
-              as={Link}
-              href="/dashboard/applications"
-              size="sm"
-              variant="light"
-            >
-              View All
-            </Button>
+            <h3 className="font-bold">Recent Applications</h3>
+            <Link href="/business/dashboard/collabs">
+              <Button size="sm" variant="link">
+                View All
+              </Button>
+            </Link>
           </CardHeader>
-          <CardBody>
+          <CardContent className="">
             {isLoadingDashboard ? (
               <div className="flex justify-center p-4">Loading...</div>
             ) : recentApplications.length > 0 ? (
-              <Table aria-label="Recent applications">
-                <TableHeader>
-                  <TableColumn>CREATOR</TableColumn>
-                  <TableColumn>COLLAB</TableColumn>
-                  <TableColumn>STATUS</TableColumn>
-                  <TableColumn>ACTION</TableColumn>
-                </TableHeader>
-                <TableBody>
-                  {recentApplications.map((application) => (
-                    <TableRow key={application.id}>
-                      <TableCell>
-                        <div className="flex items-center gap-3">
-                          <Avatar
-                            className="bg-primary/10 text-primary"
-                            name={application.creator_profile.name.charAt(0)}
-                            size="sm"
-                            src={
-                              application.creator_profile.profile_pic_url ||
-                              undefined
-                            }
-                          />
-                          <div>
-                            <p className="font-medium">
-                              {application.creator_profile.name}
-                            </p>
-                            <div className="flex items-center text-xs text-muted-foreground">
-                              <span>
-                                {application.creator_profile.instagram_handle}
-                              </span>
-                              <span className="mx-1">•</span>
-                              <span className="hidden md:block">
-                                {application.creator_profile?.followers_count?.toLocaleString()}{" "}
-                                followers
-                              </span>
+              <div className="bg-background overflow-hidden">
+                <Table className="border-none">
+                  <TableHeader>
+                    <TableRow className="hover:bg-transparent">
+                      <TableHead className="h-11">Creator</TableHead>
+                      <TableHead className="h-11">Collab</TableHead>
+                      <TableHead className="h-11">Status</TableHead>
+                      <TableHead className="h-11 text-right">Action</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {recentApplications.map((application) => (
+                      <TableRow key={application.id}>
+                        <TableCell className="font-medium">
+                          <div className="flex items-center gap-3">
+                            <Avatar className="rounded-md h-10 w-10">
+                              <AvatarImage
+                                alt="application profile"
+                                src={
+                                  application.creator_profile
+                                    .profile_pic_url as string
+                                }
+                              />
+                              <AvatarFallback className=" rounded-md">
+                                {application.creator_profile.name.charAt(0)}
+                              </AvatarFallback>
+                            </Avatar>
+                            <div>
+                              <p className="font-medium">
+                                {application.creator_profile.name}
+                              </p>
+                              <div className="flex items-center text-xs text-muted-foreground">
+                                <span>
+                                  {application.creator_profile.instagram_handle}
+                                </span>
+                                <span className="mx-1">•</span>
+                                <span className="hidden md:block">
+                                  {application.creator_profile?.followers_count?.toLocaleString()}{" "}
+                                  followers
+                                </span>
+                              </div>
                             </div>
                           </div>
-                        </div>
-                      </TableCell>
-                      <TableCell>
-                        <p className="font-medium">
-                          {toTitleCase(application.collab.title)}
-                        </p>
-                        <p className="text-xs text-muted-foreground">
-                          {timeAgo(application.created_at)}
-                        </p>
-                      </TableCell>
-                      <TableCell>
-                        {renderStatusBadge(application.status)}
-                      </TableCell>
-                      <TableCell>
-                        <Button
-                          as={Link}
-                          href={`/dashboard/applications/${application.id}`}
-                          size="sm"
-                        >
-                          View
-                        </Button>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
+                        </TableCell>
+                        <TableCell>
+                          <p className="font-medium">
+                            {toTitleCase(application.collab.title)}
+                          </p>
+                          <p className="text-xs text-muted-foreground">
+                            {timeAgo(application.created_at)}
+                          </p>
+                        </TableCell>
+                        <TableCell>
+                          {renderStatusBadge(application.status)}
+                        </TableCell>
+                        <TableCell className=" text-right">
+                          <Link
+                            href={`/business/dashboard/collabs/${application.collab.id}`}
+                          >
+                            <Button size="sm" variant="link">
+                              View
+                            </Button>
+                          </Link>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </div>
             ) : (
+              // <Table aria-label="Recent applications">
+              //   <TableHeader>
+              //     <TableColumn>CREATOR</TableColumn>
+              //     <TableColumn>COLLAB</TableColumn>
+              //     <TableColumn>STATUS</TableColumn>
+              //     <TableColumn>ACTION</TableColumn>
+              //   </TableHeader>
+              //   <TableBody>
+              //     {recentApplications.map((application) => (
+              //       <TableRow key={application.id}>
+              //         <TableCell>
+              //           <div className="flex items-center gap-3">
+              //             <Avatar
+              //               className="bg-primary/10 text-primary"
+              //               name={application.creator_profile.name.charAt(0)}
+              //               size="sm"
+              //               src={
+              //                 application.creator_profile.profile_pic_url ||
+              //                 undefined
+              //               }
+              //             />
+              //             <div>
+              //               <p className="font-medium">
+              //                 {application.creator_profile.name}
+              //               </p>
+              //               <div className="flex items-center text-xs text-muted-foreground">
+              //                 <span>
+              //                   {application.creator_profile.instagram_handle}
+              //                 </span>
+              //                 <span className="mx-1">•</span>
+              //                 <span className="hidden md:block">
+              //                   {application.creator_profile?.followers_count?.toLocaleString()}{" "}
+              //                   followers
+              //                 </span>
+              //               </div>
+              //             </div>
+              //           </div>
+              //         </TableCell>
+              //         <TableCell>
+              //           <p className="font-medium">
+              //             {toTitleCase(application.collab.title)}
+              //           </p>
+              //           <p className="text-xs text-muted-foreground">
+              //             {timeAgo(application.created_at)}
+              //           </p>
+              //         </TableCell>
+              //         <TableCell>
+              //           {renderStatusBadge(application.status)}
+              //         </TableCell>
+              //         <TableCell>
+              //           <Link
+              //             href={`/dashboard/applications/${application.id}`}
+              //           >
+              //             <Button size="sm" variant="link">
+              //               View
+              //             </Button>
+              //           </Link>
+              //         </TableCell>
+              //       </TableRow>
+              //     ))}
+              //   </TableBody>
+              // </Table>
               <div className="flex flex-col items-center justify-center py-8">
-                <Group className="size-12 text-muted-foreground" />
-                <h3 className="text-lg md:text-xl font-medium mt-4">
-                  No applicants yet
-                </h3>
-                <p className="text-sm md:text-base text-muted-foreground mt-2 text-center">
+                <RiGroupLine className="size-8 text-muted-foreground" />
+                <h3 className="font-medium mt-2">No applicants yet</h3>
+                <p className="text-sm text-muted-foreground text-center">
                   Share your collab on Instagram to attract more influencers!
                 </p>
               </div>
             )}
-          </CardBody>
+          </CardContent>
         </Card>
 
         {/* Create New Collab */}
-        <Card className="bg-linear-to-br from-primary-100/30 to-secondary-100/30">
-          <CardBody className="flex flex-col items-center justify-center py-8 gap-2 md:gap-4">
+        <Card className="shadow-none bg-linear-to-br from-primary-100/30 to-secondary-100/30">
+          <CardContent className="flex flex-col items-center justify-center py-8">
             <div className="p-4 bg-background rounded-full">
-              <Plus className="size-8 text-muted-foreground" />
+              <RiFileAddLine className="size-6 text-muted-foreground" />
             </div>
-            <h3 className="text-lg md:text-xl font-bold text-center">
-              Create New Collab
-            </h3>
-            <p className="text-sm md:text-base text-center text-default-600">
+            <h3 className="font-medium text-center">Create New Collab</h3>
+            <p className="text-sm text-center text-muted-foreground">
               Post a new collaboration opportunity for influencers
             </p>
-            <Button
-              as={Link}
-              className="mt-2"
-              color="primary"
-              href="/business/dashboard/create"
-              size="lg"
-            >
-              Create Collab
-            </Button>
-          </CardBody>
+            <Link href="/business/dashboard/create">
+              <Button className="mt-2" size="sm">
+                Create Collab
+              </Button>
+            </Link>
+          </CardContent>
         </Card>
       </div>
 
       {/* Your Active Collabs */}
-      <Card>
+      <Card className="shadow-none">
         <CardHeader className="flex justify-between items-center">
-          <h3 className="text-sm md:text-lg font-bold">
-            <span className="mr-2">💼</span>
-            Your Active Collabs
-          </h3>
-          <Button
-            as={Link}
-            href="/dashboard/campaigns"
-            size="sm"
-            variant="light"
-          >
-            View All
-          </Button>
+          <h3 className="font-bold">Your Active Collabs</h3>
+          <Link href="/dashboard/campaigns">
+            <Button size="sm" variant="link">
+              View All
+            </Button>
+          </Link>
         </CardHeader>
-        <CardBody>
+        <CardContent>
           {isLoadingDashboard ? (
             <div className="flex justify-center p-4">Loading...</div>
           ) : activeCollabs.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {activeCollabs.map((collab) => (
-                <Card key={collab.id} className="border border-divider">
-                  <CardBody className="gap-3 p-4">
+                <Card
+                  key={collab.id}
+                  className="border border-divider shadow-none"
+                >
+                  <CardContent className="">
                     <div className="flex justify-between items-start">
                       <div>
                         <h4 className="font-semibold">{collab.title}</h4>
                         <div className="flex items-center gap-2 mt-1">
-                          <Chip size="sm" variant="flat">
+                          <Badge variant="outline">
                             {COLLAB_TYPE[collab.collab_type]}
-                          </Chip>
+                          </Badge>
                         </div>
                       </div>
                       {renderStatusBadge(collab.status)}
                     </div>
-                    <div className="mt-2">
-                      <p className="text-sm text-default-600">
-                        <span className="font-medium">
-                          {/*{collab.application_count}*/}0
-                        </span>{" "}
-                        Applications
-                        {/*{collab.selected_count && collab.selected_count > 0 && (*/}
-                        {/*  <span>*/}
-                        {/*    ,{" "}*/}
-                        {/*    <span className="font-medium">*/}
-                        {/*      {collab.selected_count}*/}
-                        {/*    </span>{" "}*/}
-                        {/*    Selected*/}
-                        {/*  </span>*/}
-                        {/*)}*/}
-                      </p>
-                    </div>
+                    {/*<div className="mt-2">*/}
+                    {/*  <p className="text-sm text-muted-foreground">*/}
+                    {/*    <span className="font-medium">*/}
+                    {/*      /!*{collab.application_count}*!/0*/}
+                    {/*    </span>{" "}*/}
+                    {/*    Applications*/}
+                    {/*    /!*{collab.selected_count && collab.selected_count > 0 && (*!/*/}
+                    {/*    /!*  <span>*!/*/}
+                    {/*    /!*    ,{" "}*!/*/}
+                    {/*    /!*    <span className="font-medium">*!/*/}
+                    {/*    /!*      {collab.selected_count}*!/*/}
+                    {/*    /!*    </span>{" "}*!/*/}
+                    {/*    /!*    Selected*!/*/}
+                    {/*    /!*  </span>*!/*/}
+                    {/*    /!*)}*!/*/}
+                    {/*  </p>*/}
+                    {/*</div>*/}
                     <div className="flex gap-2 mt-2">
                       {collab.status === COLLAB_STATUS.ACTIVE ? (
                         <>
-                          <Button
-                            as={Link}
-                            className="flex-1"
-                            href={`/dashboard/campaigns/${collab.id}`}
-                            size="sm"
-                          >
-                            View Applicants
-                          </Button>
-                          <Button
-                            as={Link}
-                            className="flex-1"
-                            href={`/dashboard/campaigns/${collab.id}/edit`}
-                            size="sm"
-                            variant="flat"
-                          >
-                            Edit
-                          </Button>
+                          <Link href={`/business/dashboard/collabs`}>
+                            <Button
+                              className="flex-1"
+                              size="sm"
+                              variant="outline"
+                            >
+                              View Applicants
+                            </Button>
+                          </Link>
+
+                          <Link href={`/dashboard/campaigns/${collab.id}/edit`}>
+                            <Button
+                              className="flex-1"
+                              size="sm"
+                              variant="secondary"
+                            >
+                              Edit
+                            </Button>
+                          </Link>
                         </>
                       ) : (
-                        <Button
-                          as={Link}
-                          className="w-full"
-                          href={`/dashboard/campaigns/${collab.id}/edit`}
-                          size="sm"
-                        >
-                          Edit Draft
-                        </Button>
+                        <Link href={`/dashboard/campaigns/${collab.id}/edit`}>
+                          <Button
+                            className="w-full"
+                            size="sm"
+                            variant="secondary"
+                          >
+                            Edit Draft
+                          </Button>
+                        </Link>
                       )}
                     </div>
-                  </CardBody>
+                  </CardContent>
                 </Card>
               ))}
             </div>
           ) : (
             <div className="flex flex-col items-center justify-center py-8">
-              <Suitcase className="size-12 text-muted-foreground" />
-              <h3 className="text-xl font-medium mt-4">No active collabs</h3>
-              <p className="text-muted-foreground mt-2 text-center">
+              <RiBriefcase3Line className="size-8 text-muted-foreground" />
+              <h3 className="font-medium mt-2">No active collabs</h3>
+              <p className="text-sm text-muted-foreground text-center">
                 Create your first collaboration to connect with influencers
               </p>
-              <Button
-                as={Link}
-                className="mt-4"
-                color="primary"
-                href="/business/dashboard/create"
-              >
-                Create Collab
-              </Button>
+
+              <Link href="/business/dashboard/create">
+                <Button className="mt-4" size="sm">
+                  Create Collab
+                </Button>
+              </Link>
             </div>
           )}
-        </CardBody>
+        </CardContent>
       </Card>
     </div>
   );

@@ -24,7 +24,7 @@ interface SliderControlProps {
   defaultValue: [number];
   step: number;
   label: string;
-  onChange: (value: number[]) => void;
+  onChange?: (value: number[]) => void;
 }
 
 export default function SliderControl({
@@ -48,7 +48,7 @@ export default function SliderControl({
   } = useSliderWithInput({ minValue, maxValue, initialValue, defaultValue });
 
   useEffect(() => {
-    onChange(sliderValue);
+    onChange && onChange(sliderValue);
   }, [sliderValue]);
 
   return (

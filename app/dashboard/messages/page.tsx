@@ -112,7 +112,9 @@ export default function MessagesPage() {
                           <div className="flex justify-between items-start">
                             <div>
                               <h4
-                                className={`font-medium text-foreground ${thread.unread ? "font-semibold" : ""}`}
+                                className={`font-medium text-foreground ${
+                                  thread.unread ? "font-semibold" : ""
+                                }`}
                               >
                                 {toTitleCase(
                                   thread.collabs.business_profile.name,
@@ -124,14 +126,22 @@ export default function MessagesPage() {
                             </div>
                             <div className="flex items-center">
                               <span
-                                className={`text-xs ${thread.unread ? "text-primary font-medium" : "text-foreground/60"}`}
+                                className={`text-xs ${
+                                  thread.unread
+                                    ? "text-primary font-medium"
+                                    : "text-foreground/60"
+                                }`}
                               >
                                 {/*{timeAgo(thread.created_at)}*/}
                               </span>
                             </div>
                           </div>
                           <p
-                            className={`text-sm mt-1 truncate ${thread.unread ? "text-foreground font-medium" : "text-foreground/70"}`}
+                            className={`text-sm mt-1 truncate ${
+                              thread.unread
+                                ? "text-foreground font-medium"
+                                : "text-foreground/70"
+                            }`}
                           >
                             {/*{thread.last_message}*/}
                           </p>

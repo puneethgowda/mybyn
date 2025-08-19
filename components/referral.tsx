@@ -1,14 +1,14 @@
 "use client";
 
 import { useState } from "react";
-import { Card, CardBody, CardHeader } from "@heroui/card";
-import { Button } from "@heroui/button";
-import { Input } from "@heroui/input";
-import { Chip } from "@heroui/chip";
-import { addToast } from "@heroui/toast";
-import { ShareAndroid, Copy, Gift } from "iconoir-react";
 import { useQuery } from "@tanstack/react-query";
+import { toast } from "sonner";
+import { RiFileCopyLine, RiShareLine } from "@remixicon/react";
 
+import { Card, CardHeader, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Badge } from "@/components/ui/badge";
 import {
   getUserOptions,
   getUserProfileOptions,
@@ -33,26 +33,19 @@ export function Referral({ variant = "dashboard", className }: ReferralProps) {
     getUserProfileOptions(supabase, user?.id as string),
   );
 
-  // Generate referral code based on userId (you can customize this logic)
   const referralCode = `${userProfile?.referral_code}`;
-  const referralUrl = `${window.location.origin}/login?referral_code=${referralCode}`;
+  const referralUrl = `${
+    typeof window !== "undefined" ? window.location.origin : ""
+  }/login?referral_code=${referralCode}`;
 
   const copyToClipboard = async () => {
     try {
       await navigator.clipboard.writeText(referralUrl);
       setCopied(true);
-      addToast({
-        title: "Copied!",
-        description: "Referral link copied to clipboard",
-        color: "success",
-      });
+      toast.success("Referral link copied to clipboard.");
       setTimeout(() => setCopied(false), 2000);
     } catch (error) {
-      addToast({
-        title: "Copy Failed",
-        description: "Failed to copy referral link",
-        color: "danger",
-      });
+      toast.error("Failed to copy referral link");
     }
   };
 
@@ -77,36 +70,27 @@ export function Referral({ variant = "dashboard", className }: ReferralProps) {
       <Card className={className}>
         <CardHeader className="flex justify-between items-center">
           <div className="flex items-center gap-2">
-            <Gift className="size-5 text-primary" />
             <h3 className="text-sm md:text-lg font-bold">Refer & Earn</h3>
           </div>
-          <Chip color="primary" size="sm" variant="flat">
+          <Badge className="text-xs" variant="secondary">
             New
-          </Chip>
+          </Badge>
         </CardHeader>
-        <CardBody className="space-y-3">
-          <p className="text-xs md:text-sm text-default-600">
+        <CardContent className="space-y-3">
+          <p className="text-xs md:text-sm text-muted-foreground">
             Invite friends and earn rewards for every successful referral!
           </p>
           <div className="flex gap-2">
-            <Button
-              size="sm"
-              startContent={<Copy className="size-4" />}
-              variant="flat"
-              onPress={copyToClipboard}
-            >
+            <Button size="sm" variant="outline" onClick={copyToClipboard}>
+              <RiFileCopyLine className="size-4 mr-2" />
               {copied ? "Copied!" : "Copy Link"}
             </Button>
-            <Button
-              color="primary"
-              size="sm"
-              startContent={<ShareAndroid className="size-4" />}
-              onPress={shareReferral}
-            >
+            <Button size="sm" variant="default" onClick={shareReferral}>
+              <RiShareLine className="size-4 mr-2" />
               Share
             </Button>
           </div>
-        </CardBody>
+        </CardContent>
       </Card>
     );
   }
@@ -114,80 +98,52 @@ export function Referral({ variant = "dashboard", className }: ReferralProps) {
   return (
     <Card className={className}>
       <CardHeader>
-        <div className="flex items-center gap-2">
-          <Gift className="size-5 text-primary" />
-          <h3 className="text-base md:text-lg font-semibold">
-            Referral Program
-          </h3>
+        <div className="flex flex-col gap-2">
+          <h3 className="font-semibold">Referral Program</h3>
+          <p className="text-sm text-muted-foreground">
+            Share your referral link and earn{" "}
+            <strong>{POINTS.REFERRAL_REWARD} points</strong> when friends join
+            KOLLABIT through your link.
+          </p>
         </div>
       </CardHeader>
-      <CardBody className="space-y-4">
-        <p className="text-sm text-default-600">
-          Share your referral link and earn{" "}
-          <strong>{POINTS.REFERRAL_REWARD} points</strong> when friends join
-          KOLLABIT through your link.
-        </p>
-
+      <CardContent className="space-y-4">
         <div className="space-y-2">
-          <label className="text-sm font-medium" htmlFor="referral-code">
+          <label
+            className="text-sm text-muted-foreground"
+            htmlFor="referral-code"
+          >
             Your Referral Code
           </label>
-          <Input
-            readOnly
-            endContent={
-              <Button
-                isIconOnly
-                size="sm"
-                variant="light"
-                onPress={copyToClipboard}
-              >
-                <Copy className="size-4" />
-              </Button>
-            }
-            id="referral-code"
-            value={referralCode}
-          />
+          <Input readOnly id="referral-code" value={referralCode} />
         </div>
 
         <div className="space-y-2">
-          <label className="text-sm font-medium" htmlFor="referral-link">
+          <label
+            className="text-sm text-muted-foreground"
+            htmlFor="referral-link"
+          >
             Referral Link
           </label>
           <Input
             readOnly
             className="text-xs"
-            endContent={
-              <Button
-                isIconOnly
-                size="sm"
-                variant="light"
-                onPress={copyToClipboard}
-              >
-                <Copy className="size-4" />
-              </Button>
-            }
             id="referral-link"
             value={referralUrl}
           />
         </div>
 
         <div className="flex gap-2">
-          <Button
-            startContent={<Copy className="size-4" />}
-            variant="flat"
-            onPress={copyToClipboard}
-          >
+          <Button size="sm" variant="outline" onClick={copyToClipboard}>
+            <RiFileCopyLine />
             {copied ? "Copied!" : "Copy Link"}
           </Button>
-          <Button
-            color="primary"
-            startContent={<ShareAndroid className="size-4" />}
-            onPress={shareReferral}
-          >
+          <Button size="sm" variant="default" onClick={shareReferral}>
+            <RiShareLine />
             Share
           </Button>
         </div>
-      </CardBody>
+      </CardContent>
     </Card>
   );
 }

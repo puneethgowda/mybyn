@@ -15,10 +15,14 @@ const MOCK_LISTINGS = Array(20)
   .fill(null)
   .map((_, i) => ({
     id: i + 1,
-    title: `${["Fashion", "Tech", "Beauty", "Fitness", "Food"][i % 5]} Campaign Opportunity`,
+    title: `${
+      ["Fashion", "Tech", "Beauty", "Fitness", "Food"][i % 5]
+    } Campaign Opportunity`,
     description:
       "Looking for creative influencers to showcase our products to their audience in an authentic way.",
-    company: `${["StyleBrand", "TechGrowth", "GlowBeauty", "FitLife", "TastyEats"][i % 5]} Inc.`,
+    company: `${
+      ["StyleBrand", "TechGrowth", "GlowBeauty", "FitLife", "TastyEats"][i % 5]
+    } Inc.`,
     budget: `$${(i + 1) * 500}`,
     category: ["Fashion", "Tech", "Beauty", "Fitness", "Food"][i % 5],
     type: ["Post", "Story", "Reel", "Video", "Collaboration"][i % 5],

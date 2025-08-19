@@ -7,6 +7,7 @@ import { getQueryClient } from "@/utils/react-query";
 import { createClient } from "@/supabase/server";
 import { getUserOptions } from "@/utils/react-query/user";
 import { getBusinessProfileOptions } from "@/utils/react-query/business/profile";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 export default async function BusinessDashboardPage() {
   const queryClient = getQueryClient();
@@ -26,9 +27,11 @@ export default async function BusinessDashboardPage() {
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
-      <div className="">
-        <BusinessDashboard businessId={businessId} userId={user?.id} />
-      </div>
+      <ScrollArea className="flex-1 [&>div>div]:h-full w-full shadow-md md:rounded-s-[inherit] min-[1024px]:rounded-e-3xl bg-background">
+        <div className="h-full flex flex-col px-4 md:px-6 lg:px-8">
+          <BusinessDashboard businessId={businessId} userId={user?.id} />
+        </div>
+      </ScrollArea>
     </HydrationBoundary>
   );
 }

@@ -3,7 +3,7 @@ import {
   useMutation,
   useQueryClient,
 } from "@tanstack/react-query";
-import { addToast } from "@heroui/toast";
+import { toast } from "sonner";
 
 import { TypedSupabaseClient } from "@/supabase/types";
 import {
@@ -49,19 +49,10 @@ export function useSaveBusinessProfileMutation(supabase: TypedSupabaseClient) {
         queryKey: ["business", "profile", variables.owner_id],
       });
 
-      addToast({
-        title: "Business profile updated!",
-        description: "",
-        color: "success",
-      });
+      toast.success("Business profile updated!");
     },
-    onError: (error) => {
-      addToast({
-        title: "Failed to update business profile",
-        description:
-          error?.message ?? "Something went wrong. Please try again.",
-        color: "danger",
-      });
+    onError: () => {
+      toast.success("Failed to update business profile");
     },
   });
 }

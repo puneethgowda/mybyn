@@ -82,7 +82,9 @@ const CollabCard = ({ collab, handleClick }: CollabCardProps) => {
               <span>{collab.platform}</span>
             </Badge>
             <Badge variant="secondary">
-              {`Min: ${collab.min_followers} ${collab.platform === "INSTAGRAM" ? "followers" : "subscribers"}`}
+              {`Min: ${collab.min_followers} ${
+                collab.platform === "INSTAGRAM" ? "followers" : "subscribers"
+              }`}
             </Badge>
           </div>
         </div>

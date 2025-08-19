@@ -1,6 +1,7 @@
 import { DashboardHeader } from "@/components/header";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/app-sidebar";
+import { Toaster } from "@/components/ui/sonner";
 
 export default async function DashboardLayout({
   children,
@@ -16,6 +17,7 @@ export default async function DashboardLayout({
           {children}
         </div>
       </SidebarInset>
+      <Toaster richColors />
     </SidebarProvider>
   );
 }

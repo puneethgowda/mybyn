@@ -15,7 +15,9 @@ const InstagramConnectError = () => {
     <div className="h-full w-full flex justify-center items-center flex-col space-y-4">
       <Instagram className="size-16" />
       <h1
-        className={`font-bold ${connectStatus === "success" ? "text-success" : "text-danger"}`}
+        className={`font-bold ${
+          connectStatus === "success" ? "text-success" : "text-danger"
+        }`}
       >
         {connectStatus === "success"
           ? "Instagram account connected successfully."

@@ -188,7 +188,7 @@
 
 /*}*/
 
-@import 'tailwindcss';
+@import "tailwindcss";
 
 @import "tw-animate-css";
 
@@ -266,8 +266,8 @@
 
 @theme inline {
   --font-sans:
-          var(--font-sans), ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji',
-          'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+    var(--font-sans), ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji",
+    "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
 
   --color-border: var(--border);
   --color-input: var(--input);

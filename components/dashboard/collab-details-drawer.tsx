@@ -327,7 +327,7 @@ export function CollabDetailsDrawer({
               Apply for Collaboration
             </DialogHeader>
             <DialogContent>
-              <p className="text-xs md:text-base text-default-600 mb-2">
+              <p className="text-xs md:text-base text-muted-foreground mb-2">
                 Send a message to the business explaining why you&#39;re a good
                 fit for this collaboration.
               </p>

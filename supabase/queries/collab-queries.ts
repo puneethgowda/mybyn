@@ -47,7 +47,8 @@ export async function getCollabs(
   if (
     businessTypes &&
     businessTypes.length > 0 &&
-    !businessTypes.includes("All")
+    // @ts-ignore
+    businessTypes !== "All"
   ) {
     query = query.in("business_profile.type", businessTypes);
   }

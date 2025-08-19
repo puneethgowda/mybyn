@@ -53,7 +53,7 @@ export function DashboardHeader() {
             {isCreator ? (
               !!businessProfile ? (
                 <Link href="/business/dashboard">
-                  <Button>Switch to Business</Button>
+                  <Button size="sm">Switch to Business</Button>
                 </Link>
               ) : (
                 <Link href="/business/onboarding">
@@ -65,7 +65,7 @@ export function DashboardHeader() {
               )
             ) : (
               <Link href="/dashboard">
-                <Button>Switch to Creator</Button>
+                <Button size="sm">Switch to Creator</Button>
               </Link>
             )}
           </div>

@@ -2,11 +2,11 @@
 
 import { useEffect, useRef } from "react";
 import { useParams } from "next/navigation";
-import { Skeleton } from "@heroui/skeleton";
-import { addToast } from "@heroui/toast";
+import { toast } from "sonner";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { RiShining2Line } from "@remixicon/react";
 
+import { Skeleton } from "@/components/ui/skeleton";
 import { ChatHeader } from "@/components/dashboard/chat/ChatHeader";
 import { ChatBubble } from "@/components/dashboard/chat/ChatBubble";
 import { Message, NewMessage } from "@/types/chat";
@@ -50,7 +50,9 @@ export default function ChatRoomPage() {
   const handleSendMessage = async (message: string) => {
     if (!userId || !chatId) return;
 
-    const optimistic_id = `${Date.now()}-${Math.random().toString(36).substring(2, 9)}`;
+    const optimistic_id = `${Date.now()}-${Math.random()
+      .toString(36)
+      .substring(2, 9)}`;
 
     const newMessage: NewMessage & { optimistic_id?: string } = {
       sender_id: userId,
@@ -75,11 +77,7 @@ export default function ChatRoomPage() {
             oldData.filter((msg) => msg.id !== optimistic_id),
         );
 
-        addToast({
-          title: "Failed to send message",
-          description: "Something went wrong. Please try again.",
-          color: "danger",
-        });
+        toast.error("Failed to send message");
       },
     });
   };
@@ -88,22 +86,23 @@ export default function ChatRoomPage() {
 
   if (isLoading || !chatDetails) {
     return (
-      <div className="max-w-4xl mx-auto h-[calc(100vh-100px)] flex flex-col bg-background/40">
-        <div className="p-4">
-          <Skeleton className="h-12 w-full rounded-lg" />
+      <ScrollArea className="flex-1 [&>div>div]:h-full w-full shadow-md md:rounded-s-[inherit] min-[1024px]:rounded-e-3xl bg-background">
+        <div className="h-full flex flex-col px-4 md:px-6 lg:px-8">
+          <div className="p-4">
+            <Skeleton className="h-12 w-full lg:max-w-96 rounded-lg" />
+          </div>
+          <div className="flex-1 p-6 space-y-6 overflow-y-auto">
+            {[1, 2, 3, 4].map((i) => (
+              <Skeleton
+                key={i}
+                className={`h-24 w-3/4 rounded-2xl ${
+                  i % 2 === 0 ? "ml-auto" : ""
+                }`}
+              />
+            ))}
+          </div>
         </div>
-        <div className="flex-1 p-6 space-y-6 overflow-y-auto">
-          {[1, 2].map((i) => (
-            <Skeleton
-              key={i}
-              className={`h-24 w-3/4 rounded-2xl ${i % 2 === 0 ? "ml-auto" : ""}`}
-            />
-          ))}
-        </div>
-        <div className="p-4">
-          <Skeleton className="h-10 w-full rounded-full" />
-        </div>
-      </div>
+      </ScrollArea>
     );
   }
 
