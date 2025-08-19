@@ -16,25 +16,13 @@ const Footer = () => {
               collaborations.
             </p>
             <div className="flex gap-4 mt-4">
-              <Link
-                isExternal
-                aria-label="Twitter"
-                href={siteConfig.links.twitter}
-              >
+              <Link aria-label="Twitter" href={siteConfig.links.twitter}>
                 <TwitterIcon className="text-muted-foreground hover:text-primary" />
               </Link>
-              <Link
-                isExternal
-                aria-label="GitHub"
-                href={siteConfig.links.github}
-              >
+              <Link aria-label="GitHub" href={siteConfig.links.github}>
                 <GithubIcon className="text-muted-foreground hover:text-primary" />
               </Link>
-              <Link
-                isExternal
-                aria-label="Discord"
-                href={siteConfig.links.discord}
-              >
+              <Link aria-label="Discord" href={siteConfig.links.discord}>
                 <DiscordIcon className="text-muted-foreground hover:text-primary" />
               </Link>
             </div>
