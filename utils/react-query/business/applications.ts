@@ -3,7 +3,7 @@ import {
   useMutation,
   useQueryClient,
 } from "@tanstack/react-query";
-import { addToast } from "@heroui/toast";
+import { toast } from "sonner";
 
 import { TypedSupabaseClient } from "@/supabase/types";
 import {
@@ -98,26 +98,14 @@ export function useAcceptOrRejectApplicationMutation(
       });
 
       if (variables.status === APPLICATION_STATUS.ACCEPTED) {
-        addToast({
-          title: "Application Accepted",
-          description: ``,
-          color: "success",
-        });
+        toast.success("Application Accepted");
       } else {
-        addToast({
-          title: "Application Rejected",
-          description: ``,
-          color: "success",
-        });
+        toast.error("Application Rejected");
       }
     },
     onError: (error: any) => {
       console.error("Error updating application:", error);
-      addToast({
-        title: `Failed to accept/reject applicant`,
-        description: error.message || "Something went wrong. Please try again.",
-        color: "danger",
-      });
+      toast.error("Failed to accept/reject applicant");
     },
   });
 }

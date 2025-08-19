@@ -2,11 +2,14 @@
 
 import { useId, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { Skeleton } from "@heroui/skeleton";
-import { Search } from "iconoir-react";
-import { RiQuillPenAiLine, RiResetLeftLine } from "@remixicon/react";
+import {
+  RiQuillPenAiLine,
+  RiResetLeftLine,
+  RiSearchLine,
+} from "@remixicon/react";
 import * as React from "react";
 
+import { Skeleton } from "@/components/ui/skeleton";
 import {
   Select,
   SelectContent,
@@ -160,7 +163,7 @@ export default function DiscoverPage() {
               </div>
             ) : (
               <div className="flex flex-col items-center justify-center py-12">
-                <Search className="size-12 md:size-16" />
+                <RiSearchLine className="size-12 md:size-16" />
                 <h3 className="text-base md:text-xl font-medium mt-4">
                   No collaborations found
                 </h3>

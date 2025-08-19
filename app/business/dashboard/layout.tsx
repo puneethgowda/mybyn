@@ -7,7 +7,6 @@ import { createClient } from "@/supabase/server";
 import { getUserOptions } from "@/utils/react-query/user";
 import { AppSidebar } from "@/components/app-sidebar";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
-import { Toaster } from "@/components/ui/sonner";
 
 export default async function DashboardLayout({
   children,
@@ -38,7 +37,6 @@ export default async function DashboardLayout({
           {children}
         </div>
       </SidebarInset>
-      <Toaster richColors />
     </SidebarProvider>
   );
 }

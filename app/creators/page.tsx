@@ -1,7 +1,7 @@
-import { Button } from "@heroui/button";
-import { Link } from "@heroui/link";
+import Link from "next/link";
 import Image from "next/image";
 
+import { Button } from "@/components/ui/button";
 import { Marquee } from "@/components/magicui/marquee";
 import { WobbleCard } from "@/components/magicui/wobble-card";
 import LayoutSkeleton from "@/components/layout-skeleton";
@@ -48,29 +48,26 @@ export default function ForInfluencersPage() {
               {/*  Discover the right partners. Create bigger impact. Together.*/}
               {/*</p>*/}
 
-              <Button
-                as={Link}
-                className="mt-8"
-                color="primary"
-                href="/login"
-                size="lg"
-              >
-                Apply for collab
-                <svg
-                  className="w-6 h-6 ml-8 -mr-2"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M13 9l3 3m0 0l-3 3m3-3H8m13 0a9 9 0 11-18 0 9 9 0 0118 0z"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="1.5"
-                  />
-                </svg>
-              </Button>
+              <Link href="/login">
+                <Button className="mt-8" color="primary" size="lg">
+                  Apply for collab
+                  <svg
+                    className="w-6 h-6 ml-8 -mr-2"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M13 9l3 3m0 0l-3 3m3-3H8m13 0a9 9 0 11-18 0 9 9 0 0118 0z"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="1.5"
+                    />
+                  </svg>
+                </Button>
+              </Link>
+
               <p className="mt-5 text-muted-foreground">
                 Are you a creator?{" "}
                 <Link
@@ -236,29 +233,25 @@ export default function ForInfluencersPage() {
             <h1 className="font-mosans font-medium  text-2xl sm:text-2xl xl:text-5xl text-center">
               Ready to land your next collab?
             </h1>
-            <Button
-              as={Link}
-              className="mt-8"
-              color="primary"
-              href="/login"
-              size="lg"
-            >
-              Join as a Creator
-              <svg
-                className="w-6 h-6 ml-8 -mr-2"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M13 9l3 3m0 0l-3 3m3-3H8m13 0a9 9 0 11-18 0 9 9 0 0118 0z"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="1.5"
-                />
-              </svg>
-            </Button>
+            <Link href="/login">
+              <Button className="mt-8" color="primary" size="lg">
+                Join as a Creator
+                <svg
+                  className="w-6 h-6 ml-8 -mr-2"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M13 9l3 3m0 0l-3 3m3-3H8m13 0a9 9 0 11-18 0 9 9 0 0118 0z"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="1.5"
+                  />
+                </svg>
+              </Button>
+            </Link>
           </div>
         </section>
       </section>

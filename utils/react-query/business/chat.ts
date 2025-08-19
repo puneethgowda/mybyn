@@ -3,7 +3,7 @@ import {
   useMutation,
   useQueryClient,
 } from "@tanstack/react-query";
-import { addToast } from "@heroui/toast";
+import { toast } from "sonner";
 
 import { TypedSupabaseClient } from "@/supabase/types";
 import {
@@ -109,11 +109,7 @@ export function useSendMessageMutation(supabase: TypedSupabaseClient) {
           oldData.filter((msg) => msg.id !== variables.optimistic_id),
       );
 
-      addToast({
-        title: "Failed to send message",
-        description: "Something went wrong. Please try again.",
-        color: "danger",
-      });
+      toast("Failed to send message");
     },
   });
 }

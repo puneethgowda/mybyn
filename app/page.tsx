@@ -1,5 +1,4 @@
-import { Link } from "@heroui/link";
-import { Button } from "@heroui/button";
+import Link from "next/link";
 import {
   BellIcon,
   CalendarIcon,
@@ -9,6 +8,7 @@ import {
 } from "@radix-ui/react-icons";
 import Image from "next/image";
 
+import { Button } from "@/components/ui/button";
 import { Marquee } from "@/components/magicui/marquee";
 import { BentoCard, BentoGrid } from "@/components/magicui/bento-grid";
 import LayoutSkeleton from "@/components/layout-skeleton";
@@ -101,29 +101,26 @@ export default async function Home() {
               {/*  Discover the right partners. Create bigger impact. Together.*/}
               {/*</p>*/}
 
-              <Button
-                as={Link}
-                className="mt-8"
-                color="primary"
-                href="/login"
-                size="lg"
-              >
-                Join for free
-                <svg
-                  className="w-6 h-6 ml-8 -mr-2"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M13 9l3 3m0 0l-3 3m3-3H8m13 0a9 9 0 11-18 0 9 9 0 0118 0z"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="1.5"
-                  />
-                </svg>
-              </Button>
+              <Link href="/login">
+                <Button className="mt-8" color="primary" size="lg">
+                  Join for free
+                  <svg
+                    className="w-6 h-6 ml-8 -mr-2"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M13 9l3 3m0 0l-3 3m3-3H8m13 0a9 9 0 11-18 0 9 9 0 0118 0z"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="1.5"
+                    />
+                  </svg>
+                </Button>
+              </Link>
+
               <p className="mt-5 text-muted-foreground">
                 Already joined us?{" "}
                 <Link
@@ -157,7 +154,7 @@ export default async function Home() {
                 key={index}
                 className="flex items-center gap-[2rem] sm:gap-[4rem] text-default-300"
               >
-                <div className="w-6 h-6">
+                <div className="w-6 h-6 text-muted-foreground/50">
                   <svg
                     className="e-font-icon-svg e-fab-diaspora"
                     fill="currentColor"
@@ -167,7 +164,7 @@ export default async function Home() {
                     <path d="M251.64 354.55c-1.4 0-88 119.9-88.7 119.9S76.34 414 76 413.25s86.6-125.7 86.6-127.4c0-2.2-129.6-44-137.6-47.1-1.3-.5 31.4-101.8 31.7-102.1.6-.7 144.4 47 145.5 47 .4 0 .9-.6 1-1.3.4-2 1-148.6 1.7-149.6.8-1.2 104.5-.7 105.1-.3 1.5 1 3.5 156.1 6.1 156.1 1.4 0 138.7-47 139.3-46.3.8.9 31.9 102.2 31.5 102.6-.9.9-140.2 47.1-140.6 48.8-.3 1.4 82.8 122.1 82.5 122.9s-85.5 63.5-86.3 63.5c-1-.2-89-125.5-90.9-125.5z" />
                   </svg>
                 </div>
-                <div className="font-medium font-mosans text-xl sm:text-3xl xl:text-6xl">
+                <div className="font-medium font-mosans text-muted-foreground/50 text-xl sm:text-3xl xl:text-6xl">
                   {text}
                 </div>
               </div>
@@ -310,7 +307,7 @@ export default async function Home() {
                   strokeWidth="1.5"
                 />
               </svg>
-            </Button>
+            </Button>{" "}
           </div>
         </section>
       </section>

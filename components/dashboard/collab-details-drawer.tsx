@@ -2,8 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { useDisclosure } from "@heroui/modal";
-import { addToast } from "@heroui/toast";
+import { toast } from "sonner";
 
 import {
   Dialog,
@@ -11,6 +10,7 @@ import {
   DialogFooter,
   DialogHeader,
 } from "@/components/ui/dialog";
+import { useDisclosure } from "@/hooks/useDisclosure";
 import { Textarea } from "@/components/ui/textarea";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
@@ -51,6 +51,7 @@ export function CollabDetailsDrawer({
     onOpen: onMessageModalOpen,
     onClose: onMessageModalClose,
   } = useDisclosure();
+
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const { data } = useQuery(getUserOptions(supabase));
@@ -74,11 +75,9 @@ export function CollabDetailsDrawer({
     const currentBalance = userProfile?.balance || 0;
 
     if (currentBalance < POINTS.APPLY_COLLAB) {
-      addToast({
-        title: "Insufficient Balance",
-        description: `You need ${POINTS.APPLY_COLLAB} points to apply for collaborations. Current balance: ${currentBalance} points.`,
-        color: "warning",
-      });
+      toast.warning(
+        `You need ${POINTS.APPLY_COLLAB} points to apply for collaborations. Current balance: ${currentBalance} points.`,
+      );
 
       return false;
     }
@@ -112,23 +111,15 @@ export function CollabDetailsDrawer({
       },
       {
         onSuccess: () => {
-          addToast({
-            title: "Application Submitted",
-            description: "Your application has been sent to the business",
-            color: "success",
-          });
+          toast.success("Your application has been sent to the business");
           onMessageModalClose();
           setApplicationMessage("");
           refetch();
         },
         onError: (error) => {
-          addToast({
-            title: "Application failed to send",
-            description:
-              error?.message ??
-              "There was an error submitting your application",
-            color: "danger",
-          });
+          toast.error(
+            error?.message ?? "There was an error submitting your application",
+          );
         },
         onSettled: () => {
           setIsSubmitting(false);
