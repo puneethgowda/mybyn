@@ -2,14 +2,27 @@ import { TypedSupabaseClient } from "@/supabase/types";
 import { APPLICATION_STATUS } from "@/utils/enums";
 
 /**
- * get all collaboration applications
+ * get all collaboration applications (paginated + optional status filter)
  */
 export async function getAllCollabApplications(
   supabase: TypedSupabaseClient,
   collabId: string,
   businessId: string,
+  params?: {
+    page?: number;
+    pageSize?: number;
+    status?:
+      | (typeof APPLICATION_STATUS)[keyof typeof APPLICATION_STATUS]
+      | "All";
+  },
 ) {
-  const { data, error } = await supabase
+  const page = Math.max(1, params?.page ?? 1);
+  const pageSize = Math.max(1, params?.pageSize ?? 10);
+  const from = (page - 1) * pageSize;
+  const to = from + pageSize - 1;
+  const status = params?.status;
+
+  let query = supabase
     .from("collab_applications")
     .select(
       `
@@ -24,13 +37,27 @@ export async function getAllCollabApplications(
           profile_pic_url
         )
       `,
+      { count: "exact" },
     )
     .eq("collab_id", collabId)
-    .eq("collabs.business_id", businessId);
+    .eq("collabs.business_id", businessId)
+    .order("created_at", { ascending: false })
+    .range(from, to);
+
+  if (status && status !== "All") {
+    query = query.eq("status", status);
+  }
+
+  const { data, error, count } = await query;
 
   if (error) throw error;
 
-  return data;
+  return {
+    data: data ?? [],
+    count: count ?? 0,
+    page,
+    pageSize,
+  };
 }
 
 /**

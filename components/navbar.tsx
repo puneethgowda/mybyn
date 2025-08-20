@@ -1,80 +1,86 @@
-import {
-  Navbar as HeroUINavbar,
-  NavbarBrand,
-  NavbarContent,
-  NavbarItem,
-  NavbarMenu,
-  NavbarMenuItem,
-  NavbarMenuToggle,
-} from "@heroui/navbar";
-import { Button } from "@heroui/button";
-import Link from "next/link";
-import { link as linkStyles } from "@heroui/theme";
-import NextLink from "next/link";
-import clsx from "clsx";
+"use client";
 
+import Link from "next/link";
+import clsx from "clsx";
+import { Menu } from "lucide-react";
+
+import {
+  NavigationMenu,
+  NavigationMenuList,
+  NavigationMenuItem,
+  NavigationMenuLink,
+} from "@/components/ui/navigation-menu";
+import { Button } from "@/components/ui/button";
 import { siteConfig } from "@/config/site";
+import { Sheet, SheetTrigger, SheetContent } from "@/components/ui/sheet";
 
 export const Navbar = () => {
   return (
-    <HeroUINavbar maxWidth="xl" position="sticky">
-      <NavbarContent className="" justify="start">
-        <NavbarBrand as="li" className="gap-3 max-w-fit">
-          <NextLink className="flex justify-start items-center gap-1" href="/">
+    <nav className="sticky top-0 z-50 w-full bg-background">
+      <div className="container px-6 mx-auto flex items-center justify-between py-2">
+        {/* Brand */}
+        <div className="flex items-center gap-3">
+          <Link className="flex items-center gap-1" href="/">
             {/*<Logo size={40} />*/}
-            <p className="text-xl font-bold text-inherit">KOLLABIT</p>
-          </NextLink>
-        </NavbarBrand>
-      </NavbarContent>
-
-      <NavbarContent className="hidden sm:flex" justify="center">
-        <NavbarItem className="hidden md:flex">
-          <ul className="hidden lg:flex gap-4 justify-start ml-2">
-            {siteConfig.navItems.map((item) => (
-              <NavbarItem key={item.href}>
-                <NextLink
-                  className={clsx(
-                    linkStyles({ color: "foreground" }),
-                    "font-semibold data-[active=true]:text-primary data-[active=true]:font-bold",
-                  )}
-                  color="foreground"
-                  href={item.href}
-                >
-                  {item.label}
-                </NextLink>
-              </NavbarItem>
-            ))}
-          </ul>
-        </NavbarItem>
-      </NavbarContent>
-
-      <NavbarContent className="hidden sm:flex" justify="end">
-        <NavbarItem className="hidden md:flex">
-          <Button as={Link} color="primary" href="/login">
-            Login
-          </Button>
-        </NavbarItem>
-      </NavbarContent>
-
-      <NavbarContent className="sm:hidden basis-1 pl-4" justify="end">
-        <Button as={Link} href="/login">
-          Login
-        </Button>
-        <NavbarMenuToggle />
-      </NavbarContent>
-
-      <NavbarMenu>
-        <div className="mx-4 mt-2 flex flex-col gap-2">
-          {siteConfig.navMenuItems.map((item, index) => (
-            <NavbarMenuItem
-              key={`${item}-${index}`}
-              className="text-center font-bold text-2xl"
-            >
-              <Link href={item.href}>{item.label}</Link>
-            </NavbarMenuItem>
-          ))}
+            <span className="text-xl font-bold">KOLLABIT</span>
+          </Link>
         </div>
-      </NavbarMenu>
-    </HeroUINavbar>
+
+        {/* Desktop Nav */}
+        <div className="hidden sm:flex flex-1 justify-center">
+          <NavigationMenu>
+            <NavigationMenuList>
+              {siteConfig.navItems.map((item) => (
+                <NavigationMenuItem key={item.href}>
+                  <NavigationMenuLink
+                    asChild
+                    className={clsx(
+                      "px-3 py-2 font-semibold transition-colors hover:text-primary",
+                      "data-[active=true]:text-primary data-[active=true]:font-bold",
+                    )}
+                  >
+                    <Link href={item.href}>{item.label}</Link>
+                  </NavigationMenuLink>
+                </NavigationMenuItem>
+              ))}
+            </NavigationMenuList>
+          </NavigationMenu>
+        </div>
+
+        {/* Desktop Login */}
+        <div className="hidden sm:flex items-center gap-2">
+          <Button asChild variant="default">
+            <Link href="/login">Login</Link>
+          </Button>
+        </div>
+
+        {/* Mobile Nav */}
+        <div className="sm:hidden flex items-center gap-2">
+          <Button asChild size="sm" variant="outline">
+            <Link href="/login">Login</Link>
+          </Button>
+          <Sheet>
+            <SheetTrigger asChild>
+              <Button aria-label="Open menu" size="icon" variant="ghost">
+                <Menu size={24} />
+              </Button>
+            </SheetTrigger>
+            <SheetContent className="p-0" side="right">
+              <nav className="flex flex-col gap-4 p-6">
+                {siteConfig.navMenuItems.map((item, index) => (
+                  <Link
+                    key={`${item.label}-${index}`}
+                    className="text-center font-bold text-2xl py-2"
+                    href={item.href}
+                  >
+                    {item.label}
+                  </Link>
+                ))}
+              </nav>
+            </SheetContent>
+          </Sheet>
+        </div>
+      </div>
+    </nav>
   );
 };

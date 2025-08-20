@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from "@heroui/link";
+import Link from "next/link";
 
 import { siteConfig } from "@/config/site";
 import { DiscordIcon, GithubIcon, TwitterIcon } from "@/components/icons";
@@ -11,31 +11,19 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div>
             <h3 className="font-bold text-lg mb-4">KOLLABIT</h3>
-            <p className="text-default-500 text-sm">
+            <p className="text-muted-foreground text-sm">
               Connecting businesses and influencers for impactful
               collaborations.
             </p>
             <div className="flex gap-4 mt-4">
-              <Link
-                isExternal
-                aria-label="Twitter"
-                href={siteConfig.links.twitter}
-              >
-                <TwitterIcon className="text-default-500 hover:text-primary" />
+              <Link aria-label="Twitter" href={siteConfig.links.twitter}>
+                <TwitterIcon className="text-muted-foreground hover:text-primary" />
               </Link>
-              <Link
-                isExternal
-                aria-label="GitHub"
-                href={siteConfig.links.github}
-              >
-                <GithubIcon className="text-default-500 hover:text-primary" />
+              <Link aria-label="GitHub" href={siteConfig.links.github}>
+                <GithubIcon className="text-muted-foreground hover:text-primary" />
               </Link>
-              <Link
-                isExternal
-                aria-label="Discord"
-                href={siteConfig.links.discord}
-              >
-                <DiscordIcon className="text-default-500 hover:text-primary" />
+              <Link aria-label="Discord" href={siteConfig.links.discord}>
+                <DiscordIcon className="text-muted-foreground hover:text-primary" />
               </Link>
             </div>
           </div>
@@ -45,7 +33,7 @@ const Footer = () => {
             <ul className="space-y-2 text-sm">
               <li>
                 <Link
-                  className="text-default-500 hover:text-primary"
+                  className="text-muted-foreground hover:text-primary"
                   href="/business"
                 >
                   Business Solutions
@@ -53,7 +41,7 @@ const Footer = () => {
               </li>
               <li>
                 <Link
-                  className="text-default-500 hover:text-primary"
+                  className="text-muted-foreground hover:text-primary"
                   href="/pricing"
                 >
                   Pricing
@@ -61,7 +49,7 @@ const Footer = () => {
               </li>
               <li>
                 <Link
-                  className="text-default-500 hover:text-primary"
+                  className="text-muted-foreground hover:text-primary"
                   href="/case-studies"
                 >
                   Case Studies
@@ -69,7 +57,7 @@ const Footer = () => {
               </li>
               <li>
                 <Link
-                  className="text-default-500 hover:text-primary"
+                  className="text-muted-foreground hover:text-primary"
                   href="/resources"
                 >
                   Resources
@@ -83,7 +71,7 @@ const Footer = () => {
             <ul className="space-y-2 text-sm">
               <li>
                 <Link
-                  className="text-default-500 hover:text-primary"
+                  className="text-muted-foreground hover:text-primary"
                   href="/influencers"
                 >
                   Influencer Platform
@@ -91,7 +79,7 @@ const Footer = () => {
               </li>
               <li>
                 <Link
-                  className="text-default-500 hover:text-primary"
+                  className="text-muted-foreground hover:text-primary"
                   href="/opportunities"
                 >
                   Find Opportunities
@@ -99,7 +87,7 @@ const Footer = () => {
               </li>
               <li>
                 <Link
-                  className="text-default-500 hover:text-primary"
+                  className="text-muted-foreground hover:text-primary"
                   href="/growth"
                 >
                   Grow Your Brand
@@ -107,7 +95,7 @@ const Footer = () => {
               </li>
               <li>
                 <Link
-                  className="text-default-500 hover:text-primary"
+                  className="text-muted-foreground hover:text-primary"
                   href="/success-stories"
                 >
                   Success Stories
@@ -121,7 +109,7 @@ const Footer = () => {
             <ul className="space-y-2 text-sm">
               <li>
                 <Link
-                  className="text-default-500 hover:text-primary"
+                  className="text-muted-foreground hover:text-primary"
                   href="/about"
                 >
                   About Us
@@ -129,7 +117,7 @@ const Footer = () => {
               </li>
               <li>
                 <Link
-                  className="text-default-500 hover:text-primary"
+                  className="text-muted-foreground hover:text-primary"
                   href="/blog"
                 >
                   Blog
@@ -137,7 +125,7 @@ const Footer = () => {
               </li>
               <li>
                 <Link
-                  className="text-default-500 hover:text-primary"
+                  className="text-muted-foreground hover:text-primary"
                   href="/careers"
                 >
                   Careers
@@ -145,7 +133,7 @@ const Footer = () => {
               </li>
               <li>
                 <Link
-                  className="text-default-500 hover:text-primary"
+                  className="text-muted-foreground hover:text-primary"
                   href="/contact"
                 >
                   Contact
@@ -156,18 +144,18 @@ const Footer = () => {
         </div>
 
         <div className="border-t border-divider mt-8 pt-8 flex flex-col md:flex-row justify-between items-center">
-          <p className="text-default-500 text-sm">
+          <p className="text-muted-foreground text-sm">
             © {new Date().getFullYear()} BIZZ. All rights reserved.
           </p>
           <div className="flex gap-6 mt-4 md:mt-0">
             <Link
-              className="text-default-500 hover:text-primary text-sm"
+              className="text-muted-foreground hover:text-primary text-sm"
               href="/privacy"
             >
               Privacy Policy
             </Link>
             <Link
-              className="text-default-500 hover:text-primary text-sm"
+              className="text-muted-foreground hover:text-primary text-sm"
               href="/terms"
             >
               Terms of Service

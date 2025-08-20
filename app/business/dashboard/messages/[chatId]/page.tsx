@@ -2,9 +2,10 @@
 
 import { useEffect, useRef } from "react";
 import { useParams } from "next/navigation";
-import { Skeleton } from "@heroui/skeleton";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { RiShining2Line } from "@remixicon/react";
 
+import { Skeleton } from "@/components/ui/skeleton";
 import { ChatHeader } from "@/components/dashboard/chat/ChatHeader";
 import { ChatBubble } from "@/components/dashboard/chat/ChatBubble";
 import { MessageInput } from "@/components/dashboard/chat/MessageInput";
@@ -18,6 +19,7 @@ import {
   useSendMessageMutation,
   addOptimisticMessage,
 } from "@/utils/react-query/business/chat";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 export default function BusinessChatRoomPage() {
   const params = useParams();
@@ -49,7 +51,9 @@ export default function BusinessChatRoomPage() {
   const handleSendMessage = async (message: string) => {
     if (!userId || !chatId) return;
 
-    const optimistic_id = `${Date.now()}-${Math.random().toString(36).substring(2, 9)}`;
+    const optimistic_id = `${Date.now()}-${Math.random()
+      .toString(36)
+      .substring(2, 9)}`;
 
     const newMessage: NewMessage & { optimistic_id?: string } = {
       sender_id: userId,
@@ -71,67 +75,79 @@ export default function BusinessChatRoomPage() {
 
   if (isPending || isChatDetailsPending) {
     return (
-      <div className="max-w-4xl mx-auto h-[calc(100vh-100px)] flex flex-col bg-background/40">
-        <div className="p-4">
-          <Skeleton className="h-12 w-full rounded-lg" />
+      <ScrollArea className="flex-1 [&>div>div]:h-full w-full shadow-md md:rounded-s-[inherit] min-[1024px]:rounded-e-3xl bg-background">
+        <div className="h-full flex flex-col px-4 md:px-6 lg:px-8">
+          <div className="p-4">
+            <Skeleton className="h-12 w-full lg:max-w-96 rounded-lg" />
+          </div>
+          <div className="flex-1 p-6 space-y-6 overflow-y-auto">
+            {[1, 2, 3, 4].map((i) => (
+              <Skeleton
+                key={i}
+                className={`h-24 w-3/4 rounded-2xl ${
+                  i % 2 === 0 ? "ml-auto" : ""
+                }`}
+              />
+            ))}
+          </div>
         </div>
-        <div className="flex-1 p-6 space-y-6 overflow-y-auto">
-          {[1, 2].map((i) => (
-            <Skeleton
-              key={i}
-              className={`h-24 w-3/4 rounded-2xl ${i % 2 === 0 ? "ml-auto" : ""}`}
-            />
-          ))}
-        </div>
-        <div className="p-4">
-          <Skeleton className="h-10 w-full rounded-full" />
-        </div>
-      </div>
+      </ScrollArea>
     );
   }
 
   return (
-    <div className="h-[calc(100vh-64px)] flex flex-col bg-background/40">
-      <ChatHeader
-        businessLogo={chatDetails?.creator_profile?.profile_pic_url as string}
-        businessName={chatDetails?.creator_profile?.name as string}
-        collabTitle={chatDetails?.collabs?.title as string}
-      />
+    <ScrollArea className="flex-1 [&>div>div]:h-full w-full shadow-md md:rounded-s-[inherit] min-[1024px]:rounded-e-3xl bg-background">
+      <div className="h-full flex flex-col px-4 md:px-6 lg:px-8">
+        <ChatHeader
+          businessLogo={chatDetails?.creator_profile?.profile_pic_url as string}
+          businessName={chatDetails?.creator_profile?.name as string}
+          collabTitle={chatDetails?.collabs?.title as string}
+        />
 
-      <div className="flex-1 py-6 overflow-y-auto">
-        <div className="max-w-4xl mx-auto space-y-6">
-          {/* Date separator */}
-          <div className="flex items-center justify-center my-4">
-            <div className="bg-content3 text-foreground/60 text-xs px-3 py-1 rounded-full">
-              Today
+        {/* Chat */}
+        <div className="relative grow">
+          <div className="max-w-3xl mx-auto mt-6 space-y-6">
+            <div className="text-center my-8">
+              <div className="inline-flex items-center bg-white rounded-full border border-black/[0.08] shadow-xs text-xs font-medium py-1 px-3 text-foreground/80">
+                <RiShining2Line
+                  aria-hidden="true"
+                  className="me-1.5 text-muted-foreground/70 -ms-1"
+                  size={14}
+                />
+                Today
+              </div>
             </div>
+            {(messages || []).map((message) => {
+              // Group consecutive messages from the same sender
+              const isUser = message.sender_id === user?.id;
+
+              // const showSender =
+              //   index === 0 || messages[index - 1].sender_id !== user?.id;
+
+              return (
+                <ChatBubble
+                  key={message.id}
+                  isUser={isUser}
+                  message={message.message}
+                  senderImage={
+                    isUser
+                      ? user?.user_metadata?.avatar_url
+                      : chatDetails?.creator_profile?.profile_pic_url
+                  }
+                  senderName={undefined}
+                  timestamp={timeAgo(message.created_at)}
+                />
+              );
+            })}
+            <div ref={messagesEndRef} />
           </div>
-
-          {(messages || []).map((message) => {
-            // Group consecutive messages from the same sender
-            const isUser = message.sender_id === user?.id;
-
-            // const showSender =
-            //   index === 0 || messages[index - 1].sender_id !== user?.id;
-
-            return (
-              <ChatBubble
-                key={message.id}
-                isUser={isUser}
-                message={message.message}
-                senderName={undefined}
-                timestamp={timeAgo(message.created_at)}
-              />
-            );
-          })}
-          <div ref={messagesEndRef} />
         </div>
-      </div>
 
-      <MessageInput
-        isSending={sendMessageMutation.isPending}
-        onSendMessage={handleSendMessage}
-      />
-    </div>
+        <MessageInput
+          isSending={sendMessageMutation.isPending}
+          onSendMessage={handleSendMessage}
+        />
+      </div>
+    </ScrollArea>
   );
 }

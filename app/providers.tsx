@@ -4,12 +4,11 @@ import type { ThemeProviderProps } from "next-themes";
 
 import * as React from "react";
 import { ThemeProvider as NextThemesProvider } from "next-themes";
-import { HeroUIProvider } from "@heroui/system";
-import { ToastProvider } from "@heroui/toast";
 import { useRouter } from "next/navigation";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
+import { Toaster } from "@/components/ui/sonner";
 import { getQueryClient } from "@/utils/react-query";
 
 export interface ProvidersProps {
@@ -17,6 +16,7 @@ export interface ProvidersProps {
   themeProps?: ThemeProviderProps;
 }
 
+// @ts-ignore
 declare module "@react-types/shared" {
   interface RouterConfig {
     routerOptions: NonNullable<
@@ -31,10 +31,8 @@ export function Providers({ children, themeProps }: ProvidersProps) {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <HeroUIProvider navigate={router.push}>
-        <ToastProvider placement={"top-center"} toastOffset={60} />
-        <NextThemesProvider {...themeProps}>{children}</NextThemesProvider>
-      </HeroUIProvider>
+      <Toaster richColors />
+      <NextThemesProvider {...themeProps}>{children}</NextThemesProvider>
       <ReactQueryDevtools />
     </QueryClientProvider>
   );

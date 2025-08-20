@@ -3,7 +3,7 @@ import {
   useMutation,
   useQueryClient,
 } from "@tanstack/react-query";
-import { addToast } from "@heroui/toast";
+import { toast } from "sonner";
 
 import { TypedSupabaseClient } from "@/supabase/types";
 import {
@@ -13,26 +13,51 @@ import {
 } from "@/supabase/queries/business/application-queries";
 import { APPLICATION_STATUS } from "@/utils/enums";
 import { ApplicationStatus } from "@/types/collab";
-import { Database } from "@/supabase/database.types";
 
 /**
- * React Query options for fetching all collab applications
+ * React Query options for fetching paginated collab applications
  */
 export function getAllCollabApplicationsOptions(
   supabase: TypedSupabaseClient,
   businessId: string,
   collabId: string,
+  params?: {
+    page?: number;
+    pageSize?: number;
+    status?:
+      | (typeof APPLICATION_STATUS)[keyof typeof APPLICATION_STATUS]
+      | "All";
+  },
 ) {
+  const page = Math.max(1, params?.page ?? 1);
+  const pageSize = Math.max(1, params?.pageSize ?? 10);
+  const status = params?.status ?? "All";
+
   return queryOptions({
     queryKey: businessId
-      ? ["business", "collabs", "applications", businessId, collabId]
+      ? [
+          "business",
+          "collabs",
+          "applications",
+          businessId,
+          collabId,
+          page,
+          pageSize,
+          status,
+        ]
       : [],
     queryFn: async () => {
       if (!businessId || !collabId) return null;
 
-      return getAllCollabApplications(supabase, collabId, businessId);
+      return getAllCollabApplications(supabase, collabId, businessId, {
+        page,
+        pageSize,
+        status,
+      });
     },
     enabled: !!businessId && !!collabId,
+    placeholderData: (prev) => prev,
+    staleTime: 30_000,
   });
 }
 
@@ -48,8 +73,6 @@ export function useAcceptOrRejectApplicationMutation(
     mutationFn: async ({
       collabApplicationId,
       status,
-      businessId,
-      collabId,
     }: {
       collabApplicationId: string;
       status: ApplicationStatus;
@@ -61,62 +84,28 @@ export function useAcceptOrRejectApplicationMutation(
 
       return rejectApplication(supabase, collabApplicationId);
     },
-    onSuccess: (data, variables) => {
-      // Invalidate relevant queries
-      queryClient.setQueryData(
-        [
+    onSuccess: (_data, variables) => {
+      // Invalidate all paginated queries for this collab regardless of page/filters
+      queryClient.invalidateQueries({
+        queryKey: [
           "business",
           "collabs",
           "applications",
           variables.businessId,
           variables.collabId,
         ],
-        (
-          oldData: Database["public"]["Tables"]["collab_applications"]["Row"][] = [],
-        ) => {
-          const applicationIndex = oldData.findIndex(
-            (application) => application.id === variables.collabApplicationId,
-          );
-
-          if (applicationIndex !== -1) {
-            return [
-              ...oldData.slice(0, applicationIndex),
-              {
-                ...oldData[applicationIndex],
-                status: variables.status,
-              },
-              ...oldData.slice(applicationIndex + 1),
-            ];
-          }
-
-          return oldData;
-        },
-      );
+        exact: false,
+      });
 
       if (variables.status === APPLICATION_STATUS.ACCEPTED) {
-        addToast({
-          title: "Application Accepted",
-          description: ``,
-          color: "success",
-        });
+        toast.success("Application Accepted");
       } else {
-        addToast({
-          title: "Application Rejected",
-          description: ``,
-          color: "success",
-        });
+        toast.error("Application Rejected");
       }
-
-      // Navigate to the collab details page
-      // router.push(`/business/dashboard/collabs/${data.id}`);
     },
     onError: (error: any) => {
-      console.error("Error creating collab:", error);
-      addToast({
-        title: `Failed to Accpet/Reject applicant`,
-        description: error.message || "Something went wrong. Please try again.",
-        color: "danger",
-      });
+      console.error("Error updating application:", error);
+      toast.error("Failed to accept/reject applicant");
     },
   });
 }

@@ -1,8 +1,9 @@
 "use client";
 
-import { cn } from "@/lib/utils";
 import { motion, MotionProps, useInView } from "motion/react";
 import { useEffect, useRef, useState } from "react";
+
+import { cn } from "@/lib/utils";
 
 interface TypingAnimationProps extends MotionProps {
   children: string;
@@ -39,6 +40,7 @@ export function TypingAnimation({
       const startTimeout = setTimeout(() => {
         setStarted(true);
       }, delay);
+
       return () => clearTimeout(startTimeout);
     }
 

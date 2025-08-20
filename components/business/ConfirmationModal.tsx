@@ -1,12 +1,14 @@
 import React from "react";
+
 import {
-  Modal,
-  ModalContent,
-  ModalHeader,
-  ModalBody,
-  ModalFooter,
-} from "@heroui/modal";
-import { Button } from "@heroui/button";
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogFooter,
+  DialogTitle,
+  DialogDescription,
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
 
 interface ConfirmationModalProps {
   isOpen: boolean;
@@ -16,7 +18,6 @@ interface ConfirmationModalProps {
   message: string;
   confirmText?: string;
   cancelText?: string;
-  confirmColor?: "primary" | "danger" | "success" | "warning";
 }
 
 export function ConfirmationModal({
@@ -27,34 +28,31 @@ export function ConfirmationModal({
   message,
   confirmText = "Confirm",
   cancelText = "Cancel",
-  confirmColor = "primary",
 }: ConfirmationModalProps) {
   return (
-    <Modal isOpen={isOpen} onClose={onClose}>
-      <ModalContent>
-        {(onClose) => (
-          <>
-            <ModalHeader className="flex flex-col gap-1">{title}</ModalHeader>
-            <ModalBody>
-              <p className="text-sm md:text-base">{message}</p>
-            </ModalBody>
-            <ModalFooter>
-              <Button variant="flat" onPress={onClose}>
-                {cancelText}
-              </Button>
-              <Button
-                color={confirmColor}
-                onPress={() => {
-                  onConfirm();
-                  onClose();
-                }}
-              >
-                {confirmText}
-              </Button>
-            </ModalFooter>
-          </>
-        )}
-      </ModalContent>
-    </Modal>
+    <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle className="flex flex-col gap-1">{title}</DialogTitle>
+          <DialogDescription>
+            <p className="text-sm md:text-base">{message}</p>
+          </DialogDescription>
+        </DialogHeader>
+        <DialogFooter>
+          <Button variant="outline" onClick={onClose}>
+            {cancelText}
+          </Button>
+          <Button
+            variant="default"
+            onClick={() => {
+              onConfirm();
+              onClose();
+            }}
+          >
+            {confirmText}
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   );
 }

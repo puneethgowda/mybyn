@@ -50,6 +50,8 @@ export async function GET(request: Request) {
 
     const accessToken = await accessTokenJson.json();
 
+    console.log(accessToken, "accessToken");
+
     if (!accessTokenJson.ok && !accessToken)
       return NextResponse.redirect(`${origin}/auth/instagram/error`);
 

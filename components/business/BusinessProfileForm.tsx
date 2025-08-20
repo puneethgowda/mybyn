@@ -2,22 +2,41 @@
 
 import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Card, CardBody, CardFooter } from "@heroui/card";
-import { Button } from "@heroui/button";
-import { Input, Textarea } from "@heroui/input";
-import { Select, SelectItem } from "@heroui/select";
-import { Progress } from "@heroui/progress";
-import { Avatar } from "@heroui/avatar";
 import { motion } from "framer-motion";
 import { useQuery } from "@tanstack/react-query";
-import { addToast } from "@heroui/toast";
+import * as React from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
+import { toast } from "sonner";
 
+import { Card, CardContent, CardFooter } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Progress } from "@/components/ui/progress";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Textarea } from "@/components/ui/textarea";
 import { createClient } from "@/supabase/client";
 import { getStoragePublicUrlBase } from "@/supabase/storage";
 import { Constants } from "@/supabase/database.types";
 import { getUserOptions } from "@/utils/react-query/user";
-import { BusinessProfileFormValues } from "@/types/business-profile";
 import { useSaveBusinessProfileMutation } from "@/utils/react-query/business/profile";
+import { Toaster } from "@/components/ui/sonner";
 
 // Business type options
 const TypeOptions = Constants.public.Enums.business_type;
@@ -36,343 +55,346 @@ const locationOptions = [
   "Lucknow",
 ];
 
+// Form validation schema
+const formSchema = z.object({
+  name: z.string().min(1, "Business name is required"),
+  description: z.string().min(1, "Description is required"),
+  type: z.enum(TypeOptions, {
+    error: "Business type is required",
+  }),
+  location: z.string().min(1, "Location is required"),
+  website: z
+    .string()
+    .min(1, "Website is required")
+    .url("Please enter a valid website URL"),
+  email: z
+    .string()
+    .min(1, "Email is required")
+    .email("Please enter a valid email address"),
+  phone: z.string().optional(),
+  logo_url: z.string().min(1, "Please upload a logo"),
+});
+
+type FormValues = z.infer<typeof formSchema>;
+
 export function BusinessProfileForm() {
-  const router = useRouter();
-
-  const supabase = createClient();
-
-  const { data } = useQuery(getUserOptions(supabase));
-  const user = data?.user;
-
   const [currentStep, setCurrentStep] = useState(1);
   const totalSteps = 4;
-  const [formData, setFormData] = useState<BusinessProfileFormValues>({
-    name: "",
-    description: "",
-    type: "Retail",
-    location: "",
-    website: "",
-    email: user?.email || "",
-    phone: "",
-    logo_url: "",
-  });
-  const [errors, setErrors] = useState<Record<string, string>>({});
+  const router = useRouter();
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
 
-  const fileInputRef = useRef<HTMLInputElement>(null);
+  const supabase = createClient();
+  const { data } = useQuery(getUserOptions(supabase));
+  const user = data?.user;
 
   const { mutateAsync: saveBusinessProfile } =
     useSaveBusinessProfileMutation(supabase);
 
-  // Handle input change
-  const handleChange = (field: string, value: any) => {
-    if (field.includes(".")) {
-      const [parent, child] = field.split(".");
-
-      setFormData({
-        ...formData,
-        [parent]: {
-          ...((formData[parent as keyof BusinessProfileFormValues] ||
-            {}) as Record<string, unknown>),
-          [child]: value,
-        },
-      });
-    } else {
-      setFormData({ ...formData, [field]: value });
-    }
-
-    // Clear error when field is updated
-    if (errors[field]) {
-      setErrors({ ...errors, [field]: "" });
-    }
-  };
+  // Initialize form
+  const form = useForm<FormValues>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      name: "",
+      description: "",
+      type: "Retail",
+      location: locationOptions[0],
+      website: "",
+      email: user?.email || "",
+      phone: "",
+      logo_url: "",
+    },
+  });
 
   // Validate current step
-  const validateStep = () => {
-    const newErrors: Record<string, string> = {};
+  const validateStep = async () => {
+    let isValid = false;
 
     switch (currentStep) {
       case 1:
-        if (!formData.name.trim()) {
-          newErrors.name = "Business name is required";
-        }
-        if (!formData.description.trim()) {
-          newErrors.description = "Description is required";
-        }
+        isValid = await form.trigger(["name", "description"]);
         break;
       case 2:
-        if (!formData.type) {
-          newErrors.type = "Business type is required";
-        }
-        if (!formData.location) {
-          newErrors.location = "Location is required";
-        }
+        isValid = await form.trigger(["type", "location"]);
         break;
       case 3:
-        if (!formData.website.trim()) {
-          newErrors.website = "Website is required";
-        } else if (
-          !/^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,6})([/\w .-]*)*\/?$/.test(
-            formData.website,
-          )
-        ) {
-          newErrors.website = "Please enter a valid website URL";
-        }
-        if (!formData.email.trim()) {
-          newErrors.email = "Email is required";
-        } else if (
-          !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(formData.email)
-        ) {
-          newErrors.email = "Please enter a valid email address";
-        }
+        isValid = await form.trigger(["website", "email", "phone"]);
         break;
       case 4:
-        if (formData.logo_url === "") {
-          newErrors.logo_url = "Please upload a logo";
-        }
+        isValid = await form.trigger(["logo_url"]);
         break;
     }
 
-    setErrors(newErrors);
-
-    return Object.keys(newErrors).length === 0;
+    return isValid;
   };
 
   // Handle next step
-  const handleNext = () => {
-    if (validateStep()) {
+  const handleNext = async () => {
+    if (await validateStep()) {
       if (currentStep < totalSteps) {
         setCurrentStep(currentStep + 1);
       }
     }
   };
 
-  // Handle previous step
+  // Handle back step
   const handleBack = () => {
     if (currentStep > 1) {
       setCurrentStep(currentStep - 1);
     }
   };
 
-  const goToDashboard = () => {
-    router.push("/business/dashboard");
+  // Handle logo upload
+  const handleLogoUpload = async (file: File) => {
+    try {
+      const { data, error } = await supabase.storage
+        .from("business-profile-images")
+        .upload(`${user?.id}-logo.png`, file);
+
+      if (error) throw error;
+
+      const logoUrl = getStoragePublicUrlBase(data?.fullPath);
+
+      form.setValue("logo_url", logoUrl);
+    } catch (error) {
+      toast.error("Failed to upload logo");
+    }
   };
 
-  // Handle form submission
-  const handleSubmit = async () => {
+  // Form submission
+  const onSubmit = async (data: FormValues) => {
     try {
-      if (validateStep()) {
-        setIsSubmitting(true);
-
-        await saveBusinessProfile({
-          ...formData,
-          owner_id: user?.id as string,
-        });
-
-        setIsSubmitting(false);
-        setShowSuccess(true);
-      }
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    } catch (error) {
-      addToast({
-        title: "Failed to create profile",
-        description: "Something went wrong. Please try again.",
-        color: "danger",
+      setIsSubmitting(true);
+      await saveBusinessProfile({
+        ...data,
+        phone: data?.phone as string,
+        owner_id: user?.id as string,
       });
+      setIsSubmitting(false);
+      setShowSuccess(true);
+    } catch (error) {
+      toast.error("Failed to create profile");
       setIsSubmitting(false);
     }
   };
 
-  const handleLogoUpload = async (newFiles: File[]) => {
-    const { data, error } = await supabase.storage
-      .from("business-profile-images")
-      .upload(`${user?.id}-logo.png`, newFiles[0]);
+  // Step content components
+  const renderStep1 = () => (
+    <div className="space-y-6">
+      <div>
+        <h2 className="font-semibold">Basic Information</h2>
+        <p className="text-sm text-muted-foreground">
+          Let&#39;s start with the basics about your business
+        </p>
+      </div>
 
-    if (error)
-      return addToast({
-        title: "Failed to upload logo",
-        description: "Something went wrong. Please try again.",
-        color: "danger",
-      });
-    setFormData({
-      ...formData,
-      logo_url: getStoragePublicUrlBase(data?.fullPath),
-    });
-  };
+      <FormField
+        control={form.control}
+        name="name"
+        render={({ field }) => (
+          <FormItem>
+            <FormLabel className="text-muted-foreground">
+              Business Name
+            </FormLabel>
+            <FormControl>
+              <Input placeholder="e.g., Acme Corporation" {...field} />
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
 
-  // Render step content
-  const renderStepContent = () => {
-    switch (currentStep) {
-      case 1:
-        return (
-          <div className="space-y-6">
-            <div className="space-y-4">
-              <h2 className="text-xl font-semibold">Basic Information</h2>
-              <p className="text-default-600">
-                Let&#39;s start with the basics about your business
-              </p>
-              <Input
-                className="max-w-lg"
-                errorMessage={errors.name}
-                isInvalid={!!errors.name}
-                label="Business Name"
-                placeholder="e.g., Acme Corporation"
-                value={formData.name}
-                variant="bordered"
-                onValueChange={(value) => handleChange("name", value)}
-              />
+      <FormField
+        control={form.control}
+        name="description"
+        render={({ field }) => (
+          <FormItem>
+            <FormLabel className="text-muted-foreground">
+              Business Description
+            </FormLabel>
+            <FormControl>
               <Textarea
-                className="max-w-lg"
-                errorMessage={errors.description}
-                isInvalid={!!errors.description}
-                label="Business Description"
-                minRows={4}
-                placeholder="Describe what your business does, your mission, and what makes you unique"
-                value={formData.description}
-                variant="bordered"
-                onValueChange={(value) => handleChange("description", value)}
+                className="min-h-[100px]"
+                placeholder="Describe what your business does..."
+                {...field}
               />
-            </div>
-          </div>
-        );
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
+    </div>
+  );
 
-      case 2:
-        return (
-          <div className="space-y-6">
-            <div className="space-y-4">
-              <h2 className="text-xl font-semibold">Business Details</h2>
-              <p className="text-default-600">
-                Tell us more about your business type and location
-              </p>
-              <Select
-                className="max-w-lg"
-                errorMessage={errors.type}
-                isInvalid={!!errors.type}
-                label="Business Type"
-                placeholder="Select business type"
-                selectedKeys={formData.type ? [formData.type] : []}
-                variant="bordered"
-                onChange={(e) => handleChange("type", e.target.value)}
-              >
+  const renderStep2 = () => (
+    <div className="space-y-6">
+      <div>
+        <h2 className="font-semibold">Business Details</h2>
+        <p className="text-sm text-muted-foreground">
+          Tell us more about your business type and location
+        </p>
+      </div>
+
+      <FormField
+        control={form.control}
+        name="type"
+        render={({ field }) => (
+          <FormItem>
+            <FormLabel className="text-muted-foreground">
+              Business Type
+            </FormLabel>
+            <Select defaultValue={field.value} onValueChange={field.onChange}>
+              <FormControl>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select business type" />
+                </SelectTrigger>
+              </FormControl>
+              <SelectContent>
                 {TypeOptions.map((type) => (
-                  <SelectItem key={type}>{type}</SelectItem>
+                  <SelectItem key={type} value={type}>
+                    {type}
+                  </SelectItem>
                 ))}
-              </Select>
-              <Select
-                className="max-w-lg"
-                errorMessage={errors.location}
-                isInvalid={!!errors.location}
-                label="Primary Location"
-                placeholder="Select location"
-                selectedKeys={formData.location ? [formData.location] : []}
-                variant="bordered"
-                onChange={(e) => handleChange("location", e.target.value)}
-              >
-                {locationOptions.map((location) => (
-                  <SelectItem key={location}>{location}</SelectItem>
-                ))}
-              </Select>
-            </div>
-          </div>
-        );
+              </SelectContent>
+            </Select>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
 
-      case 3:
-        return (
-          <div className="space-y-6">
-            <div className="space-y-4">
-              <h2 className="text-xl font-semibold">Contact Information</h2>
-              <p className="text-default-600">
-                How can influencers reach your business?
-              </p>
+      <FormField
+        control={form.control}
+        name="location"
+        render={({ field }) => (
+          <FormItem>
+            <FormLabel className="text-muted-foreground">
+              Primary Location
+            </FormLabel>
+            <Select defaultValue={field.value} onValueChange={field.onChange}>
+              <FormControl>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select location" />
+                </SelectTrigger>
+              </FormControl>
+              <SelectContent>
+                {locationOptions.map((location) => (
+                  <SelectItem key={location} value={location}>
+                    {location}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
+    </div>
+  );
+
+  const renderStep3 = () => (
+    <div className="space-y-6">
+      <div>
+        <h2 className="font-semibold">Contact Information</h2>
+        <p className="text-sm text-muted-foreground">
+          How can influencers reach your business?
+        </p>
+      </div>
+
+      <FormField
+        control={form.control}
+        name="website"
+        render={({ field }) => (
+          <FormItem>
+            <FormLabel className="text-muted-foreground">Website</FormLabel>
+            <FormControl>
+              <div className="flex">
+                <Input
+                  {...field}
+                  className=""
+                  placeholder="https://business.com"
+                />
+              </div>
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
+
+      <FormField
+        control={form.control}
+        name="email"
+        render={({ field }) => (
+          <FormItem>
+            <FormLabel className="text-muted-foreground">
+              Business Email
+            </FormLabel>
+            <FormControl>
               <Input
-                className="max-w-lg"
-                errorMessage={errors.website}
-                isInvalid={!!errors.website}
-                label="Website"
-                placeholder="business.com"
-                startContent={
-                  <div className="pointer-events-none flex items-center">
-                    <span className="text-default-400 text-small">
-                      https://
-                    </span>
-                  </div>
-                }
-                type="url"
-                value={formData.website}
-                variant="bordered"
-                onValueChange={(value) => handleChange("website", value)}
-              />
-              <Input
-                className="max-w-lg"
-                errorMessage={errors.email}
-                isInvalid={!!errors.email}
-                label="Business Email"
+                {...field}
                 placeholder="contact@example.com"
                 type="email"
-                value={formData.email}
-                variant="bordered"
-                onValueChange={(value) => handleChange("email", value)}
               />
-              <Input
-                className="max-w-lg"
-                label="Phone Number (optional)"
-                maxLength={10}
-                placeholder="8888888888"
-                startContent={
-                  <div className="pointer-events-none flex items-center">
-                    <span className="text-default-400 text-small">+91</span>
-                  </div>
-                }
-                type="number"
-                value={formData.phone}
-                variant="bordered"
-                onValueChange={(value) => handleChange("phone", value)}
-              />
-            </div>
-          </div>
-        );
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
 
-      case 4:
-        return (
-          <div className="space-y-6">
-            <div className="space-y-4">
-              <h2 className="text-xl font-semibold">Business Logo</h2>
-              <p className="text-default-600">
-                Upload your business logo to make your profile stand out
-              </p>
-              {formData.logo_url ? (
-                <div className="flex flex-col items-center gap-4">
-                  <Avatar
-                    alt="Business Logo"
-                    className="w-32 h-32"
-                    src={formData.logo_url}
-                  />
-                  <div>
-                    <Input
-                      ref={fileInputRef}
-                      className="hidden"
-                      type="file"
-                      onChange={(e) =>
-                        handleLogoUpload(Array.from(e.target.files || []))
-                      }
-                    />
-                    <Button
-                      color="primary"
-                      variant="flat"
-                      onPress={() => {
-                        fileInputRef?.current?.click();
-                      }}
-                    >
-                      Change Logo
-                    </Button>
-                  </div>
-                </div>
-              ) : (
-                <div className="flex flex-col items-center gap-4">
-                  <div className="w-32 h-32 rounded-full bg-default-100 flex items-center justify-center">
+      <FormField
+        control={form.control}
+        name="phone"
+        render={({ field }) => (
+          <FormItem>
+            <FormLabel className="text-muted-foreground">
+              Phone Number (optional)
+            </FormLabel>
+            <FormControl>
+              <div className="flex">
+                <span className="flex items-center px-3 border border-r-0 rounded-l-md bg-muted">
+                  +91
+                </span>
+                <Input
+                  {...field}
+                  className="rounded-l-none"
+                  maxLength={10}
+                  placeholder="8888888888"
+                  type="tel"
+                />
+              </div>
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
+    </div>
+  );
+
+  const renderStep4 = () => (
+    <div className="space-y-6">
+      <div>
+        <h2 className="font-semibold">Business Logo</h2>
+        <p className="text-sm text-muted-foreground">
+          Upload your business logo to make your profile stand out
+        </p>
+      </div>
+
+      <FormField
+        control={form.control}
+        name="logo_url"
+        render={({ field }) => (
+          <FormItem>
+            <FormControl>
+              <div className="flex flex-col items-center gap-4">
+                {field.value ? (
+                  <Avatar className="w-32 h-32">
+                    <AvatarImage alt="Business Logo" src={field.value} />
+                    <AvatarFallback>LOGO</AvatarFallback>
+                  </Avatar>
+                ) : (
+                  <div className="w-32 h-32 rounded-full bg-muted flex items-center justify-center">
                     <svg
-                      className="text-default-400"
+                      className="text-muted-foreground"
                       fill="none"
                       height="40"
                       stroke="currentColor"
@@ -381,176 +403,132 @@ export function BusinessProfileForm() {
                       strokeWidth="2"
                       viewBox="0 0 24 24"
                       width="40"
-                      xmlns="http://www.w3.org/2000/svg"
                     >
                       <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
                       <circle cx="12" cy="7" r="4" />
                     </svg>
                   </div>
-                  {errors.logo_url && (
-                    <div className="text-sm text-danger">{errors.logo_url}</div>
-                  )}
-                  <div>
-                    <Input
-                      ref={fileInputRef}
-                      className="hidden"
-                      type="file"
-                      onChange={(e) =>
-                        handleLogoUpload(Array.from(e.target.files || []))
-                      }
-                    />
-                    <Button
-                      color="primary"
-                      variant="flat"
-                      onPress={() => {
-                        fileInputRef?.current?.click();
-                      }}
-                    >
-                      Upload Logo
-                    </Button>
-                  </div>
-                </div>
-              )}
-            </div>
-          </div>
-        );
+                )}
+                <input
+                  ref={fileInputRef}
+                  accept="image/*"
+                  className="hidden"
+                  type="file"
+                  onChange={(e) => {
+                    const file = e.target.files?.[0];
 
-      default:
-        return null;
-    }
-  };
+                    if (file) handleLogoUpload(file);
+                  }}
+                />
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => fileInputRef.current?.click()}
+                >
+                  {field.value ? "Change Logo" : "Upload Logo"}
+                </Button>
+              </div>
+            </FormControl>
+            <FormMessage className="text-center" />
+          </FormItem>
+        )}
+      />
+    </div>
+  );
+
+  // Success message component
+  const renderSuccess = () => (
+    <Card className="w-full">
+      <CardContent className="flex flex-col items-center py-10">
+        <div className="rounded-full bg-green-100 p-3 mb-4">
+          <svg
+            className="text-green-600"
+            fill="none"
+            height="24"
+            stroke="currentColor"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="2"
+            viewBox="0 0 24 24"
+            width="24"
+          >
+            <polyline points="20 6 9 17 4 12" />
+          </svg>
+        </div>
+        <h2 className="text-xl font-semibold">Profile Created!</h2>
+        <p className="text-center mt-2 text-muted-foreground">
+          Your business profile has been successfully created. You can now start
+          creating collaboration opportunities.
+        </p>
+        <Button
+          className="mt-6"
+          onClick={() => router.push("/business/dashboard")}
+        >
+          Go to dashboard
+        </Button>
+      </CardContent>
+    </Card>
+  );
+
+  if (showSuccess) {
+    return renderSuccess();
+  }
 
   return (
     <div className="w-full">
-      {/* Progress indicator */}
       <div className="mb-6">
         <div className="flex justify-between items-center mb-2">
           <span className="text-sm font-medium">
             Step {currentStep} of {totalSteps}
           </span>
-          <span className="text-sm text-default-500">
+          <span className="text-sm text-muted-foreground">
             {Math.round((currentStep / totalSteps) * 100)}% Complete
           </span>
         </div>
-        <Progress
-          className="h-2"
-          color="primary"
-          value={(currentStep / totalSteps) * 100}
-        />
+        <Progress className="h-2" value={(currentStep / totalSteps) * 100} />
       </div>
 
-      {/* Success message */}
-      {showSuccess ? (
-        <Card className="w-full bg-success-50 border-success-200">
-          <CardBody className="flex flex-col items-center py-10">
-            <div className="rounded-full bg-success-100 p-3 mb-4">
-              <svg
-                className="text-success"
-                fill="none"
-                height="24"
-                stroke="currentColor"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                viewBox="0 0 24 24"
-                width="24"
-                xmlns="http://www.w3.org/2000/svg"
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)}>
+          <Card>
+            <CardContent className="">
+              <motion.div
+                key={currentStep}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -20 }}
+                initial={{ opacity: 0, x: 20 }}
+                transition={{ duration: 0.3 }}
               >
-                <polyline points="20 6 9 17 4 12" />
-              </svg>
-            </div>
-            <h2 className="text-xl font-semibold">Profile Created!</h2>
-            <p className="text-center mt-2 text-default-600">
-              Your business profile has been successfully created. You can now
-              start creating collaboration opportunities.
-            </p>
-            <div className="mt-2">
-              <Button onPress={goToDashboard}>Go to dashboard</Button>
-            </div>
-          </CardBody>
-        </Card>
-      ) : (
-        <Card className="w-full">
-          <CardBody className="p-6">
-            <motion.div
-              key={currentStep}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -20 }}
-              initial={{ opacity: 0, x: 20 }}
-              transition={{ duration: 0.3 }}
-            >
-              {renderStepContent()}
-            </motion.div>
-          </CardBody>
-          <CardFooter className="flex justify-between px-6 py-4 border-t border-divider">
-            <div>
-              {currentStep > 1 ? (
-                <Button
-                  startContent={
-                    <svg
-                      fill="none"
-                      height="18"
-                      stroke="currentColor"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      viewBox="0 0 24 24"
-                      width="18"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <line x1="19" x2="5" y1="12" y2="12" />
-                      <polyline points="12 19 5 12 12 5" />
-                    </svg>
-                  }
-                  variant="flat"
-                  onPress={handleBack}
-                >
-                  Back
-                </Button>
-              ) : (
-                <Button variant="flat" onPress={() => router.push("/")}>
-                  Cancel
-                </Button>
-              )}
-            </div>
+                {currentStep === 1 && renderStep1()}
+                {currentStep === 2 && renderStep2()}
+                {currentStep === 3 && renderStep3()}
+                {currentStep === 4 && renderStep4()}
+              </motion.div>
+            </CardContent>
 
-            <div>
-              {currentStep < totalSteps ? (
-                <Button
-                  color="primary"
-                  endContent={
-                    <svg
-                      fill="none"
-                      height="18"
-                      stroke="currentColor"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      viewBox="0 0 24 24"
-                      width="18"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <line x1="5" x2="19" y1="12" y2="12" />
-                      <polyline points="12 5 19 12 12 19" />
-                    </svg>
-                  }
-                  onPress={handleNext}
-                >
-                  Next
-                </Button>
-              ) : (
-                <Button
-                  color="primary"
-                  isLoading={isSubmitting}
-                  onPress={handleSubmit}
-                >
-                  Complete Profile
-                </Button>
-              )}
-            </div>
-          </CardFooter>
-        </Card>
-      )}
+            <CardFooter className="flex justify-between border-t pt-6">
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() =>
+                  currentStep > 1 ? handleBack() : router.push("/")
+                }
+              >
+                {currentStep > 1 ? "Back" : "Cancel"}
+              </Button>
+
+              <Button
+                disabled={isSubmitting}
+                type={currentStep === totalSteps ? "submit" : "button"}
+                onClick={currentStep < totalSteps ? handleNext : undefined}
+              >
+                {currentStep < totalSteps ? "Next" : "Complete Profile"}
+              </Button>
+            </CardFooter>
+          </Card>
+        </form>
+      </Form>
+      <Toaster richColors position="bottom-right" />
     </div>
   );
 }

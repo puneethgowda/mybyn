@@ -1,6 +1,6 @@
-import { DashboardSidebar } from "@/components/sidebar";
 import { DashboardHeader } from "@/components/header";
-import { BottomNav } from "@/components/bottom-nav";
+import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
+import { AppSidebar } from "@/components/app-sidebar";
 
 export default async function DashboardLayout({
   children,
@@ -8,15 +8,14 @@ export default async function DashboardLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="flex h-screen bg-background">
-      <DashboardSidebar view="creator" />
-      <div className="flex flex-col flex-1 overflow-hidden">
+    <SidebarProvider>
+      <AppSidebar view="creator" />
+      <SidebarInset className="bg-sidebar group/sidebar-inset">
         <DashboardHeader />
-        <main className="flex-1 overflow-y-auto p-4 md:p-6 pb-20 md:pb-0">
+        <div className="flex h-[calc(100svh-4rem)] bg-[hsl(240_5%_92.16%)] md:rounded-s-3xl md:group-peer-data-[state=collapsed]/sidebar-inset:rounded-s-none transition-all ease-in-out duration-300">
           {children}
-        </main>
-      </div>
-      <BottomNav view="creator" />
-    </div>
+        </div>
+      </SidebarInset>
+    </SidebarProvider>
   );
 }

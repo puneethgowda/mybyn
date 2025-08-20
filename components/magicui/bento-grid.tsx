@@ -1,8 +1,8 @@
 import { ArrowRightIcon } from "@radix-ui/react-icons";
 import { ComponentPropsWithoutRef, ReactNode } from "react";
-import { Button } from "@heroui/button";
 import Link from "next/link";
 
+import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
 interface BentoGridProps extends ComponentPropsWithoutRef<"div"> {
@@ -70,7 +70,7 @@ const BentoCard = ({
         )}
       >
         <Link href={href}>
-          <Button className="pointer-events-auto" size="sm" variant="flat">
+          <Button className="pointer-events-auto" size="sm" variant="secondary">
             {cta}
             <ArrowRightIcon className="ms-2 h-4 w-4 rtl:rotate-180" />
           </Button>
@@ -84,7 +84,7 @@ const BentoCard = ({
       )}
     >
       <Link href={href}>
-        <Button className="pointer-events-auto" size="sm" variant="flat">
+        <Button className="pointer-events-auto" size="sm" variant="secondary">
           {cta}
           <ArrowRightIcon className="ms-2 h-4 w-4 rtl:rotate-180" />
         </Button>

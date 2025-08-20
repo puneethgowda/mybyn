@@ -1,16 +1,16 @@
 "use client";
 
-import { Button } from "@heroui/button";
-import { Avatar } from "@heroui/avatar";
 import { useRouter } from "next/navigation";
-import { ArrowLeft, MoreHoriz } from "iconoir-react";
-import {
-  Dropdown,
-  DropdownItem,
-  DropdownMenu,
-  DropdownTrigger,
-} from "@heroui/dropdown";
+import { RiArrowLeftLine, RiMoreLine } from "@remixicon/react";
 
+import { Button } from "@/components/ui/button";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
+} from "@/components/ui/dropdown-menu";
 import { toTitleCase } from "@/utils/string";
 
 interface ChatHeaderProps {
@@ -27,23 +27,23 @@ export function ChatHeader({
   const router = useRouter();
 
   return (
-    <div className="py-4 bg-background/60 backdrop-blur-md sticky top-0 z-10">
+    <div className="py-5 bg-background sticky top-0 z-10 before:absolute before:inset-x-0 before:bottom-0 before:h-px before:bg-gradient-to-r before:from-black/[0.06] before:via-black/10 before:to-black/[0.06]">
       <div className="max-w-4xl mx-auto flex items-center gap-2">
-        <Button
-          isIconOnly
-          className=""
-          variant="light"
-          onPress={() => router.back()}
-        >
-          <ArrowLeft />
+        <Button size="icon" variant="ghost" onClick={() => router.back()}>
+          <RiArrowLeftLine />
         </Button>
 
-        <Avatar
-          className="bg-primary/10 text-primary"
-          radius="lg"
-          size="md"
-          src={businessLogo}
-        />
+        <Avatar className="size-10 rounded-md">
+          <AvatarImage
+            alt={businessName}
+            height={32}
+            src={businessLogo}
+            width={32}
+          />
+          <AvatarFallback className=" rounded-md">
+            {businessName}
+          </AvatarFallback>
+        </Avatar>
 
         <div className="flex-1">
           <h3 className="font-medium text-foreground">
@@ -54,18 +54,18 @@ export function ChatHeader({
           </p>
         </div>
 
-        <Dropdown>
-          <DropdownTrigger>
-            <Button isIconOnly size="sm" variant="solid">
-              <MoreHoriz />
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button size="icon" variant="secondary">
+              <RiMoreLine />
             </Button>
-          </DropdownTrigger>
-          <DropdownMenu aria-label="Static Actions">
-            <DropdownItem key="new">View Profile</DropdownItem>
-            <DropdownItem key="copy">Block</DropdownItem>
-            <DropdownItem key="edit">Report</DropdownItem>
-          </DropdownMenu>
-        </Dropdown>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuItem>View Profile</DropdownMenuItem>
+            <DropdownMenuItem>Block</DropdownMenuItem>
+            <DropdownMenuItem>Report</DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
     </div>
   );

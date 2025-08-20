@@ -44,7 +44,12 @@ export async function getCollabs(
     query = query.eq("location", location);
   }
 
-  if (businessTypes && businessTypes.length > 0) {
+  if (
+    businessTypes &&
+    businessTypes.length > 0 &&
+    // @ts-ignore
+    businessTypes !== "All"
+  ) {
     query = query.in("business_profile.type", businessTypes);
   }
 

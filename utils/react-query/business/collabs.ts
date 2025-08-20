@@ -3,7 +3,7 @@ import {
   useMutation,
   useQueryClient,
 } from "@tanstack/react-query";
-import { addToast } from "@heroui/toast";
+import { toast } from "sonner";
 
 import { TypedSupabaseClient } from "@/supabase/types";
 import {
@@ -163,22 +163,14 @@ export function useCreateCollabMutation(
         queryKey: ["business", "dashboard", "data", variables.business_id],
       });
 
-      addToast({
-        title: "Collaboration Created",
-        description: "Your collaboration has been successfully posted.",
-        color: "success",
-      });
+      toast.success("Collaboration Created");
 
       // Navigate to the collab details page
       // router.push(`/business/dashboard/collabs/${data.id}`);
     },
     onError: (error: any) => {
       console.error("Error creating collab:", error);
-      addToast({
-        title: "Failed to Create Collaboration",
-        description: error.message || "Something went wrong. Please try again.",
-        color: "danger",
-      });
+      toast.error("Failed to Create Collaboration");
     },
   });
 }
@@ -203,22 +195,14 @@ export function useUpdateCollabMutation(supabase: TypedSupabaseClient) {
         queryKey: ["business", "dashboard", "data", variables.business_id],
       });
 
-      addToast({
-        title: "Collaboration Updated",
-        description: "Your collaboration has been successfully updated.",
-        color: "success",
-      });
+      toast.success("Collaboration Updated");
 
       // Navigate to the collab details page
       // router.push(`/business/dashboard/collabs/${data.id}`);
     },
     onError: (error: any) => {
       console.error("Error updating collab:", error);
-      addToast({
-        title: "Failed to Update Collaboration",
-        description: error.message || "Something went wrong. Please try again.",
-        color: "danger",
-      });
+      toast.error("Failed to Update Collaboration");
     },
   });
 }
@@ -257,19 +241,11 @@ export function useUpdateCollabStatusMutation(supabase: TypedSupabaseClient) {
             ? "closed"
             : "drafted";
 
-      addToast({
-        title: "Status Updated",
-        description: `Collaboration has been ${statusText}.`,
-        color: "success",
-      });
+      toast.success("Status Updated");
     },
     onError: (error: any) => {
       console.error("Error updating collab status:", error);
-      addToast({
-        title: "Failed to Update Status",
-        description: error.message || "Something went wrong. Please try again.",
-        color: "danger",
-      });
+      toast.error("Failed to Update Status");
     },
   });
 }

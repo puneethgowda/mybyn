@@ -2,13 +2,13 @@
 
 import { useEffect, useRef } from "react";
 import { useParams } from "next/navigation";
-import { Skeleton } from "@heroui/skeleton";
-import { addToast } from "@heroui/toast";
+import { toast } from "sonner";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { RiShining2Line } from "@remixicon/react";
 
+import { Skeleton } from "@/components/ui/skeleton";
 import { ChatHeader } from "@/components/dashboard/chat/ChatHeader";
 import { ChatBubble } from "@/components/dashboard/chat/ChatBubble";
-import { MessageInput } from "@/components/dashboard/chat/MessageInput";
 import { Message, NewMessage } from "@/types/chat";
 import { timeAgo } from "@/utils/date";
 import { createClient } from "@/supabase/client";
@@ -19,6 +19,8 @@ import {
   addOptimisticMessage,
 } from "@/utils/react-query/chat";
 import { getUserOptions } from "@/utils/react-query/user";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { MessageInput } from "@/components/dashboard/chat/MessageInput";
 
 export default function ChatRoomPage() {
   const params = useParams();
@@ -48,7 +50,9 @@ export default function ChatRoomPage() {
   const handleSendMessage = async (message: string) => {
     if (!userId || !chatId) return;
 
-    const optimistic_id = `${Date.now()}-${Math.random().toString(36).substring(2, 9)}`;
+    const optimistic_id = `${Date.now()}-${Math.random()
+      .toString(36)
+      .substring(2, 9)}`;
 
     const newMessage: NewMessage & { optimistic_id?: string } = {
       sender_id: userId,
@@ -73,11 +77,7 @@ export default function ChatRoomPage() {
             oldData.filter((msg) => msg.id !== optimistic_id),
         );
 
-        addToast({
-          title: "Failed to send message",
-          description: "Something went wrong. Please try again.",
-          color: "danger",
-        });
+        toast.error("Failed to send message");
       },
     });
   };
@@ -86,68 +86,84 @@ export default function ChatRoomPage() {
 
   if (isLoading || !chatDetails) {
     return (
-      <div className="max-w-4xl mx-auto h-[calc(100vh-100px)] flex flex-col bg-background/40">
-        <div className="p-4">
-          <Skeleton className="h-12 w-full rounded-lg" />
+      <ScrollArea className="flex-1 [&>div>div]:h-full w-full shadow-md md:rounded-s-[inherit] min-[1024px]:rounded-e-3xl bg-background">
+        <div className="h-full flex flex-col px-4 md:px-6 lg:px-8">
+          <div className="p-4">
+            <Skeleton className="h-12 w-full lg:max-w-96 rounded-lg" />
+          </div>
+          <div className="flex-1 p-6 space-y-6 overflow-y-auto">
+            {[1, 2, 3, 4].map((i) => (
+              <Skeleton
+                key={i}
+                className={`h-24 w-3/4 rounded-2xl ${
+                  i % 2 === 0 ? "ml-auto" : ""
+                }`}
+              />
+            ))}
+          </div>
         </div>
-        <div className="flex-1 p-6 space-y-6 overflow-y-auto">
-          {[1, 2].map((i) => (
-            <Skeleton
-              key={i}
-              className={`h-24 w-3/4 rounded-2xl ${i % 2 === 0 ? "ml-auto" : ""}`}
-            />
-          ))}
-        </div>
-        <div className="p-4">
-          <Skeleton className="h-10 w-full rounded-full" />
-        </div>
-      </div>
+      </ScrollArea>
     );
   }
 
   return (
-    <div className="h-[calc(100vh-64px)] flex flex-col bg-background/40">
-      <ChatHeader
-        businessLogo={chatDetails?.logo_url}
-        businessName={chatDetails?.business_name}
-        collabTitle={chatDetails?.collab_title}
-      />
+    <ScrollArea className="flex-1 [&>div>div]:h-full w-full shadow-md md:rounded-s-[inherit] min-[1024px]:rounded-e-3xl bg-background">
+      <div className="h-full flex flex-col px-4 md:px-6 lg:px-8">
+        <ChatHeader
+          businessLogo={chatDetails?.logo_url}
+          businessName={chatDetails?.business_name}
+          collabTitle={chatDetails?.collab_title}
+        />
 
-      <div className="flex-1 py-6 overflow-y-auto">
-        <div className="max-w-4xl mx-auto space-y-6">
-          <div className="flex items-center justify-center my-4">
-            <div className="bg-content3 text-foreground/60 text-xs px-3 py-1 rounded-full">
-              Today
+        {/* Chat */}
+        <div className="relative grow">
+          <div className="max-w-3xl mx-auto mt-6 space-y-6">
+            <div className="text-center my-8">
+              <div className="inline-flex items-center bg-white rounded-full border border-black/[0.08] shadow-xs text-xs font-medium py-1 px-3 text-foreground/80">
+                <RiShining2Line
+                  aria-hidden="true"
+                  className="me-1.5 text-muted-foreground/70 -ms-1"
+                  size={14}
+                />
+                Today
+              </div>
             </div>
+            {messages.map((message) => {
+              const isUser = message.sender_id === userId;
+
+              // const showSender =
+              //   index === 0 || messages[index - 1].sender_id !== message.sender_id;
+              const showSender = true;
+
+              return (
+                <ChatBubble
+                  key={message.id}
+                  isUser={isUser}
+                  message={message.message}
+                  senderImage={
+                    isUser
+                      ? userData?.user?.user_metadata?.avatar_url
+                      : chatDetails?.logo_url
+                  }
+                  senderName={
+                    showSender && !isUser
+                      ? chatDetails.business_name
+                      : undefined
+                  }
+                  timestamp={timeAgo(message.created_at)}
+                />
+              );
+            })}
+            <div ref={messagesEndRef} />
           </div>
-
-          {messages.map((message) => {
-            const isUser = message.sender_id === userId;
-
-            // const showSender =
-            //   index === 0 || messages[index - 1].sender_id !== message.sender_id;
-            const showSender = true;
-
-            return (
-              <ChatBubble
-                key={message.id}
-                isUser={isUser}
-                message={message.message}
-                senderName={
-                  showSender && !isUser ? chatDetails.business_name : undefined
-                }
-                timestamp={timeAgo(message.created_at)}
-              />
-            );
-          })}
-          <div ref={messagesEndRef} />
         </div>
-      </div>
 
-      <MessageInput
-        isSending={sendMessageMutation.isPending}
-        onSendMessage={handleSendMessage}
-      />
-    </div>
+        <MessageInput
+          isSending={sendMessageMutation.isPending}
+          onSendMessage={handleSendMessage}
+        />
+        {/*</div>*/}
+      </div>
+    </ScrollArea>
   );
 }
