@@ -94,7 +94,7 @@ export default function DiscoverPage() {
       collabType,
       languages,
       page,
-    }),
+    })
   );
 
   // Reset filters
@@ -139,12 +139,12 @@ export default function DiscoverPage() {
             </div>
 
             {/* Collaboration Cards Grid */}
-            {isCollabsLoading ? (
+            {true ? (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {Array(6)
                   .fill(0)
                   .map((_, index) => (
-                    <Card key={index} className="w-full">
+                    <Card key={index} className="w-full p-0 shadow-none">
                       <CardContent className="gap-3 p-0">
                         <Skeleton className="rounded-lg w-full h-48" />
                       </CardContent>
@@ -266,7 +266,7 @@ export default function DiscoverPage() {
                           ? []
                           : [
                               value as Database["public"]["Enums"]["business_type"],
-                            ],
+                            ]
                       )
                     }
                   >
@@ -297,7 +297,7 @@ export default function DiscoverPage() {
                       setCollabType(
                         value as
                           | Database["public"]["Enums"]["collab_type"]
-                          | "All",
+                          | "All"
                       )
                     }
                   >
