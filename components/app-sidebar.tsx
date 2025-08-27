@@ -65,7 +65,6 @@ const navData = {
       icon: RiChat1Line,
     },
     { title: "Referrals", href: "/dashboard/referrals", icon: RiShareLine },
-    { title: "Referrals", href: "/dashboard/referrals", icon: RiShareLine },
     { title: "Profile", href: "/dashboard/profile", icon: RiUser3Line },
   ],
 };
