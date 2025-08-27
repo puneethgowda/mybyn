@@ -7,8 +7,9 @@ import {
   RiHomeLine,
   RiBriefcase3Line,
   RiUser3Line,
-  RiSearch2Line,
+  RiShareLine,
   RiMailOpenLine,
+  RiSearch2Line,
 } from "@remixicon/react";
 import Image from "next/image";
 import Link from "next/link";
@@ -63,6 +64,8 @@ const navData = {
       href: "/dashboard/messages",
       icon: RiChat1Line,
     },
+    { title: "Referrals", href: "/dashboard/referrals", icon: RiShareLine },
+    { title: "Referrals", href: "/dashboard/referrals", icon: RiShareLine },
     { title: "Profile", href: "/dashboard/profile", icon: RiUser3Line },
   ],
 };

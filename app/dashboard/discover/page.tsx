@@ -85,7 +85,7 @@ export default function DiscoverPage() {
   const languageOptions = Constants.public.Enums.languages;
 
   // React Query hooks
-  const { data: collabsData, isLoading: isCollabsLoading } = useQuery(
+  const { data: collabsData, isPending: isCollabsLoading } = useQuery(
     getCollabsOptions(supabase, {
       location,
       businessTypes,
@@ -139,7 +139,7 @@ export default function DiscoverPage() {
             </div>
 
             {/* Collaboration Cards Grid */}
-            {true ? (
+            {isCollabsLoading ? (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {Array(6)
                   .fill(0)

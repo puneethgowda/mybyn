@@ -197,12 +197,6 @@ export async function createCollab(
   userId: string,
   collabData: CreateCollabData,
 ) {
-  // const { data, error } = await supabase
-  //   .from("collabs")
-  //   .insert(collabData)
-  //   .select()
-  //   .single();
-
   const { data, error } = await supabase.rpc("handle_create_collab", {
     input_user_id: userId,
     input_business_id: collabData.business_id,
@@ -211,7 +205,8 @@ export async function createCollab(
 
   if (error) throw error;
 
-  return data;
+  // The RPC returns JSONB, so we need to cast it to the expected type
+  return data as unknown as Database["public"]["Tables"]["collabs"]["Row"];
 }
 
 /**

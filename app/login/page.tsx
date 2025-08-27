@@ -7,6 +7,8 @@ import { useSearchParams } from "next/navigation";
 
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { createClient } from "@/supabase/client";
 import { AnimatedGridPattern } from "@/components/magicui/animated-grid-pattern";
 import { cn } from "@/lib/utils";
@@ -55,7 +57,7 @@ export default function SignupPage() {
       toast.error(
         error instanceof Error
           ? error.message
-          : "An unexpected error occurred. Please try again.",
+          : "An unexpected error occurred. Please try again."
       );
       setLoading(false);
     }
@@ -66,7 +68,7 @@ export default function SignupPage() {
       <AnimatedGridPattern
         className={cn(
           "[mask-image:radial-gradient(800_circle_at_center,white,transparent)]",
-          "inset-x-0 inset-y-[-30%] h-[200%] skew-y-12",
+          "inset-x-0 inset-y-[-30%] h-[200%] skew-y-12"
         )}
         duration={3}
         maxOpacity={0.1}
@@ -97,6 +99,22 @@ export default function SignupPage() {
             </h1>
             <p className="text-muted-foreground">Your collab, made simple.</p>
           </div>
+          {/* Referral Code */}
+          {referralCode.trim() && (
+            <div className="mb-4">
+              <Label className="text-sm font-medium" htmlFor="referral-code">
+                Referral Code (Optional)
+              </Label>
+              <Input
+                className={cn("mt-1")}
+                id="referral-code"
+                placeholder="Enter referral code"
+                value={referralCode}
+                onChange={(e) => setReferralCode(e.target.value)}
+              />
+            </div>
+          )}
+
           {/* Terms and Conditions */}
           <div className="flex items-center gap-2 mb-6">
             <Checkbox
