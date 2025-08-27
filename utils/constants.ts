@@ -19,6 +19,19 @@ export const APPLICATION_LIMITS = {
   MAX_MESSAGE_LENGTH: 500,
 } as const;
 
+// Validation Constants
+export const VALIDATION_MESSAGES = {
+  PROFILE_MISSING: "Please complete your creator profile before applying",
+  PROFILE_INCOMPLETE:
+    "Please complete your creator profile with name and Instagram handle",
+  INSTAGRAM_NOT_CONNECTED:
+    "Please connect your Instagram account to verify your followers",
+  INSUFFICIENT_FOLLOWERS:
+    "You need at least {required} followers. Current: {current}",
+  INSUFFICIENT_BALANCE:
+    "You need {required} points to apply. Current balance: {current} points",
+} as const;
+
 // UI Constants
 export const UI = {
   ITEMS_PER_PAGE: 9,

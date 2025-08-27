@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { toast } from "sonner";
+import { RiCheckDoubleLine } from "@remixicon/react";
 
 import {
   Dialog,
@@ -27,9 +28,17 @@ import {
 import {
   getUserOptions,
   getUserProfileOptions,
+  getCreatorProfileOptions,
 } from "@/utils/react-query/user";
 import { toTitleCase } from "@/utils/string";
 import { POINTS } from "@/utils/constants";
+import {
+  validateCreatorApplication,
+  areAllValidationsPassed,
+  getFirstValidationError,
+} from "@/utils/validation/creator-application";
+import { ValidationResult } from "@/types/validation";
+import { handleConnectInstagram } from "@/utils/instagram-connect";
 
 interface CollabDetailsDrawerProps {
   isOpen: boolean;
@@ -37,6 +46,8 @@ interface CollabDetailsDrawerProps {
   collabDetails?: CollabWithBusinessProfile | null;
   onApply?: () => void;
 }
+
+const MAX_CHARACTERS = 200;
 
 export function CollabDetailsDrawer({
   isOpen,
@@ -71,19 +82,21 @@ export function CollabDetailsDrawer({
     getUserProfileOptions(supabase, user?.id as string),
   );
 
-  const validateApplicationBalance = () => {
-    const currentBalance = userProfile?.balance || 0;
+  const { data: creatorProfile } = useQuery(
+    getCreatorProfileOptions(supabase, user?.id as string),
+  );
 
-    if (currentBalance < POINTS.APPLY_COLLAB) {
-      toast.warning(
-        `You need ${POINTS.APPLY_COLLAB} points to apply for collaborations. Current balance: ${currentBalance} points.`,
-      );
+  // Run validations
+  const validationResults: ValidationResult[] = validateCreatorApplication({
+    creatorProfile,
+    creatorFollowers: creatorProfile?.followers_count || null,
+    requiredFollowers: collab?.min_followers || 0,
+    userBalance: userProfile?.balance || 0,
+    requiredPoints: POINTS.APPLY_COLLAB,
+  });
 
-      return false;
-    }
-
-    return true;
-  };
+  const canApply = areAllValidationsPassed(validationResults);
+  const validationError = getFirstValidationError(validationResults);
 
   useEffect(() => {
     if (!!collabDetails) {
@@ -98,8 +111,15 @@ export function CollabDetailsDrawer({
   const handleSubmitApplication = () => {
     if (!user?.id || !collab?.id) return;
 
-    // Add balance validation
-    if (!validateApplicationBalance()) return;
+    // Check if all validations pass
+    if (!canApply) {
+      toast.error(
+        validationError?.errorMessage ||
+          "Please fix the validation errors before applying",
+      );
+
+      return;
+    }
 
     setIsSubmitting(true);
 
@@ -128,14 +148,23 @@ export function CollabDetailsDrawer({
     );
   };
 
+  const handleTextareaChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const value = e.target.value;
+
+    if (value.length <= MAX_CHARACTERS) {
+      setApplicationMessage(value);
+    } else {
+      setApplicationMessage(value.slice(0, MAX_CHARACTERS));
+    }
+  };
+
   const handleMessageBusiness = () => {
     onClose();
   };
 
-  if (!collab) return null;
+  const charCount = applicationMessage.length;
 
-  const currentBalance = userProfile?.balance || 0;
-  const canApply = currentBalance >= POINTS.APPLY_COLLAB;
+  if (!collab) return null;
 
   return (
     <>
@@ -172,48 +201,72 @@ export function CollabDetailsDrawer({
                 </div>
               </div>
               <div>
-                <div className="w-full flex flex-row gap-2 container mx-auto items-center">
+                <div className="w-full flex flex-col gap-2 container mx-auto">
+                  {/* Validation Error Display */}
                   {collab.status === COLLAB_STATUS.ACTIVE &&
-                    !collabApplicationDetails && (
-                      <Button
-                        className="w-full max-w-sm"
-                        color="primary"
-                        disabled={!canApply}
-                        onClick={handleApply}
-                      >
-                        {canApply
-                          ? `Apply (${POINTS.APPLY_COLLAB} pts)`
-                          : `Need ${POINTS.APPLY_COLLAB} pts`}
-                      </Button>
-                    )}
-                  {collab.status === COLLAB_STATUS.ACTIVE &&
-                    collabApplicationDetails &&
-                    collabApplicationDetails?.status ===
-                      APPLICATION_STATUS.PENDING && (
-                      <Button
-                        className="w-full max-w-sm"
-                        color="success"
-                        disabled={true}
-                        size="sm"
-                        variant="ghost"
-                      >
-                        Already Applied
-                      </Button>
+                    !collabApplicationDetails &&
+                    !canApply &&
+                    validationError && (
+                      <div className="text-sm text-destructive bg-destructive/10 p-2 rounded-md">
+                        {validationError?.errorMessage}
+                      </div>
                     )}
 
-                  {collab.status === COLLAB_STATUS.ACTIVE &&
-                    collabApplicationDetails &&
-                    collabApplicationDetails?.status ===
-                      APPLICATION_STATUS.ACCEPTED && (
-                      <Button
-                        className="w-full max-w-sm"
-                        size="sm"
-                        variant="secondary"
-                        onClick={handleMessageBusiness}
-                      >
-                        Message Business
-                      </Button>
-                    )}
+                  <div className="w-full flex flex-row gap-2 items-center">
+                    {collab.status === COLLAB_STATUS.ACTIVE &&
+                      !collabApplicationDetails && (
+                        <Button
+                          className="w-full max-w-sm"
+                          color="primary"
+                          disabled={
+                            !canApply && validationError?.field !== "profile"
+                          }
+                          onClick={
+                            !canApply
+                              ? validationError?.field === "profile"
+                                ? handleConnectInstagram
+                                : () => {}
+                              : handleApply
+                          }
+                        >
+                          {canApply
+                            ? `Apply (${POINTS.APPLY_COLLAB} credits)`
+                            : validationError
+                              ? validationError?.field === "profile"
+                                ? "Connect Instagram"
+                                : "Apply"
+                              : `Apply ${POINTS.APPLY_COLLAB} credits`}
+                        </Button>
+                      )}
+                    {collab.status === COLLAB_STATUS.ACTIVE &&
+                      collabApplicationDetails &&
+                      collabApplicationDetails?.status ===
+                        APPLICATION_STATUS.PENDING && (
+                        <Button
+                          className="w-full max-w-sm"
+                          disabled={true}
+                          size="sm"
+                          variant="secondary"
+                        >
+                          <RiCheckDoubleLine />
+                          Already Applied
+                        </Button>
+                      )}
+
+                    {collab.status === COLLAB_STATUS.ACTIVE &&
+                      collabApplicationDetails &&
+                      collabApplicationDetails?.status ===
+                        APPLICATION_STATUS.ACCEPTED && (
+                        <Button
+                          className="w-full max-w-sm"
+                          size="sm"
+                          variant="secondary"
+                          onClick={handleMessageBusiness}
+                        >
+                          Message Business
+                        </Button>
+                      )}
+                  </div>
                 </div>
               </div>
             </div>
@@ -250,6 +303,17 @@ export function CollabDetailsDrawer({
                   </Badge>
                 </div>
               )}
+
+              {/* Validation Status */}
+              {collab.status === COLLAB_STATUS.ACTIVE &&
+                !collabApplicationDetails && (
+                  <div className="flex items-center gap-2 mt-2">
+                    <span className="text-sm font-medium">Eligibility:</span>
+                    <Badge color={canApply ? "success" : "warning"}>
+                      {canApply ? "Eligible" : "Not Eligible"}
+                    </Badge>
+                  </div>
+                )}
             </div>
             {/* Description */}
             <div className="mb-6">
@@ -326,8 +390,11 @@ export function CollabDetailsDrawer({
                 placeholder="Introduce yourself and explain why you're interested in this collaboration..."
                 rows={5}
                 value={applicationMessage}
-                onChange={(e) => setApplicationMessage(e.target.value)}
+                onChange={handleTextareaChange}
               />
+              <div className="text-xs text-muted-foreground mt-1 text-end w-full">
+                {charCount} / {MAX_CHARACTERS} characters
+              </div>
               <DialogFooter>
                 <Button variant="secondary" onClick={onMessageModalClose}>
                   Cancel

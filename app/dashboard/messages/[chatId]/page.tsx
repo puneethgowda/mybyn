@@ -87,12 +87,12 @@ export default function ChatRoomPage() {
   if (isLoading || !chatDetails) {
     return (
       <ScrollArea className="flex-1 [&>div>div]:h-full w-full shadow-md md:rounded-s-[inherit] min-[1024px]:rounded-e-3xl bg-background">
-        <div className="h-full flex flex-col px-4 md:px-6 lg:px-8">
+        <div className="h-full flex flex-col px-4 md:px-6 lg:px-8 max-w-3xl mx-auto">
           <div className="p-4">
             <Skeleton className="h-12 w-full lg:max-w-96 rounded-lg" />
           </div>
           <div className="flex-1 p-6 space-y-6 overflow-y-auto">
-            {[1, 2, 3, 4].map((i) => (
+            {[1, 2, 3].map((i) => (
               <Skeleton
                 key={i}
                 className={`h-24 w-3/4 rounded-2xl ${
