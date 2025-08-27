@@ -7,7 +7,7 @@ export type Json =
   | Json[];
 
 export type Database = {
-  // Allows to automatically instanciate createClient with right options
+  // Allows to automatically instantiate createClient with right options
   // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
   __InternalSupabase: {
     PostgrestVersion: "12.2.3 (519615d)";
@@ -20,6 +20,7 @@ export type Database = {
           description: string | null;
           email: string;
           id: string;
+          is_verified: boolean;
           location: string;
           logo_url: string;
           name: string;
@@ -33,6 +34,7 @@ export type Database = {
           description?: string | null;
           email: string;
           id?: string;
+          is_verified?: boolean;
           location: string;
           logo_url: string;
           name?: string;
@@ -46,6 +48,7 @@ export type Database = {
           description?: string | null;
           email?: string;
           id?: string;
+          is_verified?: boolean;
           location?: string;
           logo_url?: string;
           name?: string;
@@ -151,7 +154,7 @@ export type Database = {
             referencedColumns: ["id"];
           },
           {
-            foreignKeyName: "collab_applications_creator_id_fkey1";
+            foreignKeyName: "collab_applications_creator_id_fkey";
             columns: ["creator_id"];
             isOneToOne: false;
             referencedRelation: "creator_profile";
@@ -242,6 +245,30 @@ export type Database = {
         };
         Relationships: [];
       };
+      point_rules: {
+        Row: {
+          action: string;
+          cost: number;
+          created_at: string | null;
+          description: string | null;
+          updated_at: string | null;
+        };
+        Insert: {
+          action: string;
+          cost: number;
+          created_at?: string | null;
+          description?: string | null;
+          updated_at?: string | null;
+        };
+        Update: {
+          action?: string;
+          cost?: number;
+          created_at?: string | null;
+          description?: string | null;
+          updated_at?: string | null;
+        };
+        Relationships: [];
+      };
       point_transactions: {
         Row: {
           amount: number;
@@ -269,27 +296,6 @@ export type Database = {
           related_id?: string;
           type?: Database["public"]["Enums"]["tranasction_type"];
           user_id?: string;
-        };
-        Relationships: [];
-      };
-      test_table: {
-        Row: {
-          created_at: string;
-          id: string;
-          text: string | null;
-          user_id: string | null;
-        };
-        Insert: {
-          created_at?: string;
-          id?: string;
-          text?: string | null;
-          user_id?: string | null;
-        };
-        Update: {
-          created_at?: string;
-          id?: string;
-          text?: string | null;
-          user_id?: string | null;
         };
         Relationships: [];
       };
@@ -327,19 +333,41 @@ export type Database = {
     Functions: {
       apply_to_collab: {
         Args: {
-          input_user_id: string;
           input_collab_id: string;
+          input_user_id: string;
           message: string;
         };
         Returns: undefined;
       };
+      get_point_cost: {
+        Args: { action_name: string };
+        Returns: number;
+      };
       handle_create_collab: {
+        Args:
+          | {
+              input_business_id: string;
+              input_collab_details: Json;
+              input_user_id: string;
+            }
+          | {
+              input_business_id: string;
+              input_collab_details: Json;
+              input_user_id: string;
+            };
+        Returns: undefined;
+      };
+      handle_referral_points: {
         Args: {
+          input_action_type: string;
+          input_referrer_id: string;
           input_user_id: string;
-          input_business_id: string;
-          input_collab_details: Json;
         };
-        Returns: Record<string, unknown>;
+        Returns: undefined;
+      };
+      handle_referral_points_for_profile: {
+        Args: { action_type: string; profile_user_id: string };
+        Returns: boolean;
       };
     };
     Enums: {

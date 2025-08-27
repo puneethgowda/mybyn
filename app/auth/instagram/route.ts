@@ -50,8 +50,6 @@ export async function GET(request: Request) {
 
     const accessToken = await accessTokenJson.json();
 
-    console.log(accessToken, "accessToken");
-
     if (!accessTokenJson.ok && !accessToken)
       return NextResponse.redirect(`${origin}/auth/instagram/error`);
 
@@ -80,7 +78,22 @@ export async function GET(request: Request) {
       });
 
       if (error) {
-        return NextResponse.redirect(`${origin}/auth/instagram/error`);
+        return NextResponse.redirect(
+          `${origin}/auth/instagram/error?message=${error.message}`,
+        );
+      }
+
+      // Handle referral points for creator profile creation
+      if (user?.id) {
+        try {
+          await supabase.rpc("handle_referral_points_for_profile", {
+            profile_user_id: user.id,
+            action_type: "CREATOR_PROFILE_CREATED",
+          });
+        } catch (referralError) {
+          console.error("Error handling referral points:", referralError);
+          // Don't fail the auth flow if referral handling fails
+        }
       }
 
       const forwardedHost = request.headers.get("x-forwarded-host"); // original origin before load balancer

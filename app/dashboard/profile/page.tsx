@@ -14,7 +14,6 @@ import {
   getUserOptions,
 } from "@/utils/react-query/user";
 import { handleConnectInstagram } from "@/utils/instagram-connect";
-import { Referral } from "@/components/referral";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
 export default function InfluencerProfilePage() {
@@ -164,8 +163,6 @@ export default function InfluencerProfilePage() {
               </Card>
             </div>
           </div>
-
-          <Referral variant="profile" />
         </div>
       </div>
     </ScrollArea>

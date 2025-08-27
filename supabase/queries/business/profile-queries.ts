@@ -66,6 +66,17 @@ export async function saveBusinessProfile(
 
     if (error) throw error;
 
+    // Handle referral points for business profile creation
+    try {
+      await supabase.rpc("handle_referral_points_for_profile", {
+        profile_user_id: owner_id,
+        action_type: "BUSINESS_PROFILE_CREATED",
+      });
+    } catch (referralError) {
+      console.error("Error handling referral points:", referralError);
+      // Don't fail the profile creation if referral handling fails
+    }
+
     return data;
   }
 }

@@ -16,15 +16,24 @@ export async function GET(request: Request) {
 
   if (code) {
     const supabase = await createClient();
+
     const {
       data: { user },
       error,
     } = await supabase.auth.exchangeCodeForSession(code);
 
-    if (referralCode && user && !user?.user_metadata?.referral_code) {
-      await supabase.auth.updateUser({
-        data: { referral_code: referralCode },
-      });
+    if (referralCode && user) {
+      // Store referral code in user_profile.referred_by
+      await supabase.from("user_profile").upsert(
+        {
+          user_id: user.id,
+          referred_by: referralCode,
+          balance: 0,
+        },
+        {
+          onConflict: "user_id",
+        },
+      );
     }
 
     if (!error) {
