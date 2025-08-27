@@ -14,15 +14,15 @@ export default function BusinessOnboardingPage() {
   const { data } = useQuery(getUserOptions(supabase));
   const user = data?.user;
 
-  const { data: businessProfile } = useQuery(
+  const { error } = useQuery(
     getBusinessProfileOptions(supabase, user?.id as string),
   );
 
   useEffect(() => {
-    if (!businessProfile?.id) {
+    if (!error) {
       redirect("/business/dashboard");
     }
-  }, [businessProfile]);
+  }, [error]);
 
   return (
     <div className="flex flex-col justify-center container max-w-3xl mx-auto my-auto h-full px-4 py-6">
