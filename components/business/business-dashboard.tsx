@@ -1,29 +1,28 @@
 "use client";
 
-import Link from "next/link";
-import { useSuspenseQuery } from "@tanstack/react-query";
 import { RiBriefcase3Line, RiFileAddLine, RiGroupLine } from "@remixicon/react";
-import * as React from "react";
+import { useSuspenseQuery } from "@tanstack/react-query";
+import Link from "next/link";
 
-import { Badge } from "@/components/ui/badge";
-import {
-  Table,
-  TableHeader,
-  TableBody,
-  TableRow,
-  TableCell,
-  TableHead,
-} from "@/components/ui/table";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { APPLICATION_STATUS, COLLAB_STATUS, COLLAB_TYPE } from "@/utils/enums";
-import { createClient } from "@/supabase/client";
-import { getBusinessDashboardDataOptions } from "@/utils/react-query/business/collabs";
-import { getBusinessProfileOptions } from "@/utils/react-query/business/profile";
 import { StatsGrid } from "@/components/stats-grid";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { toTitleCase } from "@/utils/string";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { createClient } from "@/supabase/client";
 import { timeAgo } from "@/utils/date";
+import { APPLICATION_STATUS, COLLAB_STATUS, COLLAB_TYPE } from "@/utils/enums";
+import { getBusinessDashboardDataOptions } from "@/utils/react-query/business/collabs";
+import { getBusinessProfileOptions } from "@/utils/react-query/business/profile";
+import { toTitleCase } from "@/utils/string";
 
 export function BusinessDashboard({
   businessId,
@@ -36,10 +35,10 @@ export function BusinessDashboard({
 
   const { data: dashboardData, isLoading: isLoadingDashboard } =
     useSuspenseQuery(
-      getBusinessDashboardDataOptions(supabase, businessId as string),
+      getBusinessDashboardDataOptions(supabase, businessId as string)
     );
   const { data: businessProfile } = useSuspenseQuery(
-    getBusinessProfileOptions(supabase, userId as string),
+    getBusinessProfileOptions(supabase, userId as string)
   );
 
   const stats = dashboardData?.stats || {
@@ -203,7 +202,7 @@ export function BusinessDashboard({
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {recentApplications.map((application) => (
+                    {recentApplications.map(application => (
                       <TableRow key={application.id}>
                         <TableCell className="font-medium">
                           <div className="flex items-center gap-3">
@@ -369,7 +368,7 @@ export function BusinessDashboard({
             <div className="flex justify-center p-4">Loading...</div>
           ) : activeCollabs.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {activeCollabs.map((collab) => (
+              {activeCollabs.map(collab => (
                 <Card
                   key={collab.id}
                   className="border border-divider shadow-none"

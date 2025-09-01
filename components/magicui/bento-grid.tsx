@@ -1,6 +1,6 @@
 import { ArrowRightIcon } from "@radix-ui/react-icons";
-import { ComponentPropsWithoutRef, ReactNode } from "react";
 import Link from "next/link";
+import { ComponentPropsWithoutRef, ReactNode } from "react";
 
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -25,7 +25,7 @@ const BentoGrid = ({ children, className, ...props }: BentoGridProps) => {
     <div
       className={cn(
         "grid w-full auto-rows-[22rem] grid-cols-3 gap-4",
-        className,
+        className
       )}
       {...props}
     >
@@ -52,7 +52,7 @@ const BentoCard = ({
       "bg-[#f6f6f4]",
       // dark styles
       "transform-gpu dark:bg-background dark:[border:1px_solid_rgba(255,255,255,.1)] dark:[box-shadow:0_-20px_80px_-20px_#ffffff1f_inset]",
-      className,
+      className
     )}
     {...props}
   >
@@ -66,7 +66,7 @@ const BentoCard = ({
 
       <div
         className={cn(
-          "lg:hidden pointer-events-none flex w-full translate-y-0 transform-gpu flex-row items-center transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100",
+          "lg:hidden pointer-events-none flex w-full translate-y-0 transform-gpu flex-row items-center transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100"
         )}
       >
         <Link href={href}>
@@ -80,7 +80,7 @@ const BentoCard = ({
 
     <div
       className={cn(
-        "hidden lg:flex pointer-events-none absolute bottom-0 w-full translate-y-10 transform-gpu flex-row items-center p-4 opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100",
+        "hidden lg:flex pointer-events-none absolute bottom-0 w-full translate-y-10 transform-gpu flex-row items-center p-4 opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100"
       )}
     >
       <Link href={href}>

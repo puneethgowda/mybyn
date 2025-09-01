@@ -1,4 +1,3 @@
-import Link from "next/link";
 import {
   BellIcon,
   CalendarIcon,
@@ -7,11 +6,12 @@ import {
   InputIcon,
 } from "@radix-ui/react-icons";
 import Image from "next/image";
+import Link from "next/link";
 
-import { Button } from "@/components/ui/button";
-import { Marquee } from "@/components/magicui/marquee";
-import { BentoCard, BentoGrid } from "@/components/magicui/bento-grid";
 import LayoutSkeleton from "@/components/layout-skeleton";
+import { BentoCard, BentoGrid } from "@/components/magicui/bento-grid";
+import { Marquee } from "@/components/magicui/marquee";
+import { Button } from "@/components/ui/button";
 
 const TEXTS = ["CREATORS", "BUSINESSES", "INFLUENCE"];
 const features = [
@@ -21,9 +21,7 @@ const features = [
     description: "Set requirements, budget, or barter offers.",
     href: "/",
     cta: "Learn more",
-    background: (
-      <img alt="" className="absolute -right-20 -top-20 opacity-60" />
-    ),
+    background: <div className="absolute -right-20 -top-20 opacity-60" />,
     className: "lg:row-start-1 lg:row-end-4 lg:col-start-2 lg:col-end-3",
   },
   {
@@ -33,9 +31,7 @@ const features = [
 
     href: "/",
     cta: "Learn more",
-    background: (
-      <img alt="" className="absolute -right-20 -top-20 opacity-60" />
-    ),
+    background: <div className="absolute -right-20 -top-20 opacity-60" />,
     className: "lg:col-start-1 lg:col-end-2 lg:row-start-1 lg:row-end-3",
   },
   {
@@ -44,9 +40,7 @@ const features = [
     description: "Apply for collab and get accepted quickly",
     href: "/",
     cta: "Learn more",
-    background: (
-      <img alt="" className="absolute -right-20 -top-20 opacity-60" />
-    ),
+    background: <div className="absolute -right-20 -top-20 opacity-60" />,
     className: "lg:col-start-1 lg:col-end-2 lg:row-start-3 lg:row-end-4",
   },
   {
@@ -55,9 +49,7 @@ const features = [
     description: "Find opportunities that fit your style.",
     href: "/",
     cta: "Learn more",
-    background: (
-      <img alt="" className="absolute -right-20 -top-20 opacity-60" />
-    ),
+    background: <div className="absolute -right-20 -top-20 opacity-60" />,
     className: "lg:col-start-3 lg:col-end-3 lg:row-start-1 lg:row-end-2",
   },
   {
@@ -66,9 +58,7 @@ const features = [
     description: "Never miss a new campaign.",
     href: "/",
     cta: "Learn more",
-    background: (
-      <img alt="" className="absolute -right-20 -top-20 opacity-60" />
-    ),
+    background: <div className="absolute -right-20 -top-20 opacity-60" />,
     className: "lg:col-start-3 lg:col-end-3 lg:row-start-2 lg:row-end-4",
   },
 ];
@@ -267,7 +257,7 @@ export default async function Home() {
             Collabs made simple for creators and businesses
           </h1>
           <BentoGrid className="lg:grid-rows-3">
-            {features.map((feature) => (
+            {features.map(feature => (
               <BentoCard key={feature.name} {...feature} />
             ))}
           </BentoGrid>

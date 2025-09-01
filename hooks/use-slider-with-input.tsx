@@ -17,7 +17,7 @@ export function useSliderWithInput({
 }: UseSliderWithInputProps) {
   const [sliderValue, setSliderValue] = useState(initialValue);
   const [inputValues, setInputValues] = useState(
-    initialValue.map((v) => v.toString()),
+    initialValue.map(v => v.toString())
   );
 
   const showReset =
@@ -71,7 +71,7 @@ export function useSliderWithInput({
       newInputValues[index] = clampedValue.toString();
       setInputValues(newInputValues);
     },
-    [sliderValue, inputValues, minValue, maxValue],
+    [sliderValue, inputValues, minValue, maxValue]
   );
 
   const handleInputChange = useCallback(
@@ -85,17 +85,17 @@ export function useSliderWithInput({
         setInputValues(newInputValues);
       }
     },
-    [inputValues],
+    [inputValues]
   );
 
   const handleSliderChange = useCallback((newValue: number[]) => {
     setSliderValue(newValue);
-    setInputValues(newValue.map((v) => v.toString()));
+    setInputValues(newValue.map(v => v.toString()));
   }, []);
 
   const resetToDefault = useCallback(() => {
     setSliderValue(defaultValue);
-    setInputValues(defaultValue.map((v) => v.toString()));
+    setInputValues(defaultValue.map(v => v.toString()));
   }, [defaultValue]);
 
   return {

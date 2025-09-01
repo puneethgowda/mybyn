@@ -1,44 +1,45 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
-import { useQuery } from "@tanstack/react-query";
-import { toast } from "sonner";
 import { RiCheckDoubleLine } from "@remixicon/react";
+import { useQuery } from "@tanstack/react-query";
+import { useRouter } from "next/navigation";
+import React, { useEffect, useState } from "react";
+import { toast } from "sonner";
 
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
   DialogFooter,
   DialogHeader,
 } from "@/components/ui/dialog";
-import { useDisclosure } from "@/hooks/useDisclosure";
-import { Textarea } from "@/components/ui/textarea";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import { Drawer, DrawerContent, DrawerHeader } from "@/components/ui/drawer";
-import { CollabWithBusinessProfile } from "@/types/collab";
+import { Textarea } from "@/components/ui/textarea";
+import { useDisclosure } from "@/hooks/useDisclosure";
 import { createClient } from "@/supabase/client";
+import { CollabWithBusinessProfile } from "@/types/collab";
+import { ValidationResult } from "@/types/validation";
+import { POINTS } from "@/utils/constants";
 import { formatDateForDisplay } from "@/utils/date";
 import { APPLICATION_STATUS, COLLAB_STATUS, COLLAB_TYPE } from "@/utils/enums";
+import { handleConnectInstagram } from "@/utils/instagram-connect";
 import {
   checkUserAppliedToCollabOptions,
   useApplyToCollabMutation,
 } from "@/utils/react-query/collabs";
 import {
+  getCreatorProfileOptions,
   getUserOptions,
   getUserProfileOptions,
-  getCreatorProfileOptions,
 } from "@/utils/react-query/user";
 import { toTitleCase } from "@/utils/string";
-import { POINTS } from "@/utils/constants";
 import {
-  validateCreatorApplication,
   areAllValidationsPassed,
   getFirstValidationError,
+  validateCreatorApplication,
 } from "@/utils/validation/creator-application";
-import { ValidationResult } from "@/types/validation";
-import { handleConnectInstagram } from "@/utils/instagram-connect";
 
 interface CollabDetailsDrawerProps {
   isOpen: boolean;
@@ -74,16 +75,16 @@ export function CollabDetailsDrawer({
     checkUserAppliedToCollabOptions(
       supabase,
       user?.id as string,
-      collabDetails?.id as string,
-    ),
+      collabDetails?.id as string
+    )
   );
 
   const { data: userProfile } = useQuery(
-    getUserProfileOptions(supabase, user?.id as string),
+    getUserProfileOptions(supabase, user?.id as string)
   );
 
   const { data: creatorProfile } = useQuery(
-    getCreatorProfileOptions(supabase, user?.id as string),
+    getCreatorProfileOptions(supabase, user?.id as string)
   );
 
   // Run validations
@@ -97,6 +98,8 @@ export function CollabDetailsDrawer({
 
   const canApply = areAllValidationsPassed(validationResults);
   const validationError = getFirstValidationError(validationResults);
+
+  const router = useRouter();
 
   useEffect(() => {
     if (!!collabDetails) {
@@ -115,7 +118,7 @@ export function CollabDetailsDrawer({
     if (!canApply) {
       toast.error(
         validationError?.errorMessage ||
-          "Please fix the validation errors before applying",
+          "Please fix the validation errors before applying"
       );
 
       return;
@@ -136,15 +139,15 @@ export function CollabDetailsDrawer({
           setApplicationMessage("");
           refetch();
         },
-        onError: (error) => {
+        onError: error => {
           toast.error(
-            error?.message ?? "There was an error submitting your application",
+            error?.message ?? "There was an error submitting your application"
           );
         },
         onSettled: () => {
           setIsSubmitting(false);
         },
-      },
+      }
     );
   };
 
@@ -159,6 +162,12 @@ export function CollabDetailsDrawer({
   };
 
   const handleMessageBusiness = () => {
+    // Use proper chat room lookup instead of direct application ID
+    if (collabApplicationDetails?.id) {
+      // Navigate to the chat room using the application ID
+      // The chat room ID is the same as the application ID in the current system
+      router.push(`/dashboard/messages/${collabApplicationDetails.id}`);
+    }
     onClose();
   };
 

@@ -1,18 +1,18 @@
-import * as React from "react";
 import {
+  RiBriefcase3Line,
   RiChat1Line,
+  RiHomeLine,
+  RiMailOpenLine,
   RiPlanetLine,
+  RiSearch2Line,
   RiSeedlingLine,
   RiSettings3Line,
-  RiHomeLine,
-  RiBriefcase3Line,
-  RiUser3Line,
   RiShareLine,
-  RiMailOpenLine,
-  RiSearch2Line,
+  RiUser3Line,
 } from "@remixicon/react";
 import Image from "next/image";
 import Link from "next/link";
+import * as React from "react";
 
 import {
   Sidebar,
@@ -116,7 +116,7 @@ export function AppSidebar({
           </SidebarGroupLabel>
           <SidebarGroupContent className="px-2">
             <SidebarMenu>
-              {navData[view].map((item) => (
+              {navData[view].map(item => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton
                     asChild
@@ -148,7 +148,7 @@ export function AppSidebar({
           </SidebarGroupLabel>
           <SidebarGroupContent className="px-2">
             <SidebarMenu>
-              {secondaryNavData.map((item) => (
+              {secondaryNavData.map(item => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton
                     asChild

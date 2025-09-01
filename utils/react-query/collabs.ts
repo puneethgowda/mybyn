@@ -4,14 +4,14 @@ import {
   useQueryClient,
 } from "@tanstack/react-query";
 
-import { TypedSupabaseClient } from "@/supabase/types";
+import { Database } from "@/supabase/database.types";
 import {
-  getCollabs,
   applyToCollab,
   checkUserAppliedToCollab,
   getAllCollabApplications,
+  getCollabs,
 } from "@/supabase/queries/collab-queries";
-import { Database } from "@/supabase/database.types";
+import { TypedSupabaseClient } from "@/supabase/types";
 
 export function getCollabsOptions(
   supabase: TypedSupabaseClient,
@@ -25,7 +25,7 @@ export function getCollabsOptions(
     searchQuery?: string;
     page?: number;
     pageSize?: number;
-  },
+  }
 ) {
   return queryOptions({
     queryKey: ["collabs", filters],
@@ -59,7 +59,7 @@ export function useApplyToCollabMutation(supabase: TypedSupabaseClient) {
 export function checkUserAppliedToCollabOptions(
   supabase: TypedSupabaseClient,
   userId: string,
-  collabId: string,
+  collabId: string
 ) {
   return queryOptions({
     queryKey: ["collabs", "application", "has-applied", userId, collabId],
@@ -72,7 +72,7 @@ export function checkUserAppliedToCollabOptions(
 
 export function getAllCollabApplicationsOptions(
   supabase: TypedSupabaseClient,
-  userId: string,
+  userId: string
 ) {
   return queryOptions({
     queryKey: ["collabs", "application", "all", userId],

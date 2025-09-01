@@ -1,3 +1,5 @@
+import { format, isThisWeek, isThisYear, isYesterday } from "date-fns";
+
 /**
  * Format a date string to a relative time string (e.g., "2 hours ago")
  */
@@ -41,7 +43,7 @@ export function timeAgo(dateString: string): string {
  */
 export function formatDate(
   dateString: string,
-  options?: Intl.DateTimeFormatOptions,
+  options?: Intl.DateTimeFormatOptions
 ): string {
   const date = new Date(dateString);
   const defaultOptions: Intl.DateTimeFormatOptions = {
@@ -56,7 +58,7 @@ export function formatDate(
 /**
  * Check if a date is today
  */
-export function isToday(dateString: string): boolean {
+export function isToday(dateString: string | Date): boolean {
   const date = new Date(dateString);
   const today = new Date();
 
@@ -70,23 +72,91 @@ export function isToday(dateString: string): boolean {
 /**
  * Format a date for display in the UI
  */
-export function formatDateForDisplay(dateString: string): string {
-  if (isToday(dateString)) {
+export function formatDateForDisplay(date: string | Date): string {
+  const dateObj = typeof date === "string" ? new Date(date) : date;
+
+  return format(dateObj, "MMM dd, yyyy");
+}
+
+export function formatTimeForDisplay(date: string | Date): string {
+  const dateObj = typeof date === "string" ? new Date(date) : date;
+
+  return format(dateObj, "HH:mm");
+}
+
+export function formatDateTimeForDisplay(date: string | Date): string {
+  const dateObj = typeof date === "string" ? new Date(date) : date;
+
+  return format(dateObj, "MMM dd, yyyy HH:mm");
+}
+
+export function getRelativeTime(date: string | Date): string {
+  const dateObj = typeof date === "string" ? new Date(date) : date;
+  const now = new Date();
+  const diffInSeconds = Math.floor((now.getTime() - dateObj.getTime()) / 1000);
+
+  if (diffInSeconds < 60) {
+    return "Just now";
+  } else if (diffInSeconds < 3600) {
+    const minutes = Math.floor(diffInSeconds / 60);
+
+    return `${minutes}m ago`;
+  } else if (diffInSeconds < 86400) {
+    const hours = Math.floor(diffInSeconds / 3600);
+
+    return `${hours}h ago`;
+  } else if (diffInSeconds < 2592000) {
+    const days = Math.floor(diffInSeconds / 86400);
+
+    return `${days}d ago`;
+  } else if (diffInSeconds < 31536000) {
+    const months = Math.floor(diffInSeconds / 2592000);
+
+    return `${months}mo ago`;
+  } else {
+    const years = Math.floor(diffInSeconds / 31536000);
+
+    return `${years}y ago`;
+  }
+}
+
+export function getMessageDateLabel(date: string | Date): string {
+  const dateObj = typeof date === "string" ? new Date(date) : date;
+
+  if (isToday(dateObj)) {
     return "Today";
-  }
-
-  const date = new Date(dateString);
-  const yesterday = new Date();
-
-  yesterday.setDate(yesterday.getDate() - 1);
-
-  if (
-    date.getDate() === yesterday.getDate() &&
-    date.getMonth() === yesterday.getMonth() &&
-    date.getFullYear() === yesterday.getFullYear()
-  ) {
+  } else if (isYesterday(dateObj)) {
     return "Yesterday";
+  } else if (isThisWeek(dateObj)) {
+    return format(dateObj, "EEEE"); // Day name
+  } else if (isThisYear(dateObj)) {
+    return format(dateObj, "MMM dd"); // Month and day
+  } else {
+    return format(dateObj, "MMM dd, yyyy"); // Full date
   }
+}
 
-  return formatDate(dateString);
+export function groupMessagesByDate(messages: any[]): any[] {
+  if (!messages.length) return [];
+
+  const groups: { [key: string]: any[] } = {};
+
+  messages.forEach(message => {
+    const date = new Date(message.created_at);
+    const dateKey = format(date, "yyyy-MM-dd");
+
+    if (!groups[dateKey]) {
+      groups[dateKey] = [];
+    }
+    groups[dateKey].push(message);
+  });
+
+  return Object.entries(groups).map(([dateKey, messages]) => ({
+    date: dateKey,
+    label: getMessageDateLabel(new Date(dateKey)),
+    messages: messages.sort(
+      (a, b) =>
+        new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
+    ),
+  }));
 }

@@ -6,7 +6,11 @@
     "dev": "next dev --turbopack -p 4000",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint --fix",
+    "lint": "eslint . --ext .ts,.tsx,.js,.jsx --fix",
+    "lint:check": "eslint . --ext .ts,.tsx,.js,.jsx",
+    "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md,css,scss}\"",
+    "format:check": "prettier --check \"**/*.{ts,tsx,js,jsx,json,md,css,scss}\"",
+    "clean": "rm -rf .next out dist coverage",
     "update-types": "PROJECT_ID=$1 pnpx supabase gen types --lang=typescript --project-id $PROJECT_ID > database.types.ts"
   },
   "dependencies": {
@@ -97,6 +101,7 @@
     "globals": "16.0.0",
     "postcss": "8.5.3",
     "prettier": "3.5.3",
+    "prettier-plugin-organize-imports": "^4.2.0",
     "tailwind-variants": "^1.0.0",
     "tailwindcss": "4.1.11",
     "tw-animate-css": "^1.3.6",

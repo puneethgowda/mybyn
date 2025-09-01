@@ -1,5 +1,5 @@
-import { TypedSupabaseClient } from "@/supabase/types";
 import { Database } from "@/supabase/database.types";
+import { TypedSupabaseClient } from "@/supabase/types";
 import { COLLAB_STATUS } from "@/utils/enums";
 
 export async function getCollabs(
@@ -14,7 +14,7 @@ export async function getCollabs(
     searchQuery?: string;
     page?: number;
     pageSize?: number;
-  },
+  }
 ) {
   const {
     location,
@@ -34,7 +34,7 @@ export async function getCollabs(
         business_profile!inner(
           *
         )
-      `,
+      `
   );
 
   // Apply filters
@@ -90,7 +90,7 @@ export async function applyToCollab(
   supabase: TypedSupabaseClient,
   userId: string,
   collabId: string,
-  message: string,
+  message: string
 ) {
   // const { error } = await supabase
   //   .from("collab_applications")
@@ -110,7 +110,7 @@ export async function applyToCollab(
 export async function checkUserAppliedToCollab(
   supabase: TypedSupabaseClient,
   userId: string,
-  collabId: string,
+  collabId: string
 ) {
   const { data, error } = await supabase
     .from("collab_applications")
@@ -126,7 +126,7 @@ export async function checkUserAppliedToCollab(
 
 export async function getAllCollabApplications(
   supabase: TypedSupabaseClient,
-  userId: string,
+  userId: string
 ) {
   const { data, error } = await supabase
     .from("collab_applications")
@@ -139,7 +139,7 @@ export async function getAllCollabApplications(
                   *
                 )
               )
-            `,
+            `
     )
     .eq("creator_id", userId);
 

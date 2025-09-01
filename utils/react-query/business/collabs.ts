@@ -5,30 +5,28 @@ import {
 } from "@tanstack/react-query";
 import { toast } from "sonner";
 
-import { TypedSupabaseClient } from "@/supabase/types";
-import {
-  getBusinessDashboardStats,
-  getBusinessRecentApplications,
-  getBusinessActiveCollabs,
-  getBusinessDashboardData,
-  getAllBusinessCollabs,
-  getCollabById,
-} from "@/supabase/queries/business/collab-queries";
 import { Database } from "@/supabase/database.types";
-import { COLLAB_STATUS } from "@/utils/enums";
 import {
   createCollab,
-  updateCollab,
-  updateCollabStatus,
   CreateCollabData,
+  getAllBusinessCollabs,
+  getBusinessActiveCollabs,
+  getBusinessDashboardData,
+  getBusinessDashboardStats,
+  getBusinessRecentApplications,
+  getCollabById,
+  updateCollab,
   UpdateCollabData,
+  updateCollabStatus,
 } from "@/supabase/queries/business/collab-queries";
+import { TypedSupabaseClient } from "@/supabase/types";
+import { COLLAB_STATUS } from "@/utils/enums";
 /**
  * React Query options for fetching business dashboard stats
  */
 export function getBusinessDashboardStatsOptions(
   supabase: TypedSupabaseClient,
-  businessId: string,
+  businessId: string
 ) {
   return queryOptions({
     queryKey: ["business", "dashboard", "stats", businessId],
@@ -47,7 +45,7 @@ export function getBusinessDashboardStatsOptions(
 export function getBusinessRecentApplicationsOptions(
   supabase: TypedSupabaseClient,
   businessId: string,
-  limit: number = 5,
+  limit: number = 5
 ) {
   return queryOptions({
     queryKey: [
@@ -72,7 +70,7 @@ export function getBusinessRecentApplicationsOptions(
 export function getBusinessActiveCollabsOptions(
   supabase: TypedSupabaseClient,
   businessId: string,
-  limit: number = 3,
+  limit: number = 3
 ) {
   return queryOptions({
     queryKey: ["business", "dashboard", "active-collabs", businessId, limit],
@@ -90,7 +88,7 @@ export function getBusinessActiveCollabsOptions(
  */
 export function getBusinessDashboardDataOptions(
   supabase: TypedSupabaseClient,
-  businessId: string,
+  businessId: string
 ) {
   return queryOptions({
     queryKey: ["business", "dashboard", "data", businessId],
@@ -109,7 +107,7 @@ export function getBusinessDashboardDataOptions(
 export function getAllBusinessCollabsOptions(
   supabase: TypedSupabaseClient,
   businessId: string,
-  status: Database["public"]["Enums"]["collab_status"] = COLLAB_STATUS.ACTIVE,
+  status: Database["public"]["Enums"]["collab_status"] = COLLAB_STATUS.ACTIVE
 ) {
   return queryOptions({
     queryKey: businessId ? ["business", "collabs", businessId] : [],
@@ -127,7 +125,7 @@ export function getAllBusinessCollabsOptions(
 export function getSingleBusinessCollabsOptions(
   supabase: TypedSupabaseClient,
   businessId: string,
-  collabId: string,
+  collabId: string
 ) {
   return queryOptions({
     queryKey: businessId ? ["business", "collabs", businessId, collabId] : [],
@@ -145,7 +143,7 @@ export function getSingleBusinessCollabsOptions(
  */
 export function useCreateCollabMutation(
   supabase: TypedSupabaseClient,
-  userId: string,
+  userId: string
 ) {
   const queryClient = useQueryClient();
   // const router = useRouter();
@@ -168,8 +166,8 @@ export function useCreateCollabMutation(
       // Navigate to the collab details page
       // router.push(`/business/dashboard/collabs/${data.id}`);
     },
-    onError: (error: any) => {
-      console.error("Error creating collab:", error);
+    onError: (_error: any) => {
+      // console.error("Error creating collab:", error);
       toast.error("Failed to Create Collaboration");
     },
   });
@@ -200,8 +198,8 @@ export function useUpdateCollabMutation(supabase: TypedSupabaseClient) {
       // Navigate to the collab details page
       // router.push(`/business/dashboard/collabs/${data.id}`);
     },
-    onError: (error: any) => {
-      console.error("Error updating collab:", error);
+    onError: (_error: any) => {
+      // console.error("Error updating collab:", error);
       toast.error("Failed to Update Collaboration");
     },
   });
@@ -234,7 +232,7 @@ export function useUpdateCollabStatusMutation(supabase: TypedSupabaseClient) {
         queryKey: ["business", "dashboard", "data", variables.businessId],
       });
 
-      const statusText =
+      const _statusText =
         variables.status === "ACTIVE"
           ? "activated"
           : variables.status === "CLOSED"
@@ -243,8 +241,8 @@ export function useUpdateCollabStatusMutation(supabase: TypedSupabaseClient) {
 
       toast.success("Status Updated");
     },
-    onError: (error: any) => {
-      console.error("Error updating collab status:", error);
+    onError: (_error: any) => {
+      // console.error("Error updating collab status:", error);
       toast.error("Failed to Update Status");
     },
   });

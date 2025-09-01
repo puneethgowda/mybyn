@@ -1,37 +1,36 @@
 "use client";
 
-import { useState, useMemo } from "react";
-import { useParams, useRouter } from "next/navigation";
-import Link from "next/link";
-import { Edit, X } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
-import * as React from "react";
+import { Edit, X } from "lucide-react";
+import Link from "next/link";
+import { useParams, useRouter } from "next/navigation";
+import { useMemo, useState } from "react";
 
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import ApplicantsDataTable from "@/components/business/applicants-data-table";
 import { Badge } from "@/components/ui/badge";
-import { Skeleton } from "@/components/ui/skeleton";
-import { ScrollArea } from "@/components/ui/scroll-area";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import {
   Dialog,
   DialogContent,
-  DialogHeader,
-  DialogFooter,
-  DialogTitle,
   DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
 } from "@/components/ui/dialog";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Skeleton } from "@/components/ui/skeleton";
+import { createClient } from "@/supabase/client";
+import { formatDateForDisplay, timeAgo } from "@/utils/date";
 import { COLLAB_STATUS, COLLAB_TYPE } from "@/utils/enums";
+import { formatNumber } from "@/utils/number";
 import {
   getSingleBusinessCollabsOptions,
   useUpdateCollabStatusMutation,
 } from "@/utils/react-query/business/collabs";
-import { getUserOptions } from "@/utils/react-query/user";
 import { getBusinessProfileOptions } from "@/utils/react-query/business/profile";
-import { formatDateForDisplay, timeAgo } from "@/utils/date";
-import { createClient } from "@/supabase/client";
+import { getUserOptions } from "@/utils/react-query/user";
 import { toTitleCase } from "@/utils/string";
-import { formatNumber } from "@/utils/number";
-import ApplicantsDataTable from "@/components/business/applicants-data-table";
 
 export default function CollabDetailsPage() {
   const params = useParams();
@@ -48,13 +47,13 @@ export default function CollabDetailsPage() {
   const user = data?.user;
 
   const { data: businessProfile } = useQuery(
-    getBusinessProfileOptions(supabase, user?.id as string),
+    getBusinessProfileOptions(supabase, user?.id as string)
   );
 
   const businessId = useMemo(() => businessProfile?.id, [businessProfile]);
 
   const { data: collab, isPending } = useQuery(
-    getSingleBusinessCollabsOptions(supabase, businessId as string, collabId),
+    getSingleBusinessCollabsOptions(supabase, businessId as string, collabId)
   );
 
   const updateCollabStatusMutation = useUpdateCollabStatusMutation(supabase);
@@ -230,7 +229,7 @@ export default function CollabDetailsPage() {
           {/* Close Collab Confirmation Modal */}
           <Dialog
             open={showCloseModal}
-            onOpenChange={(open) => !open && setShowCloseModal(false)}
+            onOpenChange={open => !open && setShowCloseModal(false)}
           >
             <DialogContent>
               <DialogHeader>

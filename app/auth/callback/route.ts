@@ -32,7 +32,7 @@ export async function GET(request: Request) {
         },
         {
           onConflict: "user_id",
-        },
+        }
       );
     }
 

@@ -1,34 +1,15 @@
 "use client";
 
-import { useState, useEffect, useRef, useMemo } from "react";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useQuery } from "@tanstack/react-query";
-import * as React from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import * as z from "zod";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
 
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { createClient } from "@/supabase/client";
-import { getUserOptions } from "@/utils/react-query/user";
-import {
-  getBusinessProfileOptions,
-  useSaveBusinessProfileMutation,
-} from "@/utils/react-query/business/profile";
-import { BusinessProfileFormValues } from "@/types/business-profile";
-import { Constants } from "@/supabase/database.types";
-import { getStoragePublicUrlBase } from "@/supabase/storage";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import {
   Form,
   FormControl,
@@ -37,7 +18,25 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
+import { createClient } from "@/supabase/client";
+import { Constants } from "@/supabase/database.types";
+import { getStoragePublicUrlBase } from "@/supabase/storage";
+import { BusinessProfileFormValues } from "@/types/business-profile";
+import {
+  getBusinessProfileOptions,
+  useSaveBusinessProfileMutation,
+} from "@/utils/react-query/business/profile";
+import { getUserOptions } from "@/utils/react-query/user";
 
 // Location options
 const locationOptions = [
@@ -79,7 +78,7 @@ type FormValues = z.infer<typeof formSchema>;
 
 export default function BusinessProfilePage() {
   const supabase = createClient();
-  const [profile, setProfile] = useState<BusinessProfileFormValues>({
+  const [_profile, setProfile] = useState<BusinessProfileFormValues>({
     name: "",
     location: "",
     website: "",
@@ -96,7 +95,7 @@ export default function BusinessProfilePage() {
   const user = userData?.user;
 
   const { data: businessProfile, isLoading } = useQuery(
-    getBusinessProfileOptions(supabase, user?.id as string),
+    getBusinessProfileOptions(supabase, user?.id as string)
   );
 
   // Initialize form
@@ -145,7 +144,7 @@ export default function BusinessProfilePage() {
       });
     } else if (user && !isLoading) {
       // Set default email from user if no profile exists
-      setProfile((prev) => ({
+      setProfile(prev => ({
         ...prev,
         email: user.email || "",
       }));
@@ -193,7 +192,7 @@ export default function BusinessProfilePage() {
       const logoUrl = getStoragePublicUrlBase(data?.fullPath);
 
       form.setValue("logo_url", logoUrl);
-    } catch (error) {
+    } catch (_error) {
       toast.error("Failed to upload logo");
     }
   };
@@ -276,7 +275,7 @@ export default function BusinessProfilePage() {
                                 accept="image/*"
                                 className="hidden"
                                 type="file"
-                                onChange={(e) => {
+                                onChange={e => {
                                   const file = e.target.files?.[0];
 
                                   if (file) handleLogoUpload(file);
@@ -423,7 +422,7 @@ export default function BusinessProfilePage() {
                             </SelectTrigger>
                           </FormControl>
                           <SelectContent>
-                            {locationOptions.map((location) => (
+                            {locationOptions.map(location => (
                               <SelectItem key={location} value={location}>
                                 {location}
                               </SelectItem>
@@ -452,7 +451,7 @@ export default function BusinessProfilePage() {
                             </SelectTrigger>
                           </FormControl>
                           <SelectContent>
-                            {TypeOptions.map((type) => (
+                            {TypeOptions.map(type => (
                               <SelectItem key={type} value={type}>
                                 {type}
                               </SelectItem>

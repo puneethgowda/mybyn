@@ -1,16 +1,17 @@
 "use client";
 
 import {
-  RiCodeSSlashLine,
-  RiShareLine,
-  RiShareCircleLine,
-  RiShining2Line,
   RiAttachment2,
-  RiMicLine,
+  RiCodeSSlashLine,
   RiLeafLine,
+  RiMicLine,
+  RiShareCircleLine,
+  RiShareLine,
+  RiShining2Line,
 } from "@remixicon/react";
-import { useRef, useEffect } from "react";
+import { useEffect, useRef } from "react";
 
+import { ChatMessage } from "@/components/chat-message";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -21,7 +22,6 @@ import {
 } from "@/components/ui/breadcrumb";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { ChatMessage } from "@/components/chat-message";
 
 export default function Chat() {
   const messagesEndRef = useRef<HTMLDivElement>(null);

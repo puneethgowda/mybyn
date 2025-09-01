@@ -3,7 +3,6 @@
 import { RiRefreshLine } from "@remixicon/react";
 import { useEffect } from "react";
 
-import { useSliderWithInput } from "@/hooks/use-slider-with-input";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -14,6 +13,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { useSliderWithInput } from "@/hooks/use-slider-with-input";
 import { cn } from "@/lib/utils";
 
 interface SliderControlProps {
@@ -63,7 +63,7 @@ export default function SliderControl({
                   aria-label="Reset"
                   className={cn(
                     "size-7 transition-all text-muted-foreground/70 hover:text-foreground hover:bg-transparent",
-                    showReset ? "opacity-100" : "opacity-0 pointer-events-none",
+                    showReset ? "opacity-100" : "opacity-0 pointer-events-none"
                   )}
                   size="icon"
                   variant="ghost"
@@ -84,8 +84,8 @@ export default function SliderControl({
             type="text"
             value={inputValues[0]}
             onBlur={() => validateAndUpdateValue(inputValues[0] ?? "", 0)}
-            onChange={(e) => handleInputChange(e, 0)}
-            onKeyDown={(e) => {
+            onChange={e => handleInputChange(e, 0)}
+            onKeyDown={e => {
               if (e.key === "Enter") {
                 validateAndUpdateValue(inputValues[0] ?? "", 0);
               }

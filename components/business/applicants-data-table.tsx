@@ -1,6 +1,5 @@
 "use client";
 
-import { useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import {
   ColumnDef,
@@ -11,6 +10,7 @@ import {
 } from "@tanstack/react-table";
 import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
 import Link from "next/link";
+import { useMemo, useState } from "react";
 
 import {
   Dialog,
@@ -20,7 +20,8 @@ import {
   DialogTitle,
 } from "../ui/dialog";
 
-import { cn } from "@/lib/utils";
+import { ConfirmationModal } from "@/components/business/ConfirmationModal";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
@@ -44,15 +45,14 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { cn } from "@/lib/utils";
 import { createClient } from "@/supabase/client";
+import { formatDateForDisplay, timeAgo } from "@/utils/date";
+import { APPLICATION_STATUS } from "@/utils/enums";
 import {
   getAllCollabApplicationsOptions,
   useAcceptOrRejectApplicationMutation,
 } from "@/utils/react-query/business/applications";
-import { APPLICATION_STATUS } from "@/utils/enums";
-import { formatDateForDisplay, timeAgo } from "@/utils/date";
-import { ConfirmationModal } from "@/components/business/ConfirmationModal";
 
 type CollabApplicationRow = {
   id: string;
@@ -89,12 +89,12 @@ export default function ApplicantsDataTable({
       page,
       pageSize,
       status,
-    }),
+    })
   );
 
   const rows: CollabApplicationRow[] = useMemo(
     () => (paged?.data as unknown as CollabApplicationRow[]) ?? [],
-    [paged],
+    [paged]
   );
   const total = paged?.count ?? 0;
   const pageCount = Math.max(1, Math.ceil(total / pageSize));
@@ -132,7 +132,7 @@ export default function ApplicantsDataTable({
           name && name.trim().length > 0
             ? name
                 .split(" ")
-                .map((s) => s[0])
+                .map(s => s[0])
                 .join("")
                 .slice(0, 2)
                 .toUpperCase()
@@ -260,7 +260,7 @@ export default function ApplicantsDataTable({
         if (app.status === APPLICATION_STATUS.ACCEPTED) {
           return (
             <div className="flex items-center justify-end gap-2">
-              <Link href="/business/dashboard/messages">
+              <Link href={`/business/dashboard/messages/${app.id}`}>
                 <Button size="sm" variant="outline">
                   Message
                 </Button>
@@ -292,7 +292,7 @@ export default function ApplicantsDataTable({
     },
     manualPagination: true,
     pageCount,
-    onPaginationChange: (updater) => {
+    onPaginationChange: updater => {
       if (typeof updater === "function") {
         const next = updater({ pageIndex, pageSize });
 
@@ -327,7 +327,7 @@ export default function ApplicantsDataTable({
 
   const statusOptions = useMemo(
     () => ["All", ...Object.values(APPLICATION_STATUS)],
-    [],
+    []
   );
 
   return (
@@ -338,12 +338,12 @@ export default function ApplicantsDataTable({
           <div className="flex items-center gap-2">
             <Select
               value={status}
-              onValueChange={(value) => {
+              onValueChange={value => {
                 setPageIndex(0);
                 setStatus(
                   value as
                     | (typeof APPLICATION_STATUS)[keyof typeof APPLICATION_STATUS]
-                    | "All",
+                    | "All"
                 );
               }}
             >
@@ -351,7 +351,7 @@ export default function ApplicantsDataTable({
                 <SelectValue placeholder="Filter by status" />
               </SelectTrigger>
               <SelectContent>
-                {statusOptions.map((opt) => (
+                {statusOptions.map(opt => (
                   <SelectItem key={opt} value={opt}>
                     {opt}
                   </SelectItem>
@@ -365,9 +365,9 @@ export default function ApplicantsDataTable({
       <div className="bg-background overflow-hidden rounded-md border">
         <Table className="table-fixed">
           <TableHeader>
-            {table.getHeaderGroups().map((hg) => (
+            {table.getHeaderGroups().map(hg => (
               <TableRow key={hg.id} className="hover:bg-transparent">
-                {hg.headers.map((header) => (
+                {hg.headers.map(header => (
                   <TableHead
                     key={header.id}
                     className="h-11"
@@ -381,7 +381,7 @@ export default function ApplicantsDataTable({
                       ? null
                       : flexRender(
                           header.column.columnDef.header,
-                          header.getContext(),
+                          header.getContext()
                         )}
                   </TableHead>
                 ))}
@@ -390,13 +390,13 @@ export default function ApplicantsDataTable({
           </TableHeader>
           <TableBody>
             {!isPending && table.getRowModel().rows?.length ? (
-              table.getRowModel().rows.map((row) => (
+              table.getRowModel().rows.map(row => (
                 <TableRow key={row.id}>
-                  {row.getVisibleCells().map((cell) => (
+                  {row.getVisibleCells().map(cell => (
                     <TableCell key={cell.id} className="align-top">
                       {flexRender(
                         cell.column.columnDef.cell,
-                        cell.getContext(),
+                        cell.getContext()
                       )}
                     </TableCell>
                   ))}
@@ -423,7 +423,7 @@ export default function ApplicantsDataTable({
           </Label>
           <Select
             value={String(pageSize)}
-            onValueChange={(value) => {
+            onValueChange={value => {
               setPageIndex(0);
               setPageSize(Number(value));
             }}
@@ -432,7 +432,7 @@ export default function ApplicantsDataTable({
               <SelectValue placeholder="Rows per page" />
             </SelectTrigger>
             <SelectContent>
-              {[5, 10, 25, 50].map((ps) => (
+              {[5, 10, 25, 50].map(ps => (
                 <SelectItem key={ps} value={String(ps)}>
                   {ps}
                 </SelectItem>
@@ -462,7 +462,7 @@ export default function ApplicantsDataTable({
                   disabled={pageIndex <= 0}
                   size="icon"
                   variant="outline"
-                  onClick={() => setPageIndex((p) => Math.max(0, p - 1))}
+                  onClick={() => setPageIndex(p => Math.max(0, p - 1))}
                 >
                   <ChevronLeftIcon aria-hidden="true" size={16} />
                 </Button>
@@ -475,7 +475,7 @@ export default function ApplicantsDataTable({
                   size="icon"
                   variant="outline"
                   onClick={() =>
-                    setPageIndex((p) => Math.min(pageCount - 1, p + 1))
+                    setPageIndex(p => Math.min(pageCount - 1, p + 1))
                   }
                 >
                   <ChevronRightIcon aria-hidden="true" size={16} />
@@ -515,8 +515,8 @@ export default function ApplicantsDataTable({
 
       <Dialog
         open={messageDialog.open}
-        onOpenChange={(open) =>
-          !open && setMessageDialog((m) => ({ ...m, open: false }))
+        onOpenChange={open =>
+          !open && setMessageDialog(m => ({ ...m, open: false }))
         }
       >
         <DialogContent>

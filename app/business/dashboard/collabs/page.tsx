@@ -1,8 +1,5 @@
 "use client";
 
-import { useMemo, useState } from "react";
-import Link from "next/link";
-import { useQuery } from "@tanstack/react-query";
 import {
   RiAddLine,
   RiBriefcase3Line,
@@ -11,12 +8,15 @@ import {
   RiEyeLine,
   RiTimeLine,
 } from "@remixicon/react";
-import * as React from "react";
+import { useQuery } from "@tanstack/react-query";
+import Link from "next/link";
+import { useMemo, useState } from "react";
 
-import { Card, CardContent } from "@/components/ui/card";
+import { ConfirmationModal } from "@/components/business/ConfirmationModal";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
+import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import {
   Select,
   SelectContent,
@@ -26,17 +26,15 @@ import {
 } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
 import { createClient } from "@/supabase/client";
+import { Database } from "@/supabase/database.types";
+import { timeAgo } from "@/utils/date";
 import { COLLAB_STATUS, COLLAB_TYPE } from "@/utils/enums";
-import { ConfirmationModal } from "@/components/business/ConfirmationModal";
-import { getBusinessProfileOptions } from "@/utils/react-query/business/profile";
-import { getUserOptions } from "@/utils/react-query/user";
 import {
   getAllBusinessCollabsOptions,
   useUpdateCollabStatusMutation,
 } from "@/utils/react-query/business/collabs";
-import { Database } from "@/supabase/database.types";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { timeAgo } from "@/utils/date";
+import { getBusinessProfileOptions } from "@/utils/react-query/business/profile";
+import { getUserOptions } from "@/utils/react-query/user";
 
 export default function CollabsPage() {
   const supabase = createClient();
@@ -52,7 +50,7 @@ export default function CollabsPage() {
   const user = data?.user;
 
   const { data: businessProfile } = useQuery(
-    getBusinessProfileOptions(supabase, user?.id as string),
+    getBusinessProfileOptions(supabase, user?.id as string)
   );
 
   const businessId = useMemo(() => businessProfile?.id, [businessProfile]);
@@ -61,15 +59,15 @@ export default function CollabsPage() {
     getAllBusinessCollabsOptions(
       supabase,
       businessId as string,
-      statusFilter === "ALL" ? undefined : statusFilter,
-    ),
+      statusFilter === "ALL" ? undefined : statusFilter
+    )
   );
 
   const updateCollabStatusMutation = useUpdateCollabStatusMutation(supabase);
 
   // Filter and sort collabs
   const filteredCollabs = (collabs || [])
-    .filter((collab) => {
+    .filter(collab => {
       // Search query filter
       const matchesSearch =
         searchQuery === "" ||
@@ -118,11 +116,6 @@ export default function CollabsPage() {
     }
   };
 
-  // Render collab type badge with appropriate color
-  const renderCollabTypeBadge = (type: keyof typeof COLLAB_TYPE) => {
-    return <Badge className="text-xs">{COLLAB_TYPE[type]}</Badge>;
-  };
-
   const getStatusColor = (status: string) => {
     switch (status.toLowerCase()) {
       case "active":
@@ -168,13 +161,13 @@ export default function CollabsPage() {
               className="w-full md:w-64"
               placeholder="Search collabs..."
               value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
+              onChange={e => setSearchQuery(e.target.value)}
             />
 
             <div className="flex flex-wrap gap-3 flex-1 justify-start md:justify-end">
               <Select
                 value={statusFilter}
-                onValueChange={(v) =>
+                onValueChange={v =>
                   setStatusFilter(v as "ACTIVE" | "CLOSED" | "ALL")
                 }
               >
@@ -188,7 +181,7 @@ export default function CollabsPage() {
                 </SelectContent>
               </Select>
 
-              <Select value={sortBy} onValueChange={(v) => setSortBy(v)}>
+              <Select value={sortBy} onValueChange={v => setSortBy(v)}>
                 <SelectTrigger className="w-full md:w-40">
                   <SelectValue placeholder="Sort by" />
                 </SelectTrigger>
@@ -203,7 +196,7 @@ export default function CollabsPage() {
           {/* Collab Listings */}
           {isPending ? (
             <div className="grid grid-cols-1 xl:grid-cols-2  gap-4">
-              {[1, 2, 3, 4].map((i) => (
+              {[1, 2, 3, 4].map(i => (
                 <Card key={i} className="w-full shadow-none">
                   <CardContent className="">
                     <div className="flex flex-col md:flex-row justify-between gap-3">
@@ -241,7 +234,7 @@ export default function CollabsPage() {
             </div>
           ) : filteredCollabs.length > 0 ? (
             <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
-              {filteredCollabs.map((collab) => (
+              {filteredCollabs.map(collab => (
                 <div
                   key={collab.id}
                   className="bg-white rounded-lg border border-gray-200 p-6 hover:shadow-md transition-shadow"
@@ -255,7 +248,7 @@ export default function CollabsPage() {
                         </h3>
                         <span
                           className={`px-2.5 py-0.5 rounded-full text-xs font-medium border ${getStatusColor(
-                            collab.status,
+                            collab.status
                           )}`}
                         >
                           {collab.status}

@@ -14,7 +14,7 @@ export async function getAllCollabApplications(
     status?:
       | (typeof APPLICATION_STATUS)[keyof typeof APPLICATION_STATUS]
       | "All";
-  },
+  }
 ) {
   const page = Math.max(1, params?.page ?? 1);
   const pageSize = Math.max(1, params?.pageSize ?? 10);
@@ -37,7 +37,7 @@ export async function getAllCollabApplications(
           profile_pic_url
         )
       `,
-      { count: "exact" },
+      { count: "exact" }
     )
     .eq("collab_id", collabId)
     .eq("collabs.business_id", businessId)
@@ -65,7 +65,7 @@ export async function getAllCollabApplications(
  */
 export async function acceptApplication(
   supabase: TypedSupabaseClient,
-  collabApplicationId: string,
+  collabApplicationId: string
 ) {
   const { data, error } = await supabase
     .from("collab_applications")
@@ -82,7 +82,7 @@ export async function acceptApplication(
  */
 export async function rejectApplication(
   supabase: TypedSupabaseClient,
-  collabApplicationId: string,
+  collabApplicationId: string
 ) {
   const { data, error } = await supabase
     .from("collab_applications")

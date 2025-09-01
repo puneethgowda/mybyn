@@ -1,7 +1,6 @@
 "use client";
+import { motion, useMotionValueEvent, useScroll } from "motion/react";
 import React, { useEffect, useRef, useState } from "react";
-import { useMotionValueEvent, useScroll } from "motion/react";
-import { motion } from "motion/react";
 
 import { cn } from "@/lib/utils";
 
@@ -26,7 +25,7 @@ export const StickyScroll = ({
   });
   const cardLength = content.length;
 
-  useMotionValueEvent(scrollYProgress, "change", (latest) => {
+  useMotionValueEvent(scrollYProgress, "change", latest => {
     const cardsBreakpoints = content.map((_, index) => index / cardLength);
     const closestBreakpointIndex = cardsBreakpoints.reduce(
       (acc, breakpoint, index) => {
@@ -38,7 +37,7 @@ export const StickyScroll = ({
 
         return acc;
       },
-      0,
+      0
     );
 
     setActiveCard(closestBreakpointIndex);
@@ -56,7 +55,7 @@ export const StickyScroll = ({
   ];
 
   const [backgroundGradient, setBackgroundGradient] = useState(
-    linearGradients[0],
+    linearGradients[0]
   );
 
   useEffect(() => {
@@ -105,7 +104,7 @@ export const StickyScroll = ({
       <div
         className={cn(
           "sticky top-10 hidden h-60 w-80 overflow-hidden rounded-md bg-white lg:block",
-          contentClassName,
+          contentClassName
         )}
         style={{ background: backgroundGradient }}
       >

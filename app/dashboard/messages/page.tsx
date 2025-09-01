@@ -1,21 +1,23 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-import { useQuery } from "@tanstack/react-query";
-import * as React from "react";
 import { RiChat1Line } from "@remixicon/react";
+import { useQuery } from "@tanstack/react-query";
+import { useRouter } from "next/navigation";
+import * as React from "react";
+import { useCallback, useState } from "react";
 
-import { Card, CardContent } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Skeleton } from "@/components/ui/skeleton";
+import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { createClient } from "@/supabase/client";
-import { getUserOptions } from "@/utils/react-query/user";
-import { getAllChatRoomsOptions } from "@/utils/react-query/chat";
-import { toTitleCase } from "@/utils/string";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { Skeleton } from "@/components/ui/skeleton";
+import { createClient } from "@/supabase/client";
+import { getRelativeTime } from "@/utils/date";
+import { useInfiniteChatRooms } from "@/utils/react-query/chat";
+import { getUserOptions } from "@/utils/react-query/user";
+import { toTitleCase } from "@/utils/string";
 
 export default function MessagesPage() {
   const router = useRouter();
@@ -25,21 +27,51 @@ export default function MessagesPage() {
   const { data, isLoading: loading } = useQuery(getUserOptions(supabase));
   const user = data?.user;
 
-  const { data: chatRooms } = useQuery(
-    getAllChatRoomsOptions(supabase, user?.id as string),
-  );
+  const {
+    data: chatRoomsData,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    isLoading: isLoadingChatRooms,
+  } = useInfiniteChatRooms(supabase, user?.id as string);
 
   const navigateToChat = (chatId: string) => {
     router.push(`/dashboard/messages/${chatId}`);
   };
 
+  // Flatten all chat rooms from all pages
+  const allChatRooms =
+    chatRoomsData?.pages.flatMap((page: any) => page.data) || [];
+
   // Filter chats based on search query
-  const filteredChatRooms = (chatRooms || []).filter(
-    (thread) =>
+  const filteredChatRooms = allChatRooms.filter(
+    thread =>
       thread.collabs.business_profile.name
         .toLowerCase()
         .includes(searchQuery.toLowerCase()) ||
-      thread.collabs.title.toLowerCase().includes(searchQuery.toLowerCase()),
+      thread.collabs.title.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
+  // Infinite scroll handler
+  const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
+    const { scrollTop, scrollHeight, clientHeight } = e.currentTarget;
+
+    if (
+      scrollHeight - scrollTop <= clientHeight * 1.5 &&
+      hasNextPage &&
+      !isFetchingNextPage
+    ) {
+      fetchNextPage();
+    }
+  };
+
+  const isUnRead = useCallback(
+    (unread: boolean, senderId: string) => {
+      debugger;
+
+      return unread && senderId !== user?.id;
+    },
+    [user]
   );
 
   return (
@@ -61,15 +93,15 @@ export default function MessagesPage() {
               className="w-full md:w-64"
               placeholder="Search"
               value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
+              onChange={e => setSearchQuery(e.target.value)}
             />
           </div>
 
           {/* Chat List */}
-          <div className="w-full">
-            {loading ? (
+          <div className="w-full" onScroll={handleScroll}>
+            {loading || isLoadingChatRooms ? (
               <div className="space-y-3">
-                {[1, 2, 3].map((i) => (
+                {[1, 2, 3].map(i => (
                   <Card
                     key={i}
                     className="w-full shadow-none p-0 bg-background/40"
@@ -89,11 +121,13 @@ export default function MessagesPage() {
               </div>
             ) : !!filteredChatRooms && filteredChatRooms.length > 0 ? (
               <div className="space-y-2">
-                {filteredChatRooms.map((thread) => (
+                {filteredChatRooms.map(thread => (
                   <Card
                     key={thread.id}
                     className={`w-full cursor-pointer shadow-none p-0 hover:bg-content2/40 transition-colors border border-divider bg-background/40 ${
-                      thread.unread ? "border-l-4 border-l-primary" : ""
+                      isUnRead(thread.unread, thread.last_message_sender_id)
+                        ? "border-l-4 border-l-primary"
+                        : ""
                     }`}
                     onClick={() => navigateToChat(thread.id as string)}
                   >
@@ -113,43 +147,74 @@ export default function MessagesPage() {
                             <div>
                               <h4
                                 className={`font-medium text-foreground ${
-                                  thread.unread ? "font-semibold" : ""
+                                  isUnRead(
+                                    thread.unread,
+                                    thread.last_message_sender_id
+                                  )
+                                    ? "font-semibold"
+                                    : ""
                                 }`}
                               >
                                 {toTitleCase(
-                                  thread.collabs.business_profile.name,
+                                  thread.collabs.business_profile.name
                                 )}
                               </h4>
                               <p className="text-xs text-foreground/60">
                                 {toTitleCase(thread.collabs.title)}
                               </p>
                             </div>
-                            <div className="flex items-center">
+                            <div className="flex items-center gap-2">
+                              {isUnRead(
+                                thread.unread,
+                                thread.last_message_sender_id
+                              ) && (
+                                <Badge
+                                  className="text-xs px-1 py-0"
+                                  variant="default"
+                                >
+                                  New
+                                </Badge>
+                              )}
                               <span
                                 className={`text-xs ${
-                                  thread.unread
+                                  isUnRead(
+                                    thread.unread,
+                                    thread.last_message_sender_id
+                                  )
                                     ? "text-primary font-medium"
                                     : "text-foreground/60"
                                 }`}
                               >
-                                {/*{timeAgo(thread.created_at)}*/}
+                                {thread.last_message_at
+                                  ? getRelativeTime(thread.last_message_at)
+                                  : ""}
                               </span>
                             </div>
                           </div>
                           <p
                             className={`text-sm mt-1 truncate ${
-                              thread.unread
+                              isUnRead(
+                                thread.unread,
+                                thread.last_message_sender_id
+                              )
                                 ? "text-foreground font-medium"
                                 : "text-foreground/70"
                             }`}
                           >
-                            {/*{thread.last_message}*/}
+                            {thread.last_message || "No messages yet"}
                           </p>
                         </div>
                       </div>
                     </CardContent>
                   </Card>
                 ))}
+
+                {/* Load more indicator */}
+                {isFetchingNextPage && (
+                  <div className="flex justify-center py-4">
+                    <Skeleton className="h-4 w-32 rounded-lg" />
+                  </div>
+                )}
               </div>
             ) : (
               <Card className="w-full shadow-none">

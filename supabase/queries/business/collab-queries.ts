@@ -1,14 +1,14 @@
-import { TypedSupabaseClient } from "@/supabase/types";
-import { APPLICATION_STATUS, COLLAB_STATUS } from "@/utils/enums";
-import { BusinessDashboardStats } from "@/types/business/collab";
 import { Database } from "@/supabase/database.types";
+import { TypedSupabaseClient } from "@/supabase/types";
+import { BusinessDashboardStats } from "@/types/business/collab";
+import { APPLICATION_STATUS, COLLAB_STATUS } from "@/utils/enums";
 
 /**
  * Get business dashboard stats
  */
 export async function getBusinessDashboardStats(
   supabase: TypedSupabaseClient,
-  businessId: string,
+  businessId: string
 ): Promise<BusinessDashboardStats> {
   // Initialize default stats
   const stats: BusinessDashboardStats = {
@@ -31,7 +31,7 @@ export async function getBusinessDashboardStats(
       `,
       {
         count: "exact",
-      },
+      }
     )
     .eq("collabs.business_id", businessId);
 
@@ -39,7 +39,7 @@ export async function getBusinessDashboardStats(
     const applicationStatus: Record<string, number> = {};
     let totalApplications = 0;
 
-    applicationStats.forEach((each) => {
+    applicationStats.forEach(each => {
       applicationStatus[each.status] = each.count;
       totalApplications += each.count;
     });
@@ -71,7 +71,7 @@ export async function getBusinessDashboardStats(
 export async function getBusinessRecentApplications(
   supabase: TypedSupabaseClient,
   businessId: string,
-  limit: number = 5,
+  limit: number = 5
 ) {
   const { data, error } = await supabase
     .from("collab_applications")
@@ -91,7 +91,7 @@ export async function getBusinessRecentApplications(
         id,
         title
       )
-      `,
+      `
     )
     .eq("collabs.business_id", businessId)
     .order("created_at", { ascending: false })
@@ -108,7 +108,7 @@ export async function getBusinessRecentApplications(
 export async function getBusinessActiveCollabs(
   supabase: TypedSupabaseClient,
   businessId: string,
-  limit: number = 3,
+  limit: number = 3
 ) {
   // Get active collabs
   const { data, error } = await supabase
@@ -121,7 +121,7 @@ export async function getBusinessActiveCollabs(
       status,
       amount,
       created_at
-      `,
+      `
     )
     .eq("business_id", businessId)
     .eq("status", COLLAB_STATUS.ACTIVE)
@@ -138,7 +138,7 @@ export async function getBusinessActiveCollabs(
  */
 export async function getBusinessDashboardData(
   supabase: TypedSupabaseClient,
-  businessId: string,
+  businessId: string
 ) {
   const [stats, recentApplications, activeCollabs] = await Promise.all([
     getBusinessDashboardStats(supabase, businessId),
@@ -159,7 +159,7 @@ export async function getBusinessDashboardData(
 export async function getAllBusinessCollabs(
   supabase: TypedSupabaseClient,
   businessId: string,
-  status: Database["public"]["Enums"]["collab_status"] = COLLAB_STATUS.ACTIVE,
+  status: Database["public"]["Enums"]["collab_status"] = COLLAB_STATUS.ACTIVE
 ) {
   // Get active collabs
   const { data, error } = await supabase
@@ -195,7 +195,7 @@ export interface UpdateCollabData extends Partial<CreateCollabData> {
 export async function createCollab(
   supabase: TypedSupabaseClient,
   userId: string,
-  collabData: CreateCollabData,
+  collabData: CreateCollabData
 ) {
   const { data, error } = await supabase.rpc("handle_create_collab", {
     input_user_id: userId,
@@ -214,7 +214,7 @@ export async function createCollab(
  */
 export async function updateCollab(
   supabase: TypedSupabaseClient,
-  collabData: UpdateCollabData,
+  collabData: UpdateCollabData
 ) {
   const { id, ...updateData } = collabData;
 
@@ -236,7 +236,7 @@ export async function updateCollab(
 export async function getCollabById(
   supabase: TypedSupabaseClient,
   collabId: string,
-  businessId?: string,
+  businessId?: string
 ) {
   let query = supabase.from("collabs").select("*").eq("id", collabId);
 
@@ -259,7 +259,7 @@ export async function updateCollabStatus(
   supabase: TypedSupabaseClient,
   collabId: string,
   status: Database["public"]["Enums"]["collab_status"],
-  businessId: string,
+  businessId: string
 ) {
   const { data, error } = await supabase
     .from("collabs")

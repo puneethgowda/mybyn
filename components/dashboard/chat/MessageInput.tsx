@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
 import { RiAttachment2, RiSendPlaneLine } from "@remixicon/react";
+import { useState } from "react";
 
 import { Button } from "@/components/ui/button";
 
@@ -35,7 +35,7 @@ export function MessageInput({ onSendMessage, isSending }: MessageInputProps) {
             aria-label="Message..."
             className="flex border-none sm:min-h-[64px] w-full bg-transparent px-4 py-3 text-[15px] leading-relaxed text-foreground placeholder:text-muted-foreground/70 focus-visible:outline-none [resize:none]"
             placeholder="Message..."
-            onChange={(e) => setMessage(e.target.value)}
+            onChange={e => setMessage(e.target.value)}
             onKeyDown={handleKeyPress}
           />
           {/* Textarea buttons */}

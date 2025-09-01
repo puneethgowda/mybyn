@@ -1,7 +1,7 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
-const protectedRoutes = ["/dashboard"];
+const _protectedRoutes = ["/dashboard"];
 const publicRoutes = ["/login", "/influencers", "/busuness", "/discover", "/"];
 
 export async function updateSession(request: NextRequest) {
@@ -28,20 +28,20 @@ export async function updateSession(request: NextRequest) {
             name: string;
             value: string;
             options?: { [key: string]: any };
-          }[],
+          }[]
         ) {
-          cookiesToSet.forEach(({ name, value, options }) =>
-            request.cookies.set(name, value),
+          cookiesToSet.forEach(({ name, value, options: _options }) =>
+            request.cookies.set(name, value)
           );
           supabaseResponse = NextResponse.next({
             request,
           });
           cookiesToSet.forEach(({ name, value, options }) =>
-            supabaseResponse.cookies.set(name, value, options),
+            supabaseResponse.cookies.set(name, value, options)
           );
         },
       },
-    },
+    }
   );
 
   // Do not run code between createServerClient and

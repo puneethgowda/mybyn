@@ -23,3 +23,30 @@ export interface ChatDetails {
   logo: string;
   collabTitle: string;
 }
+
+// Paginated response types
+export interface PaginatedResponse<T> {
+  data: T[];
+  count: number;
+  page: number;
+  pageSize: number;
+}
+
+// Chat room with last message info
+export interface ChatRoomWithLastMessage extends ChatRoom {
+  last_message?: string;
+  last_message_sender_id?: string;
+  last_message_at?: string;
+}
+
+// Message with read status
+export interface MessageWithReadStatus extends Message {
+  read_by?: string[];
+}
+
+// Date grouping for messages
+export interface MessageGroup {
+  date: string;
+  label: string;
+  messages: Message[];
+}

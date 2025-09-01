@@ -5,14 +5,14 @@ import {
 } from "@tanstack/react-query";
 import { toast } from "sonner";
 
-import { TypedSupabaseClient } from "@/supabase/types";
 import {
   acceptApplication,
   getAllCollabApplications,
   rejectApplication,
 } from "@/supabase/queries/business/application-queries";
-import { APPLICATION_STATUS } from "@/utils/enums";
+import { TypedSupabaseClient } from "@/supabase/types";
 import { ApplicationStatus } from "@/types/collab";
+import { APPLICATION_STATUS } from "@/utils/enums";
 
 /**
  * React Query options for fetching paginated collab applications
@@ -27,7 +27,7 @@ export function getAllCollabApplicationsOptions(
     status?:
       | (typeof APPLICATION_STATUS)[keyof typeof APPLICATION_STATUS]
       | "All";
-  },
+  }
 ) {
   const page = Math.max(1, params?.page ?? 1);
   const pageSize = Math.max(1, params?.pageSize ?? 10);
@@ -56,7 +56,7 @@ export function getAllCollabApplicationsOptions(
       });
     },
     enabled: !!businessId && !!collabId,
-    placeholderData: (prev) => prev,
+    placeholderData: prev => prev,
     staleTime: 30_000,
   });
 }
@@ -65,7 +65,7 @@ export function getAllCollabApplicationsOptions(
  * Mutation for accepting/rejecting a collaboration application
  */
 export function useAcceptOrRejectApplicationMutation(
-  supabase: TypedSupabaseClient,
+  supabase: TypedSupabaseClient
 ) {
   const queryClient = useQueryClient();
 
@@ -103,8 +103,8 @@ export function useAcceptOrRejectApplicationMutation(
         toast.error("Application Rejected");
       }
     },
-    onError: (error: any) => {
-      console.error("Error updating application:", error);
+    onError: (_error: any) => {
+      // console.error("Error updating application:", error);
       toast.error("Failed to accept/reject applicant");
     },
   });

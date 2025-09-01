@@ -1,7 +1,8 @@
 "use client";
 
+import { RiAddLine, RiExpandUpDownLine } from "@remixicon/react";
+import Image from "next/image";
 import * as React from "react";
-import { RiExpandUpDownLine, RiAddLine } from "@remixicon/react";
 
 import {
   DropdownMenu,
@@ -41,7 +42,7 @@ export function TeamSwitcher({
             >
               <div className="flex aspect-square size-9 items-center justify-center rounded-md overflow-hidden bg-sidebar-primary text-sidebar-primary-foreground relative after:rounded-[inherit] after:absolute after:inset-0 after:shadow-[0_1px_2px_0_rgb(0_0_0/.05),inset_0_1px_0_0_rgb(255_255_255/.12)] after:pointer-events-none">
                 {activeTeam && (
-                  <img
+                  <Image
                     alt={activeTeam.name}
                     height={36}
                     src={activeTeam.logo}
@@ -77,7 +78,12 @@ export function TeamSwitcher({
                 onClick={() => setActiveTeam(team)}
               >
                 <div className="flex size-6 items-center justify-center rounded-md overflow-hidden">
-                  <img alt={team.name} height={36} src={team.logo} width={36} />
+                  <Image
+                    alt={team.name}
+                    height={36}
+                    src={team.logo}
+                    width={36}
+                  />
                 </div>
                 {team.name}
                 <DropdownMenuShortcut>⌘{index + 1}</DropdownMenuShortcut>

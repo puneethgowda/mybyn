@@ -1,5 +1,4 @@
 "use client";
-import React from "react";
 import { RiInstagramLine } from "@remixicon/react";
 import Link from "next/link";
 import { useParams, useSearchParams } from "next/navigation";

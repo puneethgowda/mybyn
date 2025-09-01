@@ -1,7 +1,7 @@
-import React, { ReactNode } from "react";
+import { ReactNode } from "react";
 
-import { Navbar } from "@/components/navbar";
 import Footer from "@/components/footer";
+import { Navbar } from "@/components/navbar";
 
 const LayoutSkeleton = ({ children }: { children: ReactNode }) => {
   return (

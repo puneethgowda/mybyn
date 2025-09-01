@@ -2,7 +2,7 @@ import { TypedSupabaseClient } from "@/supabase/types";
 
 export const getCreatorStats = async (
   supabase: TypedSupabaseClient,
-  creatorId: string,
+  creatorId: string
 ) => {
   return supabase
     .from("collab_applications")
@@ -12,7 +12,7 @@ export const getCreatorStats = async (
 
 export const getCreatorRecentApplications = async (
   supabase: TypedSupabaseClient,
-  creatorId: string,
+  creatorId: string
 ) => {
   const { data, error } = await supabase
     .from("collab_applications")
@@ -25,7 +25,7 @@ export const getCreatorRecentApplications = async (
                   *
                 )
               )
-            `,
+            `
     )
     .eq("creator_id", creatorId)
     .order("created_at", { ascending: false })

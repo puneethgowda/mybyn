@@ -1,11 +1,11 @@
 import { queryOptions } from "@tanstack/react-query";
 
-import { TypedSupabaseClient } from "@/supabase/types";
 import { getReferralCreditsFromTransactions } from "@/supabase/queries/referral-queries";
+import { TypedSupabaseClient } from "@/supabase/types";
 
 export function getReferralCreditsOptions(
   supabase: TypedSupabaseClient,
-  userId: string,
+  userId: string
 ) {
   return queryOptions({
     queryKey: ["user", "referral-credits", userId],

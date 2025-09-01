@@ -30,13 +30,13 @@ export async function GET(request: Request) {
 
     form.append(
       "client_id",
-      process.env.NEXT_PUBLIC_INSTAGRAM_CLIENT_ID as string,
+      process.env.NEXT_PUBLIC_INSTAGRAM_CLIENT_ID as string
     );
     form.append("client_secret", process.env.INSTAGRAM_SECRET_KEY as string);
     form.append("grant_type", "authorization_code");
     form.append(
       "redirect_uri",
-      `${process.env.NEXT_PUBLIC_APP_URL}/auth/instagram/`,
+      `${process.env.NEXT_PUBLIC_APP_URL}/auth/instagram/`
     );
     form.append("code", code.replace("#_", ""));
 
@@ -45,7 +45,7 @@ export async function GET(request: Request) {
       {
         method: "POST",
         body: form,
-      },
+      }
     );
 
     const accessToken = await accessTokenJson.json();
@@ -54,7 +54,7 @@ export async function GET(request: Request) {
       return NextResponse.redirect(`${origin}/auth/instagram/error`);
 
     const instagramUserDetailsJson = await fetch(
-      `https://graph.instagram.com/v23.0/me?fields=user_id,username,name,account_type,profile_picture_url,followers_count,follows_count,media_count&access_token=${accessToken?.access_token}`,
+      `https://graph.instagram.com/v23.0/me?fields=user_id,username,name,account_type,profile_picture_url,followers_count,follows_count,media_count&access_token=${accessToken?.access_token}`
     );
     const instagramUserDetails = await instagramUserDetailsJson.json();
 
@@ -64,7 +64,7 @@ export async function GET(request: Request) {
     if (!error && instagramUserDetails && instagramUserDetails.username) {
       if (instagramUserDetails.followers_count <= COLLAB_LIMITS.MIN_FOLLOWERS) {
         return NextResponse.redirect(
-          `${origin}/auth/instagram/error?message=You need at least ${COLLAB_LIMITS.MIN_FOLLOWERS} followers to connect your Instagram account`,
+          `${origin}/auth/instagram/error?message=You need at least ${COLLAB_LIMITS.MIN_FOLLOWERS} followers to connect your Instagram account`
         );
       }
       const { error } = await supabase.from("creator_profile").insert({
@@ -79,7 +79,7 @@ export async function GET(request: Request) {
 
       if (error) {
         return NextResponse.redirect(
-          `${origin}/auth/instagram/error?message=${error.message}`,
+          `${origin}/auth/instagram/error?message=${error.message}`
         );
       }
 
@@ -90,8 +90,8 @@ export async function GET(request: Request) {
             profile_user_id: user.id,
             action_type: "CREATOR_PROFILE_CREATED",
           });
-        } catch (referralError) {
-          console.error("Error handling referral points:", referralError);
+        } catch (_referralError) {
+          // console.error("Error handling referral points:", referralError);
           // Don't fail the auth flow if referral handling fails
         }
       }
@@ -104,7 +104,7 @@ export async function GET(request: Request) {
         return NextResponse.redirect(`${origin}${next}/auth/instagram/success`);
       } else if (forwardedHost) {
         return NextResponse.redirect(
-          `https://${forwardedHost}${next}/auth/instagram/success`,
+          `https://${forwardedHost}${next}/auth/instagram/success`
         );
       } else {
         return NextResponse.redirect(`${origin}${next}/auth/instagram/success`);

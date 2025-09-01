@@ -1,12 +1,12 @@
 import { queryOptions } from "@tanstack/react-query";
 
-import { TypedSupabaseClient } from "@/supabase/types";
 import {
   getCreatorProfile,
   getCurrentSession,
   getCurrentUser,
   getUserProfile,
 } from "@/supabase/queries/user-queries";
+import { TypedSupabaseClient } from "@/supabase/types";
 
 export function getUserOptions(supabase: TypedSupabaseClient) {
   return queryOptions({
@@ -27,7 +27,7 @@ export function getUserSessionOptions(supabase: TypedSupabaseClient) {
 
 export function getUserProfileOptions(
   supabase: TypedSupabaseClient,
-  userId: string,
+  userId: string
 ) {
   return queryOptions({
     queryKey: ["user", "profile", userId],
@@ -40,7 +40,7 @@ export function getUserProfileOptions(
 
 export function getCreatorProfileOptions(
   supabase: TypedSupabaseClient,
-  userId: string,
+  userId: string
 ) {
   return queryOptions({
     queryKey: ["user", "creator-profile", userId],

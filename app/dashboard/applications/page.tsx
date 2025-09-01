@@ -1,10 +1,5 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-import { useQuery } from "@tanstack/react-query";
-import * as React from "react";
-import Image from "next/image";
 import {
   RiBriefcase3Line,
   RiCalendarLine,
@@ -12,22 +7,26 @@ import {
   RiChat3Line,
   RiWalletLine,
 } from "@remixicon/react";
+import { useQuery } from "@tanstack/react-query";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 
+import { CollabDetailsDrawer } from "@/components/dashboard/collab-details-drawer";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useBreakpoint } from "@/hooks/use-breakpoint";
+import { useDisclosure } from "@/hooks/useDisclosure";
 import { createClient } from "@/supabase/client";
-import { APPLICATION_STATUS, COLLAB_TYPE } from "@/utils/enums";
 import { CollabWithBusinessProfile } from "@/types/collab";
 import { timeAgo } from "@/utils/date";
-import { CollabDetailsDrawer } from "@/components/dashboard/collab-details-drawer";
+import { APPLICATION_STATUS, COLLAB_TYPE } from "@/utils/enums";
 import { getAllCollabApplicationsOptions } from "@/utils/react-query/collabs";
 import { getUserOptions } from "@/utils/react-query/user";
-import { useBreakpoint } from "@/hooks/use-breakpoint";
 import { toTitleCase } from "@/utils/string";
-import { useDisclosure } from "@/hooks/useDisclosure";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Skeleton } from "@/components/ui/skeleton";
-import { ScrollArea } from "@/components/ui/scroll-area";
 
 const CollabApplicationsPage = () => {
   const router = useRouter();
@@ -43,13 +42,13 @@ const CollabApplicationsPage = () => {
   const [collabDetails, setCollabDetails] =
     useState<CollabWithBusinessProfile | null>(null);
 
-  const { isSm } = useBreakpoint();
+  const { isSm: _isSm } = useBreakpoint();
 
   const { data, isLoading: loading } = useQuery(getUserOptions(supabase));
   const user = data?.user;
 
   const { data: applications } = useQuery(
-    getAllCollabApplicationsOptions(supabase, user?.id as string),
+    getAllCollabApplicationsOptions(supabase, user?.id as string)
   );
 
   const handleViewCollabDetails = (collab: CollabWithBusinessProfile) => {
@@ -58,7 +57,7 @@ const CollabApplicationsPage = () => {
   };
 
   // Filter applications by status
-  const filteredApplications = (applications || []).filter((application) => {
+  const filteredApplications = (applications || []).filter(application => {
     if (statusFilter === "all") return true;
 
     return application.status.toLowerCase() === statusFilter.toLowerCase();
@@ -66,6 +65,8 @@ const CollabApplicationsPage = () => {
 
   // Navigate to chat for accepted applications
   const navigateToChat = (applicationId: string) => {
+    // Use proper chat room lookup instead of direct application ID
+    // The chat room ID is the same as the application ID in the current system
     router.push(`/dashboard/messages/${applicationId}`);
   };
 
@@ -118,7 +119,7 @@ const CollabApplicationsPage = () => {
                 Pending (
                 {
                   (applications || []).filter(
-                    (a) => a.status === APPLICATION_STATUS.PENDING,
+                    a => a.status === APPLICATION_STATUS.PENDING
                   ).length
                 }
                 )
@@ -127,7 +128,7 @@ const CollabApplicationsPage = () => {
                 Accepted (
                 {
                   (applications || []).filter(
-                    (a) => a.status === APPLICATION_STATUS.ACCEPTED,
+                    a => a.status === APPLICATION_STATUS.ACCEPTED
                   ).length
                 }
                 )
@@ -136,7 +137,7 @@ const CollabApplicationsPage = () => {
                 Rejected (
                 {
                   (applications || []).filter(
-                    (a) => a.status === APPLICATION_STATUS.REJECTED,
+                    a => a.status === APPLICATION_STATUS.REJECTED
                   ).length
                 }
                 )
@@ -147,7 +148,7 @@ const CollabApplicationsPage = () => {
               {loading ? (
                 // Loading skeleton
                 <div className="space-y-2">
-                  {[1, 2, 3].map((i) => (
+                  {[1, 2, 3].map(i => (
                     <div
                       key={i}
                       className="flex items-center gap-4 p-4 border rounded-lg"
@@ -166,7 +167,7 @@ const CollabApplicationsPage = () => {
               ) : filteredApplications.length > 0 ? (
                 // Applications list
                 <div className="space-y-2">
-                  {filteredApplications.map((application) => (
+                  {filteredApplications.map(application => (
                     <div
                       key={application.id}
                       className="group hover:bg-accent/50 flex flex-col border border-border items-start gap-4 rounded-lg p-4 transition-colors sm:flex-row sm:items-center"
@@ -175,7 +176,7 @@ const CollabApplicationsPage = () => {
                         <div className="relative">
                           <Image
                             alt={toTitleCase(
-                              application.collabs.business_profile.name,
+                              application.collabs.business_profile.name
                             )}
                             className="rounded-md h-10 w-10"
                             height={40}
@@ -194,7 +195,7 @@ const CollabApplicationsPage = () => {
                             <div className="flex items-center gap-1">
                               <span className="truncate">
                                 {toTitleCase(
-                                  application.collabs.business_profile.name,
+                                  application.collabs.business_profile.name
                                 )}
                               </span>
                             </div>

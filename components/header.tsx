@@ -1,24 +1,26 @@
 "use client";
 
-import { usePathname, useRouter } from "next/navigation";
-import Link from "next/link";
-import { useQuery } from "@tanstack/react-query";
 import { RiAddBoxLine, RiFlashlightLine } from "@remixicon/react";
+import { useQuery } from "@tanstack/react-query";
+import Link from "next/link";
+import { usePathname, useRouter } from "next/navigation";
 
 import { Badge } from "./ui/badge";
 
-import { Button } from "@/components/ui/button";
-import { createClient } from "@/supabase/client";
-import { getUserOptions } from "@/utils/react-query/user";
-import { getUserProfileOptions } from "@/utils/react-query/user";
-import { getBusinessProfileOptions } from "@/utils/react-query/business/profile";
 import SplashScreen from "@/components/splash-screen";
-import { POINTS } from "@/utils/constants";
+import { Button } from "@/components/ui/button";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import UserDropdown from "@/components/user-dropdown";
+import { createClient } from "@/supabase/client";
+import { POINTS } from "@/utils/constants";
+import { getBusinessProfileOptions } from "@/utils/react-query/business/profile";
+import {
+  getUserOptions,
+  getUserProfileOptions,
+} from "@/utils/react-query/user";
 
 export function DashboardHeader() {
-  const router = useRouter();
+  const _router = useRouter();
   const supabase = createClient();
 
   const pathname = usePathname();
@@ -29,15 +31,15 @@ export function DashboardHeader() {
   const user = userData?.user;
 
   const { data: businessProfile, isPending: isBusinessPending } = useQuery(
-    getBusinessProfileOptions(supabase, user?.id as string),
+    getBusinessProfileOptions(supabase, user?.id as string)
   );
 
   const { data: userProfile } = useQuery(
-    getUserProfileOptions(supabase, user?.id as string),
+    getUserProfileOptions(supabase, user?.id as string)
   );
 
   const points = userProfile?.balance || 0;
-  const hasLowBalance =
+  const _hasLowBalance =
     points < Math.max(POINTS.CREATE_COLLAB, POINTS.APPLY_COLLAB);
 
   return (

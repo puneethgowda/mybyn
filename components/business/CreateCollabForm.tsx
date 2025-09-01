@@ -1,51 +1,51 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
-import Link from "next/link";
-import { motion } from "framer-motion";
-import { useQuery } from "@tanstack/react-query";
-import { toast } from "sonner";
 import { RiCheckDoubleLine } from "@remixicon/react";
+import { useQuery } from "@tanstack/react-query";
+import { motion } from "framer-motion";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { toast } from "sonner";
 
-import { Card, CardContent, CardFooter } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectTrigger,
-  SelectValue,
-  SelectContent,
-  SelectItem,
-} from "@/components/ui/select";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { BalanceWarning } from "@/components/balance-warning";
 import { Badge } from "@/components/ui/badge";
-import { Progress } from "@/components/ui/progress";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import {
   Dialog,
   DialogContent,
-  DialogHeader,
-  DialogFooter,
-  DialogTitle,
   DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
 } from "@/components/ui/dialog";
-import { COLLAB_STATUS } from "@/utils/enums";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Progress } from "@/components/ui/progress";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
 import { createClient } from "@/supabase/client";
+import { Database } from "@/supabase/database.types";
+import { POINTS } from "@/utils/constants";
+import { COLLAB_STATUS } from "@/utils/enums";
 import {
   useCreateCollabMutation,
   useUpdateCollabMutation,
 } from "@/utils/react-query/business/collabs";
-import { Database } from "@/supabase/database.types";
 import { getBusinessProfileOptions } from "@/utils/react-query/business/profile";
 import {
   getUserOptions,
   getUserProfileOptions,
 } from "@/utils/react-query/user";
 import { toTitleCase } from "@/utils/string";
-import { POINTS } from "@/utils/constants";
-import { BalanceWarning } from "@/components/balance-warning";
 
 export interface FormData {
   title: string;
@@ -104,16 +104,16 @@ export function CreateCollabForm({
   const user = data?.user;
 
   const { data: businessProfile } = useQuery(
-    getBusinessProfileOptions(supabase, user?.id as string),
+    getBusinessProfileOptions(supabase, user?.id as string)
   );
 
   const { data: userProfile } = useQuery(
-    getUserProfileOptions(supabase, user?.id as string),
+    getUserProfileOptions(supabase, user?.id as string)
   );
 
   const createCollabMutation = useCreateCollabMutation(
     supabase,
-    user?.id as string,
+    user?.id as string
   );
   const updateCollabMutation = useUpdateCollabMutation(supabase);
 
@@ -122,7 +122,7 @@ export function CreateCollabForm({
 
   useEffect(() => {
     if (initialData) {
-      setFormData((prev) => ({
+      setFormData(prev => ({
         ...prev,
         ...initialData,
       }));
@@ -201,7 +201,7 @@ export function CreateCollabForm({
 
     if (currentBalance < POINTS.CREATE_COLLAB) {
       toast.warning(
-        `You need ${POINTS.CREATE_COLLAB} points to create a collaboration. Current balance: ${currentBalance} points.`,
+        `You need ${POINTS.CREATE_COLLAB} points to create a collaboration. Current balance: ${currentBalance} points.`
       );
 
       return false;
@@ -234,7 +234,7 @@ export function CreateCollabForm({
           onError: () => {
             toast.error("Failed to update!");
           },
-        },
+        }
       );
     } else {
       createCollabMutation.mutate(collabData, {
@@ -274,7 +274,7 @@ export function CreateCollabForm({
                 className="max-w-lg"
                 placeholder="e.g., Summer Fashion Showcase"
                 value={formData.title}
-                onChange={(e) => handleChange("title", e.target.value)}
+                onChange={e => handleChange("title", e.target.value)}
               />
               {errors.title && (
                 <p className="text-destructive text-sm mt-1">{errors.title}</p>
@@ -300,7 +300,7 @@ export function CreateCollabForm({
                 placeholder="Describe what you want creators to do, what you're offering, and any specific requirements"
                 rows={5}
                 value={formData.description}
-                onChange={(e) => handleChange("description", e.target.value)}
+                onChange={e => handleChange("description", e.target.value)}
               />
               {errors.description && (
                 <p className="text-destructive text-sm mt-1">
@@ -323,10 +323,10 @@ export function CreateCollabForm({
             <div>
               <Select
                 value={formData.platform}
-                onValueChange={(value) =>
+                onValueChange={value =>
                   handleChange(
                     "platform",
-                    value as Database["public"]["Enums"]["platform_type"],
+                    value as Database["public"]["Enums"]["platform_type"]
                   )
                 }
               >
@@ -370,7 +370,7 @@ export function CreateCollabForm({
                 placeholder="e.g., 5000"
                 type="number"
                 value={formData.min_followers.toString()}
-                onChange={(e) =>
+                onChange={e =>
                   handleChange("min_followers", Number(e.target.value))
                 }
               />
@@ -398,10 +398,10 @@ export function CreateCollabForm({
               <RadioGroup
                 className="flex gap-4"
                 value={formData.collab_type}
-                onValueChange={(value) =>
+                onValueChange={value =>
                   handleChange(
                     "collab_type",
-                    value as Database["public"]["Enums"]["collab_type"],
+                    value as Database["public"]["Enums"]["collab_type"]
                   )
                 }
               >
@@ -445,9 +445,7 @@ export function CreateCollabForm({
                   placeholder="e.g., 5000"
                   type="number"
                   value={formData.amount.toString()}
-                  onChange={(e) =>
-                    handleChange("amount", Number(e.target.value))
-                  }
+                  onChange={e => handleChange("amount", Number(e.target.value))}
                 />
                 {errors.amount && (
                   <p className="text-destructive text-sm mt-1">
@@ -466,7 +464,7 @@ export function CreateCollabForm({
                   placeholder="Describe what you want creators to do, what you're offering, and any specific requirements"
                   rows={5}
                   value={formData.description}
-                  onChange={(e) => handleChange("description", e.target.value)}
+                  onChange={e => handleChange("description", e.target.value)}
                 />
                 {errors.description && (
                   <p className="text-destructive text-sm mt-1">
@@ -489,7 +487,7 @@ export function CreateCollabForm({
               </p>
             </div>
             <div className="flex flex-wrap gap-2 max-w-lg">
-              {languageOptions.map((language) => (
+              {languageOptions.map(language => (
                 <Badge
                   key={language}
                   className={`cursor-pointer px-3 py-1 ${
@@ -504,9 +502,9 @@ export function CreateCollabForm({
                   }
                   onClick={() => {
                     const updatedLanguages = formData.languages?.includes(
-                      language,
+                      language
                     )
-                      ? formData.languages.filter((lang) => lang !== language)
+                      ? formData.languages.filter(lang => lang !== language)
                       : [...(formData.languages || []), language];
 
                     handleChange("languages", updatedLanguages);
@@ -619,7 +617,7 @@ export function CreateCollabForm({
 
       <Dialog
         open={showConfirmModal}
-        onOpenChange={(open) => !open && setShowConfirmModal(false)}
+        onOpenChange={open => !open && setShowConfirmModal(false)}
       >
         <DialogContent>
           <DialogHeader>

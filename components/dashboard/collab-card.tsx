@@ -1,12 +1,10 @@
-import React from "react";
-
-import { Card, CardContent } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
-import { COLLAB_TYPE } from "@/utils/enums";
-import { CollabWithBusinessProfile } from "@/types/collab";
-import { toTitleCase } from "@/utils/string";
+import { Card, CardContent } from "@/components/ui/card";
 import { useBreakpoint } from "@/hooks/use-breakpoint";
+import { CollabWithBusinessProfile } from "@/types/collab";
+import { COLLAB_TYPE } from "@/utils/enums";
+import { toTitleCase } from "@/utils/string";
 
 interface CollabCardProps {
   collab: CollabWithBusinessProfile;
@@ -17,7 +15,7 @@ interface CollabCardProps {
 }
 
 const CollabCard = ({ collab, handleClick }: CollabCardProps) => {
-  const { isSm } = useBreakpoint();
+  const { isSm: _isSm } = useBreakpoint();
 
   return (
     <Card

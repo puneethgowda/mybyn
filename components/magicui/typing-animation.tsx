@@ -77,7 +77,7 @@ export function TypingAnimation({
       ref={elementRef}
       className={cn(
         "text-4xl font-bold leading-[5rem] tracking-[-0.02em]",
-        className,
+        className
       )}
       {...props}
     >

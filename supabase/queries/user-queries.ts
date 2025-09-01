@@ -19,7 +19,7 @@ export async function getCurrentUser(supabase: TypedSupabaseClient) {
 
 export async function getCreatorProfile(
   supabase: TypedSupabaseClient,
-  userId: string,
+  userId: string
 ) {
   const { data, error } = await supabase
     .from("creator_profile")
@@ -34,7 +34,7 @@ export async function getCreatorProfile(
 
 export async function getUserProfile(
   supabase: TypedSupabaseClient,
-  userId: string,
+  userId: string
 ) {
   const { data, error } = await supabase
     .from("user_profile")

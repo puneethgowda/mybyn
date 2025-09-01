@@ -5,16 +5,16 @@ import {
 } from "@tanstack/react-query";
 import { toast } from "sonner";
 
-import { TypedSupabaseClient } from "@/supabase/types";
 import {
   getBusinessProfile,
   saveBusinessProfile,
 } from "@/supabase/queries/business/profile-queries";
+import { TypedSupabaseClient } from "@/supabase/types";
 import { BusinessProfileFormValues } from "@/types/business-profile";
 
 export function getBusinessProfileOptions(
   supabase: TypedSupabaseClient,
-  ownerId: string,
+  ownerId: string
 ) {
   return queryOptions({
     queryKey: ownerId ? ["business", "profile", ownerId] : [],
@@ -33,7 +33,7 @@ export function useSaveBusinessProfileMutation(supabase: TypedSupabaseClient) {
       businessProfile: BusinessProfileFormValues & {
         owner_id: string;
         business_id?: string;
-      },
+      }
     ) => {
       return saveBusinessProfile(supabase, businessProfile);
     },
@@ -41,7 +41,7 @@ export function useSaveBusinessProfileMutation(supabase: TypedSupabaseClient) {
       // Update the cache with the new data
       queryClient.setQueryData(
         ["business", "profile", variables.owner_id],
-        data,
+        data
       );
 
       // Invalidate related queries

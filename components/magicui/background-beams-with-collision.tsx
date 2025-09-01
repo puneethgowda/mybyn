@@ -1,6 +1,6 @@
 "use client";
-import { motion, AnimatePresence } from "motion/react";
-import React, { useRef, useState, useEffect } from "react";
+import { AnimatePresence, motion } from "motion/react";
+import React, { useEffect, useRef, useState } from "react";
 
 import { cn } from "@/lib/utils";
 
@@ -73,10 +73,10 @@ export const BackgroundBeamsWithCollision = ({
       className={cn(
         "h-full bg-gradient-to-b from-white to-neutral-100 dark:from-neutral-950 dark:to-neutral-800 relative flex items-center w-full justify-center overflow-hidden",
         // h-screen if you want bigger
-        className,
+        className
       )}
     >
-      {beams.map((beam) => (
+      {beams.map(beam => (
         <CollisionMechanism
           key={beam.initialX + "beam-idx"}
           beamOptions={beam}
@@ -115,7 +115,7 @@ const CollisionMechanism = React.forwardRef<
       repeatDelay?: number;
     };
   }
->(({ parentRef, containerRef, beamOptions = {} }, ref) => {
+>(({ parentRef, containerRef, beamOptions = {} }, _ref) => {
   const beamRef = useRef<HTMLDivElement>(null);
   const [collision, setCollision] = useState<{
     detected: boolean;
@@ -169,7 +169,7 @@ const CollisionMechanism = React.forwardRef<
       }, 2000);
 
       setTimeout(() => {
-        setBeamKey((prevKey) => prevKey + 1);
+        setBeamKey(prevKey => prevKey + 1);
       }, 2000);
     }
   }, [collision]);
@@ -182,7 +182,7 @@ const CollisionMechanism = React.forwardRef<
         animate="animate"
         className={cn(
           "absolute left-0 top-20 m-auto h-14 w-px rounded-full bg-gradient-to-t from-indigo-500 via-purple-500 to-transparent",
-          beamOptions.className,
+          beamOptions.className
         )}
         initial={{
           translateY: beamOptions.initialY || "-200px",
@@ -242,7 +242,7 @@ const Explosion = ({ ...props }: React.HTMLProps<HTMLDivElement>) => {
         initial={{ opacity: 0 }}
         transition={{ duration: 1.5, ease: "easeOut" }}
       />
-      {spans.map((span) => (
+      {spans.map(span => (
         <motion.span
           key={span.id}
           animate={{

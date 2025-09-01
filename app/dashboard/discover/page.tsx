@@ -1,15 +1,25 @@
 "use client";
 
-import { useId, useState } from "react";
-import { useQuery } from "@tanstack/react-query";
 import {
   RiQuillPenAiLine,
   RiResetLeftLine,
   RiSearchLine,
 } from "@remixicon/react";
-import * as React from "react";
+import { useQuery } from "@tanstack/react-query";
+import { useId, useState } from "react";
 
-import { Skeleton } from "@/components/ui/skeleton";
+import AppPagination from "@/components/app-pagination";
+import CollabCard from "@/components/dashboard/collab-card";
+import { CollabDetailsDrawer } from "@/components/dashboard/collab-details-drawer";
+import {
+  FilterPanel,
+  FilterPanelTrigger,
+} from "@/components/dashboard/filter-panel";
+import PriceSlider from "@/components/price-slider";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { Label } from "@/components/ui/label";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import {
   Select,
   SelectContent,
@@ -17,25 +27,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { CollabDetailsDrawer } from "@/components/dashboard/collab-details-drawer";
-import { CollabWithBusinessProfile } from "@/types/collab";
-import CollabCard from "@/components/dashboard/collab-card";
-import { createClient } from "@/supabase/client";
-import { getCollabsOptions } from "@/utils/react-query/collabs";
-import { Constants, Database } from "@/supabase/database.types";
-import { COLLAB_TYPE } from "@/utils/enums";
+import { Skeleton } from "@/components/ui/skeleton";
 import { useBreakpoint } from "@/hooks/use-breakpoint";
-import AppPagination from "@/components/app-pagination";
 import { useDisclosure } from "@/hooks/useDisclosure";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import {
-  FilterPanel,
-  FilterPanelTrigger,
-} from "@/components/dashboard/filter-panel";
-import { Label } from "@/components/ui/label";
-import PriceSlider from "@/components/price-slider";
+import { createClient } from "@/supabase/client";
+import { Constants, Database } from "@/supabase/database.types";
+import { CollabWithBusinessProfile } from "@/types/collab";
+import { COLLAB_TYPE } from "@/utils/enums";
+import { getCollabsOptions } from "@/utils/react-query/collabs";
 
 export default function DiscoverPage() {
   const supabase = createClient();
@@ -82,7 +81,7 @@ export default function DiscoverPage() {
       label: value,
     })),
   ];
-  const languageOptions = Constants.public.Enums.languages;
+  const _languageOptions = Constants.public.Enums.languages;
 
   // React Query hooks
   const { data: collabsData, isPending: isCollabsLoading } = useQuery(
@@ -114,7 +113,7 @@ export default function DiscoverPage() {
 
   const collabs = collabsData?.collabs || [];
   const totalPages = Math.ceil((collabsData?.count || 0) / 9);
-  const { isSm } = useBreakpoint();
+  const { isSm: _isSm } = useBreakpoint();
 
   const id = useId();
 
@@ -153,7 +152,7 @@ export default function DiscoverPage() {
               </div>
             ) : collabs.length > 0 ? (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {collabs.map((collab) => (
+                {collabs.map(collab => (
                   <CollabCard
                     key={collab.id}
                     collab={collab}
@@ -228,7 +227,7 @@ export default function DiscoverPage() {
 
                   <Select
                     value={location}
-                    onValueChange={(value) => setLocation(value)}
+                    onValueChange={value => setLocation(value)}
                   >
                     <SelectTrigger
                       className="bg-background w-auto max-w-full h-7 py-1 px-2 gap-1 [&_svg]:-me-1 border-none"
@@ -240,7 +239,7 @@ export default function DiscoverPage() {
                       align="end"
                       className="[&_*[role=option]>span]:end-2 [&_*[role=option]>span]:start-auto [&_*[role=option]]:pe-8 [&_*[role=option]]:ps-2"
                     >
-                      {locationOptions.map((loc) => (
+                      {locationOptions.map(loc => (
                         <SelectItem key={loc} value={loc}>
                           {loc}
                         </SelectItem>
@@ -260,7 +259,7 @@ export default function DiscoverPage() {
 
                   <Select
                     value={businessTypes[0] ?? "All"}
-                    onValueChange={(value) =>
+                    onValueChange={value =>
                       setBusinessTypes(
                         value === "All"
                           ? []
@@ -277,7 +276,7 @@ export default function DiscoverPage() {
                       <SelectValue placeholder="Select type" />
                     </SelectTrigger>
                     <SelectContent align="end">
-                      {businessTypeOptions.map((type) => (
+                      {businessTypeOptions.map(type => (
                         <SelectItem key={type} value={type}>
                           {type}
                         </SelectItem>
@@ -293,7 +292,7 @@ export default function DiscoverPage() {
 
                   <Select
                     value={collabType}
-                    onValueChange={(value) =>
+                    onValueChange={value =>
                       setCollabType(
                         value as
                           | Database["public"]["Enums"]["collab_type"]
@@ -308,7 +307,7 @@ export default function DiscoverPage() {
                       <SelectValue placeholder="Select type" />
                     </SelectTrigger>
                     <SelectContent align="end">
-                      {collabTypeOptions.map((type) => (
+                      {collabTypeOptions.map(type => (
                         <SelectItem key={type.key} value={type.key}>
                           {type.label}
                         </SelectItem>
@@ -329,9 +328,7 @@ export default function DiscoverPage() {
                   maxValue={amountRange[1]}
                   minValue={amountRange[0]}
                   step={500}
-                  onChange={(value) =>
-                    setAmountRange(value as [number, number])
-                  }
+                  onChange={value => setAmountRange(value as [number, number])}
                 />
 
                 {/*<Slider*/}

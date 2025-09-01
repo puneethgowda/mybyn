@@ -3,9 +3,10 @@
 import { RiQuillPenAiLine, RiSettingsLine } from "@remixicon/react";
 import * as React from "react";
 
-import { useIsMobile } from "@/hooks/use-mobile";
-import { Label } from "@/components/ui/label";
+import SliderControl from "@/components/slider-control";
 import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import {
   Select,
   SelectContent,
@@ -13,9 +14,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import SliderControl from "@/components/slider-control";
-import { Sheet, SheetTitle, SheetContent } from "@/components/ui/sheet";
-import { ScrollArea } from "@/components/ui/scroll-area";
+import { Sheet, SheetContent, SheetTitle } from "@/components/ui/sheet";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 type SettingsPanelContext = {
   openMobile: boolean;
@@ -25,7 +25,7 @@ type SettingsPanelContext = {
 };
 
 const SettingsPanelContext = React.createContext<SettingsPanelContext | null>(
-  null,
+  null
 );
 
 function useSettingsPanel() {
@@ -33,7 +33,7 @@ function useSettingsPanel() {
 
   if (!context) {
     throw new Error(
-      "useSettingsPanel must be used within a SettingsPanelProvider.",
+      "useSettingsPanel must be used within a SettingsPanelProvider."
     );
   }
 
@@ -46,7 +46,7 @@ const SettingsPanelProvider = ({ children }: { children: React.ReactNode }) => {
 
   // Helper to toggle the sidebar.
   const togglePanel = React.useCallback(() => {
-    return isMobile && setOpenMobile((open) => !open);
+    return isMobile && setOpenMobile(open => !open);
   }, [isMobile, setOpenMobile]);
 
   const contextValue = React.useMemo<SettingsPanelContext>(
@@ -56,7 +56,7 @@ const SettingsPanelProvider = ({ children }: { children: React.ReactNode }) => {
       setOpenMobile,
       togglePanel,
     }),
-    [isMobile, openMobile, setOpenMobile, togglePanel],
+    [isMobile, openMobile, setOpenMobile, togglePanel]
   );
 
   return (
@@ -281,7 +281,7 @@ const SettingsPanelTrigger = ({
     <Button
       className="px-2"
       variant="ghost"
-      onClick={(event) => {
+      onClick={event => {
         onClick?.(event);
         togglePanel();
       }}

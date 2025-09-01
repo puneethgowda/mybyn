@@ -4,7 +4,7 @@ const DEFAULT_MOBILE_BREAKPOINT = 768;
 
 export function useIsMobile(breakpoint: number = DEFAULT_MOBILE_BREAKPOINT) {
   const [isMobile, setIsMobile] = React.useState<boolean | undefined>(
-    undefined,
+    undefined
   );
 
   React.useEffect(() => {

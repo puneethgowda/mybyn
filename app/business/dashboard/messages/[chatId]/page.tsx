@@ -1,51 +1,74 @@
 "use client";
 
-import { useEffect, useRef } from "react";
-import { useParams } from "next/navigation";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { RiShining2Line } from "@remixicon/react";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useParams } from "next/navigation";
+import { useEffect, useRef } from "react";
 
-import { Skeleton } from "@/components/ui/skeleton";
-import { ChatHeader } from "@/components/dashboard/chat/ChatHeader";
 import { ChatBubble } from "@/components/dashboard/chat/ChatBubble";
+import { ChatHeader } from "@/components/dashboard/chat/ChatHeader";
 import { MessageInput } from "@/components/dashboard/chat/MessageInput";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { createClient } from "@/supabase/client";
 import { NewMessage } from "@/types/chat";
-import { timeAgo } from "@/utils/date";
-import { getUserOptions } from "@/utils/react-query/user";
+import { groupMessagesByDate, timeAgo } from "@/utils/date";
 import {
-  getChatMessagesOptions,
-  getChatDetailsOptions,
-  useSendMessageMutation,
   addOptimisticMessage,
+  getChatDetailsOptions,
+  useInfiniteBusinessChatMessages,
+  useMarkMessagesAsReadMutation,
+  useSendMessageMutation,
 } from "@/utils/react-query/business/chat";
-import { ScrollArea } from "@/components/ui/scroll-area";
+import { getUserOptions } from "@/utils/react-query/user";
 
 export default function BusinessChatRoomPage() {
   const params = useParams();
   const chatId = params.chatId as string;
   const supabase = createClient();
   const messagesEndRef = useRef<HTMLDivElement>(null);
-
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
   const queryClient = useQueryClient();
 
   const { data } = useQuery(getUserOptions(supabase));
   const user = data?.user;
   const userId = user?.id;
 
-  const { data: messages, isPending } = useQuery(
-    getChatMessagesOptions(supabase, chatId),
-  );
-  const { data: chatDetails, isPending: isChatDetailsPending } = useQuery(
-    getChatDetailsOptions(supabase, chatId),
+  const {
+    data: messagesData,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    isLoading: messagesLoading,
+  } = useInfiniteBusinessChatMessages(supabase, chatId);
+
+  const { data: chatDetails, isLoading: detailsLoading } = useQuery(
+    getChatDetailsOptions(supabase, chatId)
   );
 
   const sendMessageMutation = useSendMessageMutation(supabase);
+  const markMessagesAsReadMutation = useMarkMessagesAsReadMutation(supabase);
+
+  // Flatten all messages from all pages
+  const allMessages =
+    messagesData?.pages.flatMap((page: any) => page.data) || [];
+
+  // Group messages by date
+  const messageGroups = groupMessagesByDate(allMessages);
 
   // Scroll to bottom when messages change
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages]);
+  }, [allMessages]);
+
+  // Mark messages as read when entering chat room
+  useEffect(() => {
+    if (chatId && userId && allMessages.length > 0 && chatDetails?.unread) {
+      markMessagesAsReadMutation.mutate({
+        chatRoomId: chatId,
+        userId: userId,
+      });
+    }
+  }, [chatId, userId, allMessages.length, chatDetails?.unread]);
 
   // Send message handler
   const handleSendMessage = async (message: string) => {
@@ -73,25 +96,25 @@ export default function BusinessChatRoomPage() {
     sendMessageMutation.mutate(newMessage);
   };
 
-  if (isPending || isChatDetailsPending) {
+  // Infinite scroll handler for loading older messages
+  const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
+    const { scrollTop } = e.currentTarget;
+
+    if (scrollTop < 100 && hasNextPage && !isFetchingNextPage) {
+      fetchNextPage();
+    }
+  };
+
+  const isLoading = messagesLoading || detailsLoading;
+
+  if (isLoading || !chatDetails) {
     return (
-      <ScrollArea className="flex-1 [&>div>div]:h-full w-full shadow-md md:rounded-s-[inherit] min-[1024px]:rounded-e-3xl bg-background">
-        <div className="h-full flex flex-col px-4 md:px-6 lg:px-8">
-          <div className="p-4">
-            <Skeleton className="h-12 w-full lg:max-w-96 rounded-lg" />
-          </div>
-          <div className="flex-1 p-6 space-y-6 overflow-y-auto">
-            {[1, 2, 3, 4].map((i) => (
-              <Skeleton
-                key={i}
-                className={`h-24 w-3/4 rounded-2xl ${
-                  i % 2 === 0 ? "ml-auto" : ""
-                }`}
-              />
-            ))}
-          </div>
+      <div className="flex-1 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto" />
+          <p className="mt-2 text-muted-foreground">Loading chat...</p>
         </div>
-      </ScrollArea>
+      </div>
     );
   }
 
@@ -106,39 +129,63 @@ export default function BusinessChatRoomPage() {
 
         {/* Chat */}
         <div className="relative grow">
-          <div className="max-w-3xl mx-auto mt-6 space-y-6">
-            <div className="text-center my-8">
-              <div className="inline-flex items-center bg-white rounded-full border border-black/[0.08] shadow-xs text-xs font-medium py-1 px-3 text-foreground/80">
-                <RiShining2Line
-                  aria-hidden="true"
-                  className="me-1.5 text-muted-foreground/70 -ms-1"
-                  size={14}
-                />
-                Today
+          <div
+            ref={scrollContainerRef}
+            className="max-w-3xl mx-auto mt-6 space-y-6 h-full overflow-y-auto"
+            onScroll={handleScroll}
+          >
+            {/* Loading indicator for older messages */}
+            {isFetchingNextPage && (
+              <div className="text-center py-4">
+                <div className="inline-flex items-center bg-white rounded-full border border-black/[0.08] shadow-xs text-xs font-medium py-1 px-3 text-foreground/80">
+                  <RiShining2Line
+                    aria-hidden="true"
+                    className="me-1.5 text-muted-foreground/70 -ms-1"
+                    size={14}
+                  />
+                  Loading older messages...
+                </div>
               </div>
-            </div>
-            {(messages || []).map((message) => {
-              // Group consecutive messages from the same sender
-              const isUser = message.sender_id === user?.id;
+            )}
 
-              // const showSender =
-              //   index === 0 || messages[index - 1].sender_id !== user?.id;
+            {/* Message groups */}
+            {messageGroups.map(group => (
+              <div key={group.date}>
+                {/* Date separator */}
+                <div className="text-center my-8">
+                  <div className="inline-flex items-center bg-white rounded-full border border-black/[0.08] shadow-xs text-xs font-medium py-1 px-3 text-foreground/80">
+                    <RiShining2Line
+                      aria-hidden="true"
+                      className="me-1.5 text-muted-foreground/70 -ms-1"
+                      size={14}
+                    />
+                    {group.label}
+                  </div>
+                </div>
 
-              return (
-                <ChatBubble
-                  key={message.id}
-                  isUser={isUser}
-                  message={message.message}
-                  senderImage={
-                    isUser
-                      ? user?.user_metadata?.avatar_url
-                      : chatDetails?.creator_profile?.profile_pic_url
-                  }
-                  senderName={undefined}
-                  timestamp={timeAgo(message.created_at)}
-                />
-              );
-            })}
+                {/* Messages in this group */}
+                {group.messages.map((message: any) => {
+                  // Group consecutive messages from the same sender
+                  const isUser = message.sender_id === user?.id;
+
+                  return (
+                    <ChatBubble
+                      key={message.id}
+                      isUser={isUser}
+                      message={message.message}
+                      senderImage={
+                        isUser
+                          ? user?.user_metadata?.avatar_url
+                          : chatDetails?.creator_profile?.profile_pic_url
+                      }
+                      senderName={undefined}
+                      timestamp={timeAgo(message.created_at)}
+                    />
+                  );
+                })}
+              </div>
+            ))}
+
             <div ref={messagesEndRef} />
           </div>
         </div>

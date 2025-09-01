@@ -1,26 +1,26 @@
 "use client";
 
-import { useEffect, useRef } from "react";
-import { useParams } from "next/navigation";
-import { toast } from "sonner";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { RiShining2Line } from "@remixicon/react";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useParams } from "next/navigation";
+import { useEffect, useRef } from "react";
+import { toast } from "sonner";
 
-import { Skeleton } from "@/components/ui/skeleton";
-import { ChatHeader } from "@/components/dashboard/chat/ChatHeader";
 import { ChatBubble } from "@/components/dashboard/chat/ChatBubble";
-import { Message, NewMessage } from "@/types/chat";
-import { timeAgo } from "@/utils/date";
+import { ChatHeader } from "@/components/dashboard/chat/ChatHeader";
+import { MessageInput } from "@/components/dashboard/chat/MessageInput";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { createClient } from "@/supabase/client";
+import { Message, NewMessage } from "@/types/chat";
+import { groupMessagesByDate, timeAgo } from "@/utils/date";
 import {
-  getChatMessagesOptions,
-  getChatDetailsOptions,
-  useSendMessageMutation,
   addOptimisticMessage,
+  getChatDetailsOptions,
+  useInfiniteChatMessages,
+  useMarkMessagesAsReadMutation,
+  useSendMessageMutation,
 } from "@/utils/react-query/chat";
 import { getUserOptions } from "@/utils/react-query/user";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { MessageInput } from "@/components/dashboard/chat/MessageInput";
 
 export default function ChatRoomPage() {
   const params = useParams();
@@ -28,23 +28,46 @@ export default function ChatRoomPage() {
   const supabase = createClient();
   const queryClient = useQueryClient();
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
 
   const { data: userData } = useQuery(getUserOptions(supabase));
   const userId = userData?.user?.id;
 
-  const { data: messages = [], isLoading: messagesLoading } = useQuery(
-    getChatMessagesOptions(supabase, chatId),
-  );
+  const {
+    data: messagesData,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    isLoading: messagesLoading,
+  } = useInfiniteChatMessages(supabase, chatId);
 
   const { data: chatDetails, isLoading: detailsLoading } = useQuery(
-    getChatDetailsOptions(supabase, chatId),
+    getChatDetailsOptions(supabase, chatId)
   );
 
   const sendMessageMutation = useSendMessageMutation(supabase);
+  const markMessagesAsReadMutation = useMarkMessagesAsReadMutation(supabase);
+
+  // Flatten all messages from all pages
+  const allMessages =
+    messagesData?.pages.flatMap((page: any) => page.data) || [];
+
+  // Group messages by date
+  const messageGroups = groupMessagesByDate(allMessages);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages]);
+  }, [allMessages]);
+
+  // Mark messages as read when entering chat room
+  useEffect(() => {
+    if (chatId && userId && allMessages.length > 0 && chatDetails?.unread) {
+      markMessagesAsReadMutation.mutate({
+        chatRoomId: chatId,
+        userId: userId,
+      });
+    }
+  }, [chatId, userId, allMessages.length, chatDetails?.unread]);
 
   // Send message handler
   const handleSendMessage = async (message: string) => {
@@ -74,7 +97,7 @@ export default function ChatRoomPage() {
         queryClient.setQueryData(
           ["chat", "room-messages", chatId],
           (oldData: Message[] = []) =>
-            oldData.filter((msg) => msg.id !== optimistic_id),
+            oldData.filter(msg => msg.id !== optimistic_id)
         );
 
         toast.error("Failed to send message");
@@ -82,27 +105,25 @@ export default function ChatRoomPage() {
     });
   };
 
+  // Infinite scroll handler for loading older messages
+  const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
+    const { scrollTop } = e.currentTarget;
+
+    if (scrollTop < 100 && hasNextPage && !isFetchingNextPage) {
+      fetchNextPage();
+    }
+  };
+
   const isLoading = messagesLoading || detailsLoading;
 
   if (isLoading || !chatDetails) {
     return (
-      <ScrollArea className="flex-1 [&>div>div]:h-full w-full shadow-md md:rounded-s-[inherit] min-[1024px]:rounded-e-3xl bg-background">
-        <div className="h-full flex flex-col px-4 md:px-6 lg:px-8 max-w-3xl mx-auto">
-          <div className="p-4">
-            <Skeleton className="h-12 w-full lg:max-w-96 rounded-lg" />
-          </div>
-          <div className="flex-1 p-6 space-y-6 overflow-y-auto">
-            {[1, 2, 3].map((i) => (
-              <Skeleton
-                key={i}
-                className={`h-24 w-3/4 rounded-2xl ${
-                  i % 2 === 0 ? "ml-auto" : ""
-                }`}
-              />
-            ))}
-          </div>
+      <div className="flex-1 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto" />
+          <p className="mt-2 text-muted-foreground">Loading chat...</p>
         </div>
-      </ScrollArea>
+      </div>
     );
   }
 
@@ -117,43 +138,67 @@ export default function ChatRoomPage() {
 
         {/* Chat */}
         <div className="relative grow">
-          <div className="max-w-3xl mx-auto mt-6 space-y-6">
-            <div className="text-center my-8">
-              <div className="inline-flex items-center bg-white rounded-full border border-black/[0.08] shadow-xs text-xs font-medium py-1 px-3 text-foreground/80">
-                <RiShining2Line
-                  aria-hidden="true"
-                  className="me-1.5 text-muted-foreground/70 -ms-1"
-                  size={14}
-                />
-                Today
+          <div
+            ref={scrollContainerRef}
+            className="max-w-3xl mx-auto mt-6 space-y-6 h-full overflow-y-auto"
+            onScroll={handleScroll}
+          >
+            {/* Loading indicator for older messages */}
+            {isFetchingNextPage && (
+              <div className="text-center py-4">
+                <div className="inline-flex items-center bg-white rounded-full border border-black/[0.08] shadow-xs text-xs font-medium py-1 px-3 text-foreground/80">
+                  <RiShining2Line
+                    aria-hidden="true"
+                    className="me-1.5 text-muted-foreground/70 -ms-1"
+                    size={14}
+                  />
+                  Loading older messages...
+                </div>
               </div>
-            </div>
-            {messages.map((message) => {
-              const isUser = message.sender_id === userId;
+            )}
 
-              // const showSender =
-              //   index === 0 || messages[index - 1].sender_id !== message.sender_id;
-              const showSender = true;
+            {/* Message groups */}
+            {messageGroups.map(group => (
+              <div key={group.date}>
+                {/* Date separator */}
+                <div className="text-center my-8">
+                  <div className="inline-flex items-center bg-white rounded-full border border-black/[0.08] shadow-xs text-xs font-medium py-1 px-3 text-foreground/80">
+                    <RiShining2Line
+                      aria-hidden="true"
+                      className="me-1.5 text-muted-foreground/70 -ms-1"
+                      size={14}
+                    />
+                    {group.label}
+                  </div>
+                </div>
 
-              return (
-                <ChatBubble
-                  key={message.id}
-                  isUser={isUser}
-                  message={message.message}
-                  senderImage={
-                    isUser
-                      ? userData?.user?.user_metadata?.avatar_url
-                      : chatDetails?.logo_url
-                  }
-                  senderName={
-                    showSender && !isUser
-                      ? chatDetails.business_name
-                      : undefined
-                  }
-                  timestamp={timeAgo(message.created_at)}
-                />
-              );
-            })}
+                {/* Messages in this group */}
+                {group.messages.map((message: any) => {
+                  const isUser = message.sender_id === userId;
+                  const showSender = true;
+
+                  return (
+                    <ChatBubble
+                      key={message.id}
+                      isUser={isUser}
+                      message={message.message}
+                      senderImage={
+                        isUser
+                          ? userData?.user?.user_metadata?.avatar_url
+                          : chatDetails?.logo_url
+                      }
+                      senderName={
+                        showSender && !isUser
+                          ? chatDetails.business_name
+                          : undefined
+                      }
+                      timestamp={timeAgo(message.created_at)}
+                    />
+                  );
+                })}
+              </div>
+            ))}
+
             <div ref={messagesEndRef} />
           </div>
         </div>
@@ -162,7 +207,6 @@ export default function ChatRoomPage() {
           isSending={sendMessageMutation.isPending}
           onSendMessage={handleSendMessage}
         />
-        {/*</div>*/}
       </div>
     </ScrollArea>
   );

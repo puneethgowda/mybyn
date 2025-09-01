@@ -2,14 +2,14 @@ import { HydrationBoundary, dehydrate } from "@tanstack/react-query";
 import { redirect } from "next/navigation";
 
 import { CreatorDashboard } from "@/components/dashboard/creator-dashboard";
-import { getQueryClient } from "@/utils/react-query";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { createClient } from "@/supabase/server";
+import { getQueryClient } from "@/utils/react-query";
 import {
   getCreatorRecentApplicationsOptions,
   getCreatorStatsOptions,
 } from "@/utils/react-query/creator";
 import { getUserOptions } from "@/utils/react-query/user";
-import { ScrollArea } from "@/components/ui/scroll-area";
 
 export default async function Dashboard() {
   const queryClient = getQueryClient();
@@ -22,7 +22,7 @@ export default async function Dashboard() {
 
   void queryClient.prefetchQuery(getCreatorStatsOptions(supabase, user?.id));
   void queryClient.prefetchQuery(
-    getCreatorRecentApplicationsOptions(supabase, user?.id),
+    getCreatorRecentApplicationsOptions(supabase, user?.id)
   );
 
   return (

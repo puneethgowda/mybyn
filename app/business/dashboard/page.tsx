@@ -2,12 +2,12 @@ import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import { redirect } from "next/navigation";
 
 import { BusinessDashboard } from "@/components/business/business-dashboard";
-import { getBusinessDashboardDataOptions } from "@/utils/react-query/business/collabs";
-import { getQueryClient } from "@/utils/react-query";
-import { createClient } from "@/supabase/server";
-import { getUserOptions } from "@/utils/react-query/user";
-import { getBusinessProfileOptions } from "@/utils/react-query/business/profile";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { createClient } from "@/supabase/server";
+import { getQueryClient } from "@/utils/react-query";
+import { getBusinessDashboardDataOptions } from "@/utils/react-query/business/collabs";
+import { getBusinessProfileOptions } from "@/utils/react-query/business/profile";
+import { getUserOptions } from "@/utils/react-query/user";
 
 export default async function BusinessDashboardPage() {
   const queryClient = getQueryClient();
@@ -18,11 +18,11 @@ export default async function BusinessDashboardPage() {
   if (!user?.id) redirect("/login");
 
   const { id: businessId } = await queryClient.fetchQuery(
-    getBusinessProfileOptions(supabase, user?.id as string),
+    getBusinessProfileOptions(supabase, user?.id as string)
   );
 
   await queryClient.prefetchQuery(
-    getBusinessDashboardDataOptions(supabase, businessId),
+    getBusinessDashboardDataOptions(supabase, businessId)
   );
 
   return (

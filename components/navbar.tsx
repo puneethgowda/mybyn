@@ -1,18 +1,18 @@
 "use client";
 
-import Link from "next/link";
 import clsx from "clsx";
 import { Menu } from "lucide-react";
+import Link from "next/link";
 
+import { Button } from "@/components/ui/button";
 import {
   NavigationMenu,
-  NavigationMenuList,
   NavigationMenuItem,
   NavigationMenuLink,
+  NavigationMenuList,
 } from "@/components/ui/navigation-menu";
-import { Button } from "@/components/ui/button";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { siteConfig } from "@/config/site";
-import { Sheet, SheetTrigger, SheetContent } from "@/components/ui/sheet";
 
 export const Navbar = () => {
   return (
@@ -30,13 +30,13 @@ export const Navbar = () => {
         <div className="hidden sm:flex flex-1 justify-center">
           <NavigationMenu>
             <NavigationMenuList>
-              {siteConfig.navItems.map((item) => (
+              {siteConfig.navItems.map(item => (
                 <NavigationMenuItem key={item.href}>
                   <NavigationMenuLink
                     asChild
                     className={clsx(
                       "px-3 py-2 font-semibold transition-colors hover:text-primary",
-                      "data-[active=true]:text-primary data-[active=true]:font-bold",
+                      "data-[active=true]:text-primary data-[active=true]:font-bold"
                     )}
                   >
                     <Link href={item.href}>{item.label}</Link>

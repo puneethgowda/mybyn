@@ -1,7 +1,5 @@
 import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
 
-import { usePagination } from "@/hooks/use-pagination";
-import { cn } from "@/lib/utils";
 import { buttonVariants } from "@/components/ui/button";
 import {
   Pagination,
@@ -10,6 +8,8 @@ import {
   PaginationItem,
   PaginationLink,
 } from "@/components/ui/pagination";
+import { usePagination } from "@/hooks/use-pagination";
+import { cn } from "@/lib/utils";
 
 type PaginationProps = {
   currentPage: number;
@@ -40,7 +40,7 @@ export default function AppPagination({
             aria-label="Go to previous page"
             className={cn(
               buttonVariants({ variant: "outline" }),
-              "rounded-none shadow-none focus-visible:z-10 aria-disabled:pointer-events-none [&[aria-disabled]>svg]:opacity-50",
+              "rounded-none shadow-none focus-visible:z-10 aria-disabled:pointer-events-none [&[aria-disabled]>svg]:opacity-50"
             )}
             onClick={() => currentPage > 1 && onChange(currentPage - 1)}
           >
@@ -56,7 +56,7 @@ export default function AppPagination({
         )}
 
         {/* Page number links */}
-        {pages.map((page) => (
+        {pages.map(page => (
           <PaginationItem
             key={page}
             className="[&:first-child>a]:rounded-s-md [&:last-child>a]:rounded-e-md"
@@ -65,7 +65,7 @@ export default function AppPagination({
               className={cn(
                 buttonVariants({ variant: "outline" }),
                 "rounded-none shadow-none focus-visible:z-10",
-                page === currentPage && "bg-accent",
+                page === currentPage && "bg-accent"
               )}
               isActive={page === currentPage}
               onClick={() => onChange(page)}
@@ -81,7 +81,7 @@ export default function AppPagination({
             <PaginationEllipsis
               className={cn(
                 buttonVariants({ variant: "outline" }),
-                "pointer-events-none rounded-none shadow-none",
+                "pointer-events-none rounded-none shadow-none"
               )}
             />
           </PaginationItem>
@@ -94,7 +94,7 @@ export default function AppPagination({
             aria-label="Go to next page"
             className={cn(
               buttonVariants({ variant: "outline" }),
-              "rounded-none shadow-none focus-visible:z-10 aria-disabled:pointer-events-none [&[aria-disabled]>svg]:opacity-50",
+              "rounded-none shadow-none focus-visible:z-10 aria-disabled:pointer-events-none [&[aria-disabled]>svg]:opacity-50"
             )}
             onClick={() =>
               currentPage < totalPages && onChange(currentPage + 1)

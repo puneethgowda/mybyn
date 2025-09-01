@@ -56,7 +56,7 @@ interface StatsGridProps {
 export function StatsGrid({ stats }: StatsGridProps) {
   return (
     <div className="grid grid-cols-2 min-[1200px]:grid-cols-4 border border-border rounded-xl">
-      {stats.map((stat) => (
+      {stats.map(stat => (
         <StatsCard key={stat.title} {...stat} />
       ))}
     </div>

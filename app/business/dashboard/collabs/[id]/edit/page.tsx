@@ -1,20 +1,19 @@
 "use client";
 
-import { useMemo } from "react";
-import { useParams } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
-import * as React from "react";
+import { useParams } from "next/navigation";
+import { useMemo } from "react";
 
-import { Skeleton } from "@/components/ui/skeleton";
 import {
   CreateCollabForm,
   FormData,
 } from "@/components/business/CreateCollabForm";
-import { createClient } from "@/supabase/client";
-import { getUserOptions } from "@/utils/react-query/user";
-import { getBusinessProfileOptions } from "@/utils/react-query/business/profile";
-import { getSingleBusinessCollabsOptions } from "@/utils/react-query/business/collabs";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { Skeleton } from "@/components/ui/skeleton";
+import { createClient } from "@/supabase/client";
+import { getSingleBusinessCollabsOptions } from "@/utils/react-query/business/collabs";
+import { getBusinessProfileOptions } from "@/utils/react-query/business/profile";
+import { getUserOptions } from "@/utils/react-query/user";
 
 export default function EditCollabPage() {
   const params = useParams();
@@ -25,12 +24,12 @@ export default function EditCollabPage() {
   const user = data?.user;
 
   const { data: businessProfile } = useQuery(
-    getBusinessProfileOptions(supabase, user?.id as string),
+    getBusinessProfileOptions(supabase, user?.id as string)
   );
   const businessId = useMemo(() => businessProfile?.id, [businessProfile]);
 
   const { data: collab, isLoading } = useQuery(
-    getSingleBusinessCollabsOptions(supabase, businessId as string, collabId),
+    getSingleBusinessCollabsOptions(supabase, businessId as string, collabId)
   );
 
   if (isLoading) {

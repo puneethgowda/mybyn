@@ -1,5 +1,5 @@
-import { ValidationResult, ValidationParams } from "@/types/validation";
 import { CreatorProfile } from "@/types/user";
+import { ValidationParams, ValidationResult } from "@/types/validation";
 
 /**
  * Creator Application Validation Utilities
@@ -15,7 +15,7 @@ import { CreatorProfile } from "@/types/user";
  * Validate if creator profile exists and has required fields
  */
 export function validateCreatorProfile(
-  creatorProfile: CreatorProfile | undefined,
+  creatorProfile: CreatorProfile | undefined
 ): ValidationResult {
   if (!creatorProfile) {
     return {
@@ -44,7 +44,7 @@ export function validateCreatorProfile(
  */
 export function validateMinimumFollowers(
   creatorFollowers: number | null,
-  requiredFollowers: number,
+  requiredFollowers: number
 ): ValidationResult {
   if (!creatorFollowers) {
     return {
@@ -73,7 +73,7 @@ export function validateMinimumFollowers(
  */
 export function validateApplicationBalance(
   userBalance: number,
-  requiredPoints: number,
+  requiredPoints: number
 ): ValidationResult {
   if (userBalance < requiredPoints) {
     return {
@@ -92,7 +92,7 @@ export function validateApplicationBalance(
  * Comprehensive validation for creator application
  */
 export function validateCreatorApplication(
-  params: ValidationParams,
+  params: ValidationParams
 ): ValidationResult[] {
   const results: ValidationResult[] = [];
 
@@ -107,7 +107,7 @@ export function validateCreatorApplication(
   // 2. Validate minimum followers
   const followersValidation = validateMinimumFollowers(
     params.creatorFollowers,
-    params.requiredFollowers,
+    params.requiredFollowers
   );
 
   results.push(followersValidation);
@@ -118,7 +118,7 @@ export function validateCreatorApplication(
   // 3. Validate balance
   const balanceValidation = validateApplicationBalance(
     params.userBalance,
-    params.requiredPoints,
+    params.requiredPoints
   );
 
   results.push(balanceValidation);
@@ -130,16 +130,16 @@ export function validateCreatorApplication(
  * Check if all validations pass
  */
 export function areAllValidationsPassed(results: ValidationResult[]): boolean {
-  return results.every((result) => result.isValid);
+  return results.every(result => result.isValid);
 }
 
 /**
  * Get first validation error message
  */
 export function getFirstValidationError(
-  results: ValidationResult[],
+  results: ValidationResult[]
 ): ValidationResult | undefined {
-  const failedValidation = results.find((result) => !result.isValid);
+  const failedValidation = results.find(result => !result.isValid);
 
   return failedValidation;
 }

@@ -1,23 +1,22 @@
 "use client";
 
-import { useQuery } from "@tanstack/react-query";
-import { toast } from "sonner";
-import * as React from "react";
 import {
   RiClipboardLine,
   RiFlashlightLine,
   RiShareLine,
 } from "@remixicon/react";
+import { useQuery } from "@tanstack/react-query";
+import { toast } from "sonner";
 
+import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
 import { createClient } from "@/supabase/client";
+import { getReferralCreditsOptions } from "@/utils/react-query/referral";
 import {
   getUserOptions,
   getUserProfileOptions,
 } from "@/utils/react-query/user";
-import { getReferralCreditsOptions } from "@/utils/react-query/referral";
-import { Button } from "@/components/ui/button";
-import { Skeleton } from "@/components/ui/skeleton";
 
 export default function ReferralsPage() {
   const supabase = createClient();

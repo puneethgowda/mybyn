@@ -1,10 +1,10 @@
-import Link from "next/link";
 import Image from "next/image";
+import Link from "next/link";
 
-import { Button } from "@/components/ui/button";
+import LayoutSkeleton from "@/components/layout-skeleton";
 import { Marquee } from "@/components/magicui/marquee";
 import { WobbleCard } from "@/components/magicui/wobble-card";
-import LayoutSkeleton from "@/components/layout-skeleton";
+import { Button } from "@/components/ui/button";
 
 const TEXTS = ["VERIFIED", "COLLABORATE", "GROWTH", "TRUSTED"];
 const campaignSteps = [

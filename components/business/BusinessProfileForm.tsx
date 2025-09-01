@@ -1,27 +1,17 @@
 "use client";
 
-import { useRef, useState } from "react";
-import { useRouter } from "next/navigation";
-import { motion } from "framer-motion";
-import { useQuery } from "@tanstack/react-query";
-import * as React from "react";
-import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
+import { useQuery } from "@tanstack/react-query";
+import { motion } from "framer-motion";
+import { useRouter } from "next/navigation";
+import { useRef, useState } from "react";
+import { useForm } from "react-hook-form";
 import { toast } from "sonner";
+import * as z from "zod";
 
-import { Card, CardContent, CardFooter } from "@/components/ui/card";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Progress } from "@/components/ui/progress";
-import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import {
   Form,
   FormControl,
@@ -30,13 +20,22 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Progress } from "@/components/ui/progress";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Toaster } from "@/components/ui/sonner";
 import { Textarea } from "@/components/ui/textarea";
 import { createClient } from "@/supabase/client";
-import { getStoragePublicUrlBase } from "@/supabase/storage";
 import { Constants } from "@/supabase/database.types";
-import { getUserOptions } from "@/utils/react-query/user";
+import { getStoragePublicUrlBase } from "@/supabase/storage";
 import { useSaveBusinessProfileMutation } from "@/utils/react-query/business/profile";
-import { Toaster } from "@/components/ui/sonner";
+import { getUserOptions } from "@/utils/react-query/user";
 
 // Business type options
 const TypeOptions = Constants.public.Enums.business_type;
@@ -157,7 +156,7 @@ export function BusinessProfileForm() {
       const logoUrl = getStoragePublicUrlBase(data?.fullPath);
 
       form.setValue("logo_url", logoUrl);
-    } catch (error) {
+    } catch (_error) {
       toast.error("Failed to upload logo");
     }
   };
@@ -173,7 +172,7 @@ export function BusinessProfileForm() {
       });
       setIsSubmitting(false);
       setShowSuccess(true);
-    } catch (error) {
+    } catch (_error) {
       toast.error("Failed to create profile");
       setIsSubmitting(false);
     }
@@ -251,7 +250,7 @@ export function BusinessProfileForm() {
                 </SelectTrigger>
               </FormControl>
               <SelectContent>
-                {TypeOptions.map((type) => (
+                {TypeOptions.map(type => (
                   <SelectItem key={type} value={type}>
                     {type}
                   </SelectItem>
@@ -278,7 +277,7 @@ export function BusinessProfileForm() {
                 </SelectTrigger>
               </FormControl>
               <SelectContent>
-                {locationOptions.map((location) => (
+                {locationOptions.map(location => (
                   <SelectItem key={location} value={location}>
                     {location}
                   </SelectItem>
@@ -414,7 +413,7 @@ export function BusinessProfileForm() {
                   accept="image/*"
                   className="hidden"
                   type="file"
-                  onChange={(e) => {
+                  onChange={e => {
                     const file = e.target.files?.[0];
 
                     if (file) handleLogoUpload(file);

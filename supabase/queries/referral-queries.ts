@@ -7,7 +7,7 @@ import { TypedSupabaseClient } from "@/supabase/types";
  */
 export async function getReferralCreditsFromTransactions(
   supabase: TypedSupabaseClient,
-  userId: string,
+  userId: string
 ): Promise<number> {
   // Use a single aggregate query to compute the sum on the server
   const { data, error } = await supabase
@@ -22,7 +22,7 @@ export async function getReferralCreditsFromTransactions(
   // Sum on client in case some drivers don't support sum(), while staying simple
   const total = (data || []).reduce(
     (acc, row: any) => acc + (row.amount || 0),
-    0,
+    0
   );
 
   return total || 0;

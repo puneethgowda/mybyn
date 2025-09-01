@@ -1,17 +1,17 @@
 "use client";
-import { useEffect, useMemo, useState } from "react";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
-import { toast } from "sonner";
 import { useSearchParams } from "next/navigation";
+import { useEffect, useMemo, useState } from "react";
+import { toast } from "sonner";
 
-import { Checkbox } from "@/components/ui/checkbox";
+import { AnimatedGridPattern } from "@/components/magicui/animated-grid-pattern";
 import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { createClient } from "@/supabase/client";
-import { AnimatedGridPattern } from "@/components/magicui/animated-grid-pattern";
 import { cn } from "@/lib/utils";
+import { createClient } from "@/supabase/client";
 
 export default function SignupPage() {
   const [loading, setLoading] = useState(false);
@@ -110,7 +110,7 @@ export default function SignupPage() {
                 id="referral-code"
                 placeholder="Enter referral code"
                 value={referralCode}
-                onChange={(e) => setReferralCode(e.target.value)}
+                onChange={e => setReferralCode(e.target.value)}
               />
             </div>
           )}
@@ -120,7 +120,7 @@ export default function SignupPage() {
             <Checkbox
               checked={acceptTerms}
               id="accept-terms"
-              onCheckedChange={(v) => setAcceptTerms(v === true)}
+              onCheckedChange={v => setAcceptTerms(v === true)}
             />
             <label className="text-sm cursor-pointer" htmlFor="accept-terms">
               I agree to the{" "}

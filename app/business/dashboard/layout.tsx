@@ -1,12 +1,12 @@
 import { redirect } from "next/navigation";
 
-import { DashboardHeader } from "@/components/header";
-import { getBusinessProfileOptions } from "@/utils/react-query/business/profile";
-import { getQueryClient } from "@/utils/react-query";
-import { createClient } from "@/supabase/server";
-import { getUserOptions } from "@/utils/react-query/user";
 import { AppSidebar } from "@/components/app-sidebar";
+import { DashboardHeader } from "@/components/header";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
+import { createClient } from "@/supabase/server";
+import { getQueryClient } from "@/utils/react-query";
+import { getBusinessProfileOptions } from "@/utils/react-query/business/profile";
+import { getUserOptions } from "@/utils/react-query/user";
 
 export default async function DashboardLayout({
   children,
@@ -22,9 +22,9 @@ export default async function DashboardLayout({
 
   try {
     await queryClient.fetchQuery(
-      getBusinessProfileOptions(supabase, user?.id as string),
+      getBusinessProfileOptions(supabase, user?.id as string)
     );
-  } catch (e) {
+  } catch (_e) {
     redirect("/dashboard");
   }
 

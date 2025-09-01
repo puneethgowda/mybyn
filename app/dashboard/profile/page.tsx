@@ -1,20 +1,19 @@
 "use client";
 
-import { useQuery } from "@tanstack/react-query";
-import * as React from "react";
 import { RiErrorWarningLine, RiInstagramLine } from "@remixicon/react";
+import { useQuery } from "@tanstack/react-query";
 
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { createClient } from "@/supabase/client";
+import { handleConnectInstagram } from "@/utils/instagram-connect";
 import {
   getCreatorProfileOptions,
   getUserOptions,
 } from "@/utils/react-query/user";
-import { handleConnectInstagram } from "@/utils/instagram-connect";
-import { ScrollArea } from "@/components/ui/scroll-area";
 
 export default function InfluencerProfilePage() {
   const supabase = createClient();
@@ -23,7 +22,7 @@ export default function InfluencerProfilePage() {
   const user = userData?.user;
 
   const { data: creatorProfile } = useQuery(
-    getCreatorProfileOptions(supabase, user?.id as string),
+    getCreatorProfileOptions(supabase, user?.id as string)
   );
 
   const instagramConnected = !!creatorProfile?.instagram_handle;

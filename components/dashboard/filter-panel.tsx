@@ -3,10 +3,10 @@
 import { RiSettingsLine } from "@remixicon/react";
 import * as React from "react";
 
-import { useIsMobile } from "@/hooks/use-mobile";
 import { Button } from "@/components/ui/button";
-import { Sheet, SheetTitle, SheetContent } from "@/components/ui/sheet";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { Sheet, SheetContent, SheetTitle } from "@/components/ui/sheet";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 type FilterPanelContext = {
   openMobile: boolean;
@@ -22,7 +22,7 @@ function useFilterPanel() {
 
   if (!context) {
     throw new Error(
-      "useFilterPanel must be used within a FilterPanelProvider.",
+      "useFilterPanel must be used within a FilterPanelProvider."
     );
   }
 
@@ -35,7 +35,7 @@ const FilterPanelProvider = ({ children }: { children: React.ReactNode }) => {
 
   // Helper to toggle the sidebar.
   const togglePanel = React.useCallback(() => {
-    return isMobile && setOpenMobile((open) => !open);
+    return isMobile && setOpenMobile(open => !open);
   }, [isMobile, setOpenMobile]);
 
   const contextValue = React.useMemo<FilterPanelContext>(
@@ -45,7 +45,7 @@ const FilterPanelProvider = ({ children }: { children: React.ReactNode }) => {
       setOpenMobile,
       togglePanel,
     }),
-    [isMobile, openMobile, setOpenMobile, togglePanel],
+    [isMobile, openMobile, setOpenMobile, togglePanel]
   );
 
   return (
@@ -95,7 +95,7 @@ const FilterPanelTrigger = ({
     <Button
       className="px-2"
       variant="ghost"
-      onClick={(event) => {
+      onClick={event => {
         onClick?.(event);
         togglePanel();
       }}

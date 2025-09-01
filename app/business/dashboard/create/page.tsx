@@ -1,7 +1,5 @@
 "use client";
 
-import * as React from "react";
-
 import { CreateCollabForm } from "@/components/business/CreateCollabForm";
 import { ScrollArea } from "@/components/ui/scroll-area";
 

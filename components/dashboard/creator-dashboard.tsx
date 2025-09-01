@@ -1,21 +1,25 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import Link from "next/link";
-import { useQuery, useSuspenseQuery } from "@tanstack/react-query";
 import {
   RiCalendarLine,
   RiInstagramLine,
   RiWalletLine,
 } from "@remixicon/react";
+import { useQuery, useSuspenseQuery } from "@tanstack/react-query";
 import Image from "next/image";
+import Link from "next/link";
+import { useEffect, useState } from "react";
 
 import { StatsGrid } from "../stats-grid";
 
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { APPLICATION_STATUS, COLLAB_TYPE } from "@/utils/enums";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { useBreakpoint } from "@/hooks/use-breakpoint";
 import { createClient } from "@/supabase/client";
+import { timeAgo } from "@/utils/date";
+import { APPLICATION_STATUS, COLLAB_TYPE } from "@/utils/enums";
+import { handleConnectInstagram } from "@/utils/instagram-connect";
 import {
   getCreatorRecentApplicationsOptions,
   getCreatorStatsOptions,
@@ -24,11 +28,7 @@ import {
   getCreatorProfileOptions,
   getUserOptions,
 } from "@/utils/react-query/user";
-import { handleConnectInstagram } from "@/utils/instagram-connect";
-import { useBreakpoint } from "@/hooks/use-breakpoint";
-import { Badge } from "@/components/ui/badge";
 import { toTitleCase } from "@/utils/string";
-import { timeAgo } from "@/utils/date";
 
 export function CreatorDashboard({ userId }: { userId: string }) {
   const supabase = createClient();
@@ -40,28 +40,28 @@ export function CreatorDashboard({ userId }: { userId: string }) {
     profileCompletion: 0,
   });
 
-  const { isSm } = useBreakpoint();
+  const { isSm: _isSm } = useBreakpoint();
 
   const { data: creatorStats } = useSuspenseQuery(
-    getCreatorStatsOptions(supabase, userId),
+    getCreatorStatsOptions(supabase, userId)
   );
   const {
     data: { user },
   } = useSuspenseQuery(getUserOptions(supabase));
 
   const { data: creatorProfile } = useQuery(
-    getCreatorProfileOptions(supabase, user?.id as string),
+    getCreatorProfileOptions(supabase, user?.id as string)
   );
 
   const { data: recentApplications } = useSuspenseQuery(
-    getCreatorRecentApplicationsOptions(supabase, userId),
+    getCreatorRecentApplicationsOptions(supabase, userId)
   );
 
   useEffect(() => {
     const applicationStatus: Record<string, number> = {};
     let applicationsSent: number = 0;
 
-    creatorStats?.data?.forEach((each) => {
+    creatorStats?.data?.forEach(each => {
       applicationStatus[each.status] = each.count;
       applicationsSent += each.count;
     });
@@ -167,7 +167,7 @@ export function CreatorDashboard({ userId }: { userId: string }) {
         <CardContent>
           {recentApplications && recentApplications.length > 0 ? (
             <div className="space-y-2">
-              {recentApplications.map((application) => (
+              {recentApplications.map(application => (
                 <div
                   key={application.id}
                   className="group hover:bg-accent/50 flex flex-col items-start gap-4 rounded-lg p-4 transition-colors sm:flex-row sm:items-center"
@@ -193,7 +193,7 @@ export function CreatorDashboard({ userId }: { userId: string }) {
                         <div className="flex items-center gap-1">
                           <span className="truncate">
                             {toTitleCase(
-                              application.collabs.business_profile.name,
+                              application.collabs.business_profile.name
                             )}
                           </span>
                         </div>

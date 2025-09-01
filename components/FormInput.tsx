@@ -52,7 +52,7 @@ export default function FormInput({
         required={required}
         type={type}
         value={value}
-        onChange={(e) => onChange(e.target.value)}
+        onChange={e => onChange(e.target.value)}
       />
       {error && (
         <p

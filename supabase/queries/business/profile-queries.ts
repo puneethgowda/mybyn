@@ -6,7 +6,7 @@ import { BusinessProfileFormValues } from "@/types/business-profile";
  */
 export async function getBusinessProfile(
   supabase: TypedSupabaseClient,
-  ownerId: string,
+  ownerId: string
 ) {
   const { data, error } = await supabase
     .from("business_profile")
@@ -29,7 +29,7 @@ export async function saveBusinessProfile(
   profileData: BusinessProfileFormValues & {
     owner_id: string;
     business_id?: string;
-  },
+  }
 ) {
   const { owner_id, business_id, ...updateData } = profileData;
 
@@ -72,8 +72,8 @@ export async function saveBusinessProfile(
         profile_user_id: owner_id,
         action_type: "BUSINESS_PROFILE_CREATED",
       });
-    } catch (referralError) {
-      console.error("Error handling referral points:", referralError);
+    } catch (_referralError) {
+      // console.error("Error handling referral points:", referralError);
       // Don't fail the profile creation if referral handling fails
     }
 

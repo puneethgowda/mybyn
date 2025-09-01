@@ -1,12 +1,12 @@
-import "./globals.css";
-import { Metadata, Viewport } from "next";
 import clsx from "clsx";
+import { Metadata, Viewport } from "next";
 import { headers } from "next/headers";
+import "./globals.css";
 
 import { Providers } from "./providers";
 
+import { moSans, onest } from "@/config/fonts";
 import { siteConfig } from "@/config/site";
-import { onest, moSans } from "@/config/fonts";
 
 export const metadata: Metadata = {
   title: {
@@ -35,8 +35,8 @@ export default async function RootLayout({
   const pathname = headersList.get("x-pathname") || "/"; // Use middleware to set x-pathname or parse from request
 
   const websiteRoutes = ["/", "/business", "/discover", "/creators"];
-  const isWebsiteRoute = websiteRoutes.includes(pathname);
-  const isLogin = ["/login"].includes(pathname);
+  const _isWebsiteRoute = websiteRoutes.includes(pathname);
+  const _isLogin = ["/login"].includes(pathname);
 
   return (
     <html suppressHydrationWarning lang="en">
@@ -45,7 +45,7 @@ export default async function RootLayout({
         className={clsx(
           "min-h-dvh text-foreground bg-background font-onest antialiased",
           onest.variable,
-          moSans.variable,
+          moSans.variable
         )}
       >
         <Providers themeProps={{ attribute: "class", defaultTheme: "light" }}>

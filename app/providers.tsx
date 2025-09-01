@@ -2,11 +2,11 @@
 
 import type { ThemeProviderProps } from "next-themes";
 
-import * as React from "react";
-import { ThemeProvider as NextThemesProvider } from "next-themes";
-import { useRouter } from "next/navigation";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import { ThemeProvider as NextThemesProvider } from "next-themes";
+import { useRouter } from "next/navigation";
+import * as React from "react";
 
 import { Toaster } from "@/components/ui/sonner";
 import { getQueryClient } from "@/utils/react-query";
@@ -26,7 +26,7 @@ declare module "@react-types/shared" {
 }
 
 export function Providers({ children, themeProps }: ProvidersProps) {
-  const router = useRouter();
+  const _router = useRouter();
   const queryClient = getQueryClient();
 
   return (

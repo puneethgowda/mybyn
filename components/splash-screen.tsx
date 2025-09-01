@@ -1,5 +1,3 @@
-import React from "react";
-
 const SplashScreen = () => {
   return (
     <div className="h-screen w-screen fixed top-0 left-0 z-50 bg-background">

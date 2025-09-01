@@ -49,7 +49,7 @@ export default function FormTextArea({
         placeholder={placeholder}
         required={required}
         value={value}
-        onChange={(e) => onChange(e.target.value)}
+        onChange={e => onChange(e.target.value)}
       />
       {error && (
         <p

@@ -1,8 +1,7 @@
-import React from "react";
 import Link from "next/link";
 
-import { siteConfig } from "@/config/site";
 import { DiscordIcon, GithubIcon, TwitterIcon } from "@/components/icons";
+import { siteConfig } from "@/config/site";
 
 const Footer = () => {
   return (

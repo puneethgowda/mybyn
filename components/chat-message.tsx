@@ -1,17 +1,18 @@
 import {
-  RiCodeSSlashLine,
   RiBookLine,
-  RiLoopRightFill,
   RiCheckLine,
+  RiCodeSSlashLine,
+  RiLoopRightFill,
 } from "@remixicon/react";
+import Image from "next/image";
 
-import { cn } from "@/lib/utils";
 import {
-  TooltipProvider,
   Tooltip,
   TooltipContent,
+  TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { cn } from "@/lib/utils";
 
 type ChatMessageProps = {
   isUser?: boolean;
@@ -23,14 +24,14 @@ export function ChatMessage({ isUser, children }: ChatMessageProps) {
     <article
       className={cn(
         "flex items-start gap-4 text-[15px] leading-relaxed",
-        isUser && "justify-end",
+        isUser && "justify-end"
       )}
     >
-      <img
+      <Image
         alt={isUser ? "User profile" : "Bart logo"}
         className={cn(
           "rounded-full",
-          isUser ? "order-1" : "border border-black/[0.08] shadow-sm",
+          isUser ? "order-1" : "border border-black/[0.08] shadow-sm"
         )}
         height={40}
         src={

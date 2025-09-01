@@ -1,14 +1,14 @@
 import { queryOptions } from "@tanstack/react-query";
 
-import { TypedSupabaseClient } from "@/supabase/types";
 import {
   getCreatorRecentApplications,
   getCreatorStats,
 } from "@/supabase/queries/creator-queries";
+import { TypedSupabaseClient } from "@/supabase/types";
 
 export function getCreatorStatsOptions(
   supabase: TypedSupabaseClient,
-  userId: string,
+  userId: string
 ) {
   return queryOptions({
     queryKey: ["creator", "stats", userId],
@@ -23,7 +23,7 @@ export function getCreatorStatsOptions(
 
 export function getCreatorRecentApplicationsOptions(
   supabase: TypedSupabaseClient,
-  userId: string,
+  userId: string
 ) {
   return queryOptions({
     queryKey: ["creator", "recent-applications", userId],
