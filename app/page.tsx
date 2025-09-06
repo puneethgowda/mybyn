@@ -208,51 +208,53 @@ export default async function Home() {
         </section>
 
         {/* For Creators */}
-        <section className="px-6 mt-10 sm:mt-14 xl:mt-20 w-full mx-auto max-w-7xl grid grid-cols-1 md:grid-cols-2 gap-14">
-          <div className="">
-            <h1 className="font-mosans font-medium text-2xl sm:text-2xl xl:text-5xl">
-              For Creators
-            </h1>
-            <p className="text-2xl sm:text-2xl xl:text-5xl mt-4 text-muted-foreground">
-              Discover collabs from brands looking for creators. Apply today,
-              collaborate today.
-            </p>
+        <section className="px-6">
+          <div className="mt-10 sm:mt-14 xl:mt-20 w-full mx-auto max-w-7xl grid grid-cols-1 md:grid-cols-2 gap-14">
+            <div className="">
+              <h1 className="font-mosans font-medium text-2xl sm:text-2xl xl:text-5xl">
+                For Creators
+              </h1>
+              <p className="text-2xl sm:text-2xl xl:text-5xl mt-4 text-muted-foreground">
+                Discover collabs from brands looking for creators. Apply today,
+                collaborate today.
+              </p>
 
-            <Link href="/business">
-              <Button className="mt-8" color="secondary" size="lg">
-                Learn More
-                <svg
-                  className="w-6 h-6 ml-8 -mr-2"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M13 9l3 3m0 0l-3 3m3-3H8m13 0a9 9 0 11-18 0 9 9 0 0118 0z"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="1.5"
-                  />
-                </svg>
-              </Button>
-            </Link>
-          </div>
-          <div className="">
-            <div className="relative bg-pink-200 rounded-2xl h-80">
-              <Image
-                alt="brand"
-                className="absolute bottom-0"
-                height={500}
-                src="/assets/creator.png"
-                width={500}
-              />
+              <Link href="/business">
+                <Button className="mt-8" color="secondary" size="lg">
+                  Learn More
+                  <svg
+                    className="w-6 h-6 ml-8 -mr-2"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M13 9l3 3m0 0l-3 3m3-3H8m13 0a9 9 0 11-18 0 9 9 0 0118 0z"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="1.5"
+                    />
+                  </svg>
+                </Button>
+              </Link>
+            </div>
+            <div className="">
+              <div className="relative bg-pink-200 rounded-2xl h-80">
+                <Image
+                  alt="brand"
+                  className="absolute bottom-0"
+                  height={500}
+                  src="/assets/creator.png"
+                  width={500}
+                />
+              </div>
             </div>
           </div>
         </section>
 
         {/* Explaination */}
-        <section className="w-full mx-auto max-w-7xl">
+        <section className="w-full mx-auto max-w-7xl px-6">
           <h1 className="font-mosans font-medium text-2xl sm:text-2xl xl:text-5xl text-center mb-10 sm:mb-20">
             Collabs made simple for creators and businesses
           </h1>
@@ -264,30 +266,32 @@ export default async function Home() {
         </section>
 
         {/* CTA */}
-        <section className=" bg-yellow-300 w-full rounded-4xl">
-          <div className="flex items-center justify-center flex-col py-20">
-            <h1 className="font-mosans font-medium  text-2xl sm:text-2xl xl:text-5xl text-center">
-              Meet the right partner
-            </h1>
-            <Link href="/login">
-              <Button className="mt-8" color="primary" size="lg">
-                Join for free
-                <svg
-                  className="w-6 h-6 ml-8 -mr-2"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M13 9l3 3m0 0l-3 3m3-3H8m13 0a9 9 0 11-18 0 9 9 0 0118 0z"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="1.5"
-                  />
-                </svg>
-              </Button>
-            </Link>
+        <section className="px-6 w-full ">
+          <div className="bg-yellow-300 rounded-4xl">
+            <div className="flex items-center justify-center flex-col py-20">
+              <h1 className="font-mosans font-medium  text-2xl sm:text-2xl xl:text-5xl text-center">
+                Meet the right partner
+              </h1>
+              <Link href="/login">
+                <Button className="mt-8" color="primary" size="lg">
+                  Join for free
+                  <svg
+                    className="w-6 h-6 ml-8 -mr-2"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M13 9l3 3m0 0l-3 3m3-3H8m13 0a9 9 0 11-18 0 9 9 0 0118 0z"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="1.5"
+                    />
+                  </svg>
+                </Button>
+              </Link>
+            </div>
           </div>
         </section>
       </section>

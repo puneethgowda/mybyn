@@ -17,7 +17,7 @@ import { siteConfig } from "@/config/site";
 export const Navbar = () => {
   return (
     <nav className="sticky top-0 z-50 w-full bg-background">
-      <div className="container px-6 mx-auto flex items-center justify-between py-2">
+      <div className="container px-6 mx-auto flex items-center justify-between py-4">
         {/* Brand */}
         <div className="flex items-center gap-3">
           <Link className="flex items-center gap-1" href="/">
@@ -35,7 +35,7 @@ export const Navbar = () => {
                   <NavigationMenuLink
                     asChild
                     className={clsx(
-                      "px-3 py-2 font-semibold transition-colors hover:text-primary",
+                      "px-3 py-2 font-semibold transition-colors hover:text-primary text-muted-foreground",
                       "data-[active=true]:text-primary data-[active=true]:font-bold"
                     )}
                   >
@@ -49,15 +49,21 @@ export const Navbar = () => {
 
         {/* Desktop Login */}
         <div className="hidden sm:flex items-center gap-2">
-          <Button asChild variant="default">
+          <Button asChild variant="outline">
             <Link href="/login">Login</Link>
+          </Button>
+          <Button asChild variant="default">
+            <Link href="/login">Join for free</Link>
           </Button>
         </div>
 
         {/* Mobile Nav */}
         <div className="sm:hidden flex items-center gap-2">
-          <Button asChild size="sm" variant="outline">
+          {/* <Button asChild size="sm" variant="outline">
             <Link href="/login">Login</Link>
+          </Button> */}
+          <Button asChild size="sm" variant="outline">
+            <Link href="/login">Join for free</Link>
           </Button>
           <Sheet>
             <SheetTrigger asChild>

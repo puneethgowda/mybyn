@@ -225,30 +225,32 @@ export default function ForBusinessPage() {
         </section>
 
         {/* CTA */}
-        <section className=" bg-yellow-300 w-full rounded-4xl">
-          <div className="flex items-center justify-center flex-col py-20">
-            <h1 className="font-mosans font-medium  text-2xl sm:text-2xl xl:text-5xl text-center">
-              Find your perfect creator match
-            </h1>
-            <Link href="/login">
-              <Button className="mt-8" color="primary" size="lg">
-                Join for free
-                <svg
-                  className="w-6 h-6 ml-8 -mr-2"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M13 9l3 3m0 0l-3 3m3-3H8m13 0a9 9 0 11-18 0 9 9 0 0118 0z"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="1.5"
-                  />
-                </svg>
-              </Button>
-            </Link>
+        <section className="px-6  w-full ">
+          <div className="bg-yellow-300 rounded-4xl">
+            <div className="flex items-center justify-center flex-col py-20">
+              <h1 className="font-mosans font-medium  text-2xl sm:text-2xl xl:text-5xl text-center">
+                Find your perfect creator match
+              </h1>
+              <Link href="/login">
+                <Button className="mt-8" color="primary" size="lg">
+                  Join for free
+                  <svg
+                    className="w-6 h-6 ml-8 -mr-2"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M13 9l3 3m0 0l-3 3m3-3H8m13 0a9 9 0 11-18 0 9 9 0 0118 0z"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="1.5"
+                    />
+                  </svg>
+                </Button>
+              </Link>
+            </div>
           </div>
         </section>
       </section>
