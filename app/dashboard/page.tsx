@@ -2,7 +2,6 @@ import { HydrationBoundary, dehydrate } from "@tanstack/react-query";
 import { redirect } from "next/navigation";
 
 import { CreatorDashboard } from "@/components/dashboard/creator-dashboard";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import { createClient } from "@/supabase/server";
 import { getQueryClient } from "@/utils/react-query";
 import {
@@ -27,11 +26,9 @@ export default async function Dashboard() {
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
-      <ScrollArea className="flex-1 [&>div>div]:h-full w-full shadow-md md:rounded-s-[inherit] min-[1024px]:rounded-e-3xl bg-background">
-        <div className="h-full flex flex-col px-4 md:px-6 lg:px-8">
-          <CreatorDashboard userId={user?.id as string} />
-        </div>
-      </ScrollArea>
+      <div className="h-full flex flex-col px-4 md:px-6 lg:px-8 md:shadow-md md:rounded-s-[inherit] min-[1024px]:rounded-e-3xl  w-full bg-background pb-20 md:pb-4">
+        <CreatorDashboard userId={user?.id as string} />
+      </div>
     </HydrationBoundary>
   );
 }

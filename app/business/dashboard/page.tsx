@@ -2,7 +2,6 @@ import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import { redirect } from "next/navigation";
 
 import { BusinessDashboard } from "@/components/business/business-dashboard";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import { createClient } from "@/supabase/server";
 import { getQueryClient } from "@/utils/react-query";
 import { getBusinessDashboardDataOptions } from "@/utils/react-query/business/collabs";
@@ -27,11 +26,9 @@ export default async function BusinessDashboardPage() {
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
-      <ScrollArea className="flex-1 [&>div>div]:h-full w-full shadow-md md:rounded-s-[inherit] min-[1024px]:rounded-e-3xl bg-background">
-        <div className="h-full flex flex-col px-4 md:px-6 lg:px-8">
-          <BusinessDashboard businessId={businessId} userId={user?.id} />
-        </div>
-      </ScrollArea>
+      <div className="h-full flex flex-col px-4 md:px-6 lg:px-8 md:shadow-md md:rounded-s-[inherit] min-[1024px]:rounded-e-3xl  w-full  w-full  w-full bg-background pb-20 md:pb-4">
+        <BusinessDashboard businessId={businessId} userId={user?.id} />
+      </div>
     </HydrationBoundary>
   );
 }

@@ -9,7 +9,6 @@ import { toast } from "sonner";
 import { ChatBubble } from "@/components/dashboard/chat/ChatBubble";
 import { ChatHeader } from "@/components/dashboard/chat/ChatHeader";
 import { MessageInput } from "@/components/dashboard/chat/MessageInput";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import { createClient } from "@/supabase/client";
 import { Message, NewMessage } from "@/types/chat";
 import { groupMessagesByDate, timeAgo } from "@/utils/date";
@@ -128,86 +127,84 @@ export default function ChatRoomPage() {
   }
 
   return (
-    <ScrollArea className="flex-1 [&>div>div]:h-full w-full shadow-md md:rounded-s-[inherit] min-[1024px]:rounded-e-3xl bg-background">
-      <div className="h-full flex flex-col px-4 md:px-6 lg:px-8">
-        <ChatHeader
-          businessLogo={chatDetails?.logo_url}
-          businessName={chatDetails?.business_name}
-          collabTitle={chatDetails?.collab_title}
-        />
+    <div className="h-full flex flex-col px-4 md:px-6 lg:px-8 md:shadow-md md:rounded-s-[inherit] min-[1024px]:rounded-e-3xl  w-full bg-background pb-20 md:pb-4">
+      <ChatHeader
+        businessLogo={chatDetails?.logo_url}
+        businessName={chatDetails?.business_name}
+        collabTitle={chatDetails?.collab_title}
+      />
 
-        {/* Chat */}
-        <div className="relative grow">
-          <div
-            ref={scrollContainerRef}
-            className="max-w-3xl mx-auto mt-6 space-y-6 h-full overflow-y-auto"
-            onScroll={handleScroll}
-          >
-            {/* Loading indicator for older messages */}
-            {isFetchingNextPage && (
-              <div className="text-center py-4">
+      {/* Chat */}
+      <div className="relative grow">
+        <div
+          ref={scrollContainerRef}
+          className="max-w-3xl mx-auto mt-6 space-y-6 h-full overflow-y-auto"
+          onScroll={handleScroll}
+        >
+          {/* Loading indicator for older messages */}
+          {isFetchingNextPage && (
+            <div className="text-center py-4">
+              <div className="inline-flex items-center bg-white rounded-full border border-black/[0.08] shadow-xs text-xs font-medium py-1 px-3 text-foreground/80">
+                <RiShining2Line
+                  aria-hidden="true"
+                  className="me-1.5 text-muted-foreground/70 -ms-1"
+                  size={14}
+                />
+                Loading older messages...
+              </div>
+            </div>
+          )}
+
+          {/* Message groups */}
+          {messageGroups.map(group => (
+            <div key={group.date}>
+              {/* Date separator */}
+              <div className="text-center my-8">
                 <div className="inline-flex items-center bg-white rounded-full border border-black/[0.08] shadow-xs text-xs font-medium py-1 px-3 text-foreground/80">
                   <RiShining2Line
                     aria-hidden="true"
                     className="me-1.5 text-muted-foreground/70 -ms-1"
                     size={14}
                   />
-                  Loading older messages...
+                  {group.label}
                 </div>
               </div>
-            )}
 
-            {/* Message groups */}
-            {messageGroups.map(group => (
-              <div key={group.date}>
-                {/* Date separator */}
-                <div className="text-center my-8">
-                  <div className="inline-flex items-center bg-white rounded-full border border-black/[0.08] shadow-xs text-xs font-medium py-1 px-3 text-foreground/80">
-                    <RiShining2Line
-                      aria-hidden="true"
-                      className="me-1.5 text-muted-foreground/70 -ms-1"
-                      size={14}
-                    />
-                    {group.label}
-                  </div>
-                </div>
+              {/* Messages in this group */}
+              {group.messages.map((message: any) => {
+                const isUser = message.sender_id === userId;
+                const showSender = true;
 
-                {/* Messages in this group */}
-                {group.messages.map((message: any) => {
-                  const isUser = message.sender_id === userId;
-                  const showSender = true;
+                return (
+                  <ChatBubble
+                    key={message.id}
+                    isUser={isUser}
+                    message={message.message}
+                    senderImage={
+                      isUser
+                        ? userData?.user?.user_metadata?.avatar_url
+                        : chatDetails?.logo_url
+                    }
+                    senderName={
+                      showSender && !isUser
+                        ? chatDetails.business_name
+                        : undefined
+                    }
+                    timestamp={timeAgo(message.created_at)}
+                  />
+                );
+              })}
+            </div>
+          ))}
 
-                  return (
-                    <ChatBubble
-                      key={message.id}
-                      isUser={isUser}
-                      message={message.message}
-                      senderImage={
-                        isUser
-                          ? userData?.user?.user_metadata?.avatar_url
-                          : chatDetails?.logo_url
-                      }
-                      senderName={
-                        showSender && !isUser
-                          ? chatDetails.business_name
-                          : undefined
-                      }
-                      timestamp={timeAgo(message.created_at)}
-                    />
-                  );
-                })}
-              </div>
-            ))}
-
-            <div ref={messagesEndRef} />
-          </div>
+          <div ref={messagesEndRef} />
         </div>
-
-        <MessageInput
-          isSending={sendMessageMutation.isPending}
-          onSendMessage={handleSendMessage}
-        />
       </div>
-    </ScrollArea>
+
+      <MessageInput
+        isSending={sendMessageMutation.isPending}
+        onSendMessage={handleSendMessage}
+      />
+    </div>
   );
 }

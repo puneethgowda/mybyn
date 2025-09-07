@@ -19,7 +19,6 @@ import PriceSlider from "@/components/price-slider";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import {
   Select,
   SelectContent,
@@ -130,81 +129,79 @@ export default function DiscoverPage() {
 
   return (
     <>
-      <ScrollArea className="flex-1 [&>div>div]:h-full w-full shadow-md md:rounded-s-[inherit] min-[1024px]:rounded-e-3xl bg-background">
-        <div className="h-full flex flex-col px-4 md:px-6 lg:px-8">
-          <div className="space-y-6">
-            {/* Header */}
-            <div className="flex flex-1 flex-col lg:gap-6 py-4 lg:py-6 md:flex-row justify-between items-start md:items-center gap-4">
-              <div>
-                <h1 className="text-base lg:text-xl font-bold">
-                  Discover Collaborations
-                </h1>
-                <p className="text-muted-foreground text-xs md:text-sm">
-                  Find the perfect opportunities to grow your influence
-                </p>
-              </div>
-              <div className="flex gap-2">
-                <FilterPanelTrigger />
-              </div>
+      <div className="h-full flex flex-col px-4 md:px-6 lg:px-8 md:shadow-md md:rounded-s-[inherit] min-[1024px]:rounded-e-3xl  w-full bg-background pb-20 md:pb-4">
+        <div className="space-y-6">
+          {/* Header */}
+          <div className="flex flex-1 flex-col lg:gap-6 py-4 lg:py-6 md:flex-row justify-between items-start md:items-center gap-4">
+            <div>
+              <h1 className="text-base lg:text-xl font-bold">
+                Discover Collaborations
+              </h1>
+              <p className="text-muted-foreground text-xs md:text-sm">
+                Find the perfect opportunities to grow your influence
+              </p>
             </div>
-
-            {/* Collaboration Cards Grid */}
-            {isCollabsLoading ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {Array(6)
-                  .fill(0)
-                  .map((_, index) => (
-                    <Card key={index} className="w-full p-0 shadow-none">
-                      <CardContent className="gap-3 p-0">
-                        <Skeleton className="rounded-lg w-full h-48" />
-                      </CardContent>
-                    </Card>
-                  ))}
-              </div>
-            ) : collabs.length > 0 ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {collabs.map(collab => (
-                  <CollabCard
-                    key={collab.id}
-                    collab={collab}
-                    handleClick={() => handleCollabClick(collab)}
-                  />
-                ))}
-              </div>
-            ) : (
-              <div className="flex flex-col items-center justify-center py-12">
-                <RiSearchLine className="size-12 md:size-16" />
-                <h3 className="text-base md:text-xl font-medium mt-4">
-                  No collaborations found
-                </h3>
-                <p className="text-sm md:text-base text-muted-foreground mt-2">
-                  Try adjusting your filters or search query
-                </p>
-                <Button className="mt-4" color="primary" onClick={resetFilters}>
-                  Reset Filters
-                </Button>
-              </div>
-            )}
-
-            {/* Pagination */}
-            {!isCollabsLoading && collabs.length > 0 && totalPages > 1 && (
-              <div className="flex justify-center mt-8">
-                <AppPagination
-                  currentPage={1}
-                  totalPages={100}
-                  onChange={setPage}
-                />
-              </div>
-            )}
-
-            <CollabDetailsDrawer
-              collabDetails={collabDetails}
-              isOpen={isCollabDetailsOpen}
-              onClose={onCollabDetailsClose}
-            />
+            <div className="flex gap-2">
+              <FilterPanelTrigger />
+            </div>
           </div>
+
+          {/* Collaboration Cards Grid */}
+          {isCollabsLoading ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {Array(6)
+                .fill(0)
+                .map((_, index) => (
+                  <Card key={index} className="w-full p-0 shadow-none">
+                    <CardContent className="gap-3 p-0">
+                      <Skeleton className="rounded-lg w-full h-48" />
+                    </CardContent>
+                  </Card>
+                ))}
+            </div>
+          ) : collabs.length > 0 ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {collabs.map(collab => (
+                <CollabCard
+                  key={collab.id}
+                  collab={collab}
+                  handleClick={() => handleCollabClick(collab)}
+                />
+              ))}
+            </div>
+          ) : (
+            <div className="flex flex-col items-center justify-center py-12">
+              <RiSearchLine className="size-12 md:size-16" />
+              <h3 className="text-base md:text-xl font-medium mt-4">
+                No collaborations found
+              </h3>
+              <p className="text-sm md:text-base text-muted-foreground mt-2">
+                Try adjusting your filters or search query
+              </p>
+              <Button className="mt-4" color="primary" onClick={resetFilters}>
+                Reset Filters
+              </Button>
+            </div>
+          )}
+
+          {/* Pagination */}
+          {!isCollabsLoading && collabs.length > 0 && totalPages > 1 && (
+            <div className="flex justify-center mt-8">
+              <AppPagination
+                currentPage={1}
+                totalPages={100}
+                onChange={setPage}
+              />
+            </div>
+          )}
+
+          <CollabDetailsDrawer
+            collabDetails={collabDetails}
+            isOpen={isCollabDetailsOpen}
+            onClose={onCollabDetailsClose}
+          />
         </div>
-      </ScrollArea>
+      </div>
       <FilterPanel>
         <>
           {/* Sidebar header */}
