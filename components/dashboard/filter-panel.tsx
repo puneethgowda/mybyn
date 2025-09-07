@@ -30,7 +30,7 @@ function useFilterPanel() {
 }
 
 const FilterPanelProvider = ({ children }: { children: React.ReactNode }) => {
-  const isMobile = useIsMobile(1024);
+  const isMobile = useIsMobile(1440);
   const [openMobile, setOpenMobile] = React.useState(false);
 
   // Helper to toggle the sidebar.

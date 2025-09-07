@@ -21,7 +21,7 @@ export function getCollabsOptions(
     amountRange?: [number, number];
     formats?: string[];
     collabType?: Database["public"]["Enums"]["collab_type"] | "All";
-    languages?: Database["public"]["Enums"]["languages"][];
+    languages?: string;
     searchQuery?: string;
     page?: number;
     pageSize?: number;

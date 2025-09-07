@@ -36,6 +36,19 @@ import { CollabWithBusinessProfile } from "@/types/collab";
 import { COLLAB_TYPE } from "@/utils/enums";
 import { getCollabsOptions } from "@/utils/react-query/collabs";
 
+const locationOptionsDefault = [
+  "Mumbai",
+  "Delhi",
+  "Bangalore",
+  "Hyderabad",
+  "Chennai",
+  "Kolkata",
+  "Pune",
+  "Ahmedabad",
+  "Jaipur",
+  "Lucknow",
+];
+
 export default function DiscoverPage() {
   const supabase = createClient();
   const {
@@ -57,11 +70,10 @@ export default function DiscoverPage() {
   const [collabType, setCollabType] = useState<
     Database["public"]["Enums"]["collab_type"] | "All"
   >("All");
-  const [languages, setLanguages] = useState<
-    Database["public"]["Enums"]["languages"][]
-  >([]);
+  const [languages, setLanguages] = useState<string>("All");
 
-  const locationOptions: string[] = [
+  const locationOptions: string[] = ["All", ...locationOptionsDefault];
+  const languagesOptions: string[] = [
     "All",
     ...Constants.public.Enums.languages,
   ];
@@ -81,7 +93,6 @@ export default function DiscoverPage() {
       label: value,
     })),
   ];
-  const _languageOptions = Constants.public.Enums.languages;
 
   // React Query hooks
   const { data: collabsData, isPending: isCollabsLoading } = useQuery(
@@ -103,7 +114,7 @@ export default function DiscoverPage() {
     setAmountRange([0, 200000]);
     setFormats([]);
     setCollabType("All");
-    setLanguages([]);
+    setLanguages("All");
   };
 
   const handleCollabClick = (collab: CollabWithBusinessProfile) => {
@@ -216,11 +227,11 @@ export default function DiscoverPage() {
             {/* Content group */}
             <div className="py-5 relative before:absolute before:inset-x-0 before:top-0 before:h-px before:bg-gradient-to-r before:from-black/[0.06] before:via-black/10 before:to-black/[0.06]">
               <h3 className="text-xs font-medium uppercase text-muted-foreground/80 mb-4">
-                Chat presets
+                Types
               </h3>
               <div className="space-y-3">
                 {/* Locations */}
-                <div className="flex items-center justify-between gap-2">
+                {/* <div className="flex items-center justify-between gap-2">
                   <Label className="font-normal" htmlFor={`${id}-location`}>
                     Locations
                   </Label>
@@ -240,6 +251,35 @@ export default function DiscoverPage() {
                       className="[&_*[role=option]>span]:end-2 [&_*[role=option]>span]:start-auto [&_*[role=option]]:pe-8 [&_*[role=option]]:ps-2"
                     >
                       {locationOptions.map(loc => (
+                        <SelectItem key={loc} value={loc}>
+                          {loc}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div> */}
+
+                {/* Languages */}
+                <div className="flex items-center justify-between gap-2">
+                  <Label className="font-normal" htmlFor={`${id}-location`}>
+                    Languages
+                  </Label>
+
+                  <Select
+                    value={languages}
+                    onValueChange={value => setLanguages(value)}
+                  >
+                    <SelectTrigger
+                      className="bg-background w-auto max-w-full h-7 py-1 px-2 gap-1 [&_svg]:-me-1 border-none"
+                      id={`${id}-language`}
+                    >
+                      <SelectValue placeholder="Select language" />
+                    </SelectTrigger>
+                    <SelectContent
+                      align="end"
+                      className="[&_*[role=option]>span]:end-2 [&_*[role=option]>span]:start-auto [&_*[role=option]]:pe-8 [&_*[role=option]]:ps-2"
+                    >
+                      {languagesOptions.map(loc => (
                         <SelectItem key={loc} value={loc}>
                           {loc}
                         </SelectItem>
@@ -321,7 +361,7 @@ export default function DiscoverPage() {
             {/* Content group */}
             <div className="py-5 relative before:absolute before:inset-x-0 before:top-0 before:h-px before:bg-gradient-to-r before:from-black/[0.06] before:via-black/10 before:to-black/[0.06]">
               <h3 className="text-xs font-medium uppercase text-muted-foreground/80 mb-4">
-                Configurations
+                Amount Range
               </h3>
               <div className="space-y-3">
                 <PriceSlider

@@ -10,7 +10,7 @@ export async function getCollabs(
     amountRange?: [number, number];
     formats?: string[];
     collabType?: Database["public"]["Enums"]["collab_type"] | "All";
-    languages?: Database["public"]["Enums"]["languages"][];
+    languages?: string;
     searchQuery?: string;
     page?: number;
     pageSize?: number;
@@ -65,8 +65,8 @@ export async function getCollabs(
     query = query.eq("collab_type", collabType);
   }
 
-  if (languages && languages.length > 0) {
-    query = query.overlaps("languages", languages);
+  if (languages && languages !== "All" && languages.length > 0) {
+    query = query.overlaps("languages", [languages]);
   }
 
   if (searchQuery) {
