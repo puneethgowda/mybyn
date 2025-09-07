@@ -62,7 +62,7 @@ export default function ReferralsPage() {
   };
 
   return (
-    <div className="container mx-auto p-6 space-y-6">
+    <div className="flex flex-col px-4 md:px-6 lg:px-8 md:shadow-md md:rounded-s-[inherit] min-[1024px]:rounded-e-3xl  w-full bg-background pb-16 md:pb-4">
       <div className="flex justify-center items-center h-full">
         <Card className="shadow-none">
           <CardContent>

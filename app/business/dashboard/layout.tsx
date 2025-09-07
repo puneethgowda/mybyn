@@ -1,8 +1,6 @@
 import { redirect } from "next/navigation";
 
-import { AppSidebar } from "@/components/app-sidebar";
-import { DashboardHeader } from "@/components/header";
-import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
+import { MobileLayout } from "@/components/mobile-layout";
 import { createClient } from "@/supabase/server";
 import { getQueryClient } from "@/utils/react-query";
 import { getBusinessProfileOptions } from "@/utils/react-query/business/profile";
@@ -28,15 +26,5 @@ export default async function DashboardLayout({
     redirect("/dashboard");
   }
 
-  return (
-    <SidebarProvider>
-      <AppSidebar view="business" />
-      <SidebarInset className="bg-sidebar group/sidebar-inset">
-        <DashboardHeader />
-        <div className="flex h-[calc(100svh-4rem)] bg-[hsl(240_5%_92.16%)] md:rounded-s-3xl md:group-peer-data-[state=collapsed]/sidebar-inset:rounded-s-none transition-all ease-in-out duration-300">
-          {children}
-        </div>
-      </SidebarInset>
-    </SidebarProvider>
-  );
+  return <MobileLayout view="business">{children}</MobileLayout>;
 }

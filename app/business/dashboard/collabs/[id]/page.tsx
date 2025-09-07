@@ -18,7 +18,6 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import { Skeleton } from "@/components/ui/skeleton";
 import { createClient } from "@/supabase/client";
 import { formatDateForDisplay, timeAgo } from "@/utils/date";
@@ -85,175 +84,169 @@ export default function CollabDetailsPage() {
 
   if (isPending) {
     return (
-      <ScrollArea className="flex-1 w-full shadow-md md:rounded-s-[inherit] min-[1024px]:rounded-e-3xl bg-background">
-        <div className="h-full flex flex-col px-4 md:px-6 lg:px-8">
-          <div className="space-y-6  px-0 md:px-4 py-6">
-            <Card className="shadow-none">
-              <CardContent>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <Skeleton className="h-16 rounded-lg" />
-                  <Skeleton className="h-16 rounded-lg" />
-                </div>
-              </CardContent>
-            </Card>
-            <Skeleton className="h-10 w-full lg:w-md rounded-lg" />
-            <Card className="shadow-none">
-              <CardContent>
-                <Skeleton className="h-32 w-full rounded-lg" />
-              </CardContent>
-            </Card>
-          </div>
+      <div className="flex flex-col px-4 md:px-6 lg:px-8 md:shadow-md md:rounded-s-[inherit] min-[1024px]:rounded-e-3xl  w-full bg-background pb-16 md:pb-4">
+        <div className="space-y-6  px-0 md:px-4 py-6">
+          <Card className="shadow-none">
+            <CardContent>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <Skeleton className="h-16 rounded-lg" />
+                <Skeleton className="h-16 rounded-lg" />
+              </div>
+            </CardContent>
+          </Card>
+          <Skeleton className="h-10 w-full lg:w-md rounded-lg" />
+          <Card className="shadow-none">
+            <CardContent>
+              <Skeleton className="h-32 w-full rounded-lg" />
+            </CardContent>
+          </Card>
         </div>
-      </ScrollArea>
+      </div>
     );
   }
 
   if (!collab) {
     return (
-      <ScrollArea className="flex-1 w-full shadow-md md:rounded-s-[inherit] min-[1024px]:rounded-e-3xl bg-background">
-        <div className="h-full flex flex-col px-4 md:px-6 lg:px-8">
-          <div className="text-center py-12">
-            <h2 className="font-semibold">Collaboration not found</h2>
-            <p className="text-sm md:text-base text-muted-foreground mt-2">
-              The collaboration you&#39;re looking for doesn&#39;t exist or has
-              been removed.
-            </p>
-            <Button asChild className="mt-6" variant="default">
-              <Link href="/business/dashboard/collabs">
-                Back to Collaborations
-              </Link>
-            </Button>
-          </div>
+      <div className="flex flex-col px-4 md:px-6 lg:px-8 md:shadow-md md:rounded-s-[inherit] min-[1024px]:rounded-e-3xl  w-full bg-background pb-16 md:pb-4">
+        <div className="text-center py-12">
+          <h2 className="font-semibold">Collaboration not found</h2>
+          <p className="text-sm md:text-base text-muted-foreground mt-2">
+            The collaboration you&#39;re looking for doesn&#39;t exist or has
+            been removed.
+          </p>
+          <Button asChild className="mt-6" variant="default">
+            <Link href="/business/dashboard/collabs">
+              Back to Collaborations
+            </Link>
+          </Button>
         </div>
-      </ScrollArea>
+      </div>
     );
   }
 
   return (
-    <ScrollArea className="flex-1 w-full shadow-md md:rounded-s-[inherit] min-[1024px]:rounded-e-3xl bg-background">
-      <div className="h-full flex flex-col px-4 md:px-6 lg:px-8">
-        <div className="space-y-8 px-0 md:px-4 py-6">
-          {/* Collab Details */}
-          <Card className="mb-4 shadow-none">
-            <CardHeader className="flex flex-col md:flex-row md:items-center md:justify-between gap-2 pb-2">
+    <div className="h-full flex flex-col px-4 md:px-6 lg:px-8 md:shadow-md md:rounded-s-[inherit] min-[1024px]:rounded-e-3xl  w-full bg-background pb-20 md:pb-4">
+      <div className="space-y-8 px-0 md:px-4 py-6">
+        {/* Collab Details */}
+        <Card className="mb-4 shadow-none">
+          <CardHeader className="flex flex-col md:flex-row md:items-center md:justify-between gap-2 pb-2">
+            <div>
+              <h1 className="text-xl md:text-2xl font-bold flex items-center gap-2">
+                {toTitleCase(collab.title)}
+                {renderStatusBadge(collab.status)}
+              </h1>
+              <p className="text-sm text-muted-foreground">
+                Posted {formatDateForDisplay(collab.created_at)} (
+                {timeAgo(collab.created_at)})
+              </p>
+            </div>
+            <div className="flex gap-2 mt-2 md:mt-0">
+              <Button asChild size="sm" variant="outline">
+                <Link href={`/business/dashboard/collabs/${collab.id}/edit`}>
+                  <Edit className="mr-1 size-4" />
+                  Edit
+                </Link>
+              </Button>
+              {collab.status === COLLAB_STATUS.ACTIVE && (
+                <Button
+                  size="sm"
+                  variant="destructive"
+                  onClick={() => {
+                    setSelectedCollabId(collab.id);
+                    setShowCloseModal(true);
+                  }}
+                >
+                  <X className="mr-1 size-4" />
+                  Close Collab
+                </Button>
+              )}
+            </div>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-2 lg:gap-6">
               <div>
-                <h1 className="text-xl md:text-2xl font-bold flex items-center gap-2">
-                  {toTitleCase(collab.title)}
-                  {renderStatusBadge(collab.status)}
-                </h1>
-                <p className="text-sm text-muted-foreground">
-                  Posted {formatDateForDisplay(collab.created_at)} (
-                  {timeAgo(collab.created_at)})
+                <h3 className="text-xs font-medium text-muted-foreground mb-1">
+                  Collab Type
+                </h3>
+                <p className="font-semibold">
+                  {COLLAB_TYPE[collab?.collab_type]}
                 </p>
               </div>
-              <div className="flex gap-2 mt-2 md:mt-0">
-                <Button asChild size="sm" variant="outline">
-                  <Link href={`/business/dashboard/collabs/${collab.id}/edit`}>
-                    <Edit className="mr-1 size-4" />
-                    Edit
-                  </Link>
-                </Button>
-                {collab.status === COLLAB_STATUS.ACTIVE && (
-                  <Button
-                    size="sm"
-                    variant="destructive"
-                    onClick={() => {
-                      setSelectedCollabId(collab.id);
-                      setShowCloseModal(true);
-                    }}
-                  >
-                    <X className="mr-1 size-4" />
-                    Close Collab
-                  </Button>
-                )}
-              </div>
-            </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-2 lg:gap-6">
-                <div>
-                  <h3 className="text-xs font-medium text-muted-foreground mb-1">
-                    Collab Type
-                  </h3>
-                  <p className="font-semibold">
-                    {COLLAB_TYPE[collab?.collab_type]}
-                  </p>
-                </div>
-                <div>
-                  <h3 className="text-xs font-medium text-muted-foreground mb-1">
-                    Platform
-                  </h3>
-                  <p className="font-semibold">
-                    {toTitleCase(collab.platform ?? "")}
-                  </p>
-                </div>
-                <div>
-                  <h3 className="text-xs font-medium text-muted-foreground mb-1">
-                    Min Followers/Subscribers
-                  </h3>
-                  <p className="font-semibold">
-                    {formatNumber(collab.min_followers)}
-                  </p>
-                </div>
-                <div>
-                  <h3 className="text-xs font-medium text-muted-foreground mb-1">
-                    {collab.collab_type === COLLAB_TYPE.BARTER
-                      ? "Value"
-                      : "Amount Offered"}
-                  </h3>
-                  <p className="font-semibold">
-                    {collab.collab_type === COLLAB_TYPE.BARTER
-                      ? "Product Exchange"
-                      : collab.amount
-                        ? `₹${collab.amount.toLocaleString()}`
-                        : "-"}
-                  </p>
-                </div>
-              </div>
-              <div className="mt-4 lg:mt-6">
+              <div>
                 <h3 className="text-xs font-medium text-muted-foreground mb-1">
-                  Description
+                  Platform
                 </h3>
-                <p className="text-foreground">{collab.description}</p>
+                <p className="font-semibold">
+                  {toTitleCase(collab.platform ?? "")}
+                </p>
               </div>
-            </CardContent>
-          </Card>
+              <div>
+                <h3 className="text-xs font-medium text-muted-foreground mb-1">
+                  Min Followers/Subscribers
+                </h3>
+                <p className="font-semibold">
+                  {formatNumber(collab.min_followers)}
+                </p>
+              </div>
+              <div>
+                <h3 className="text-xs font-medium text-muted-foreground mb-1">
+                  {collab.collab_type === COLLAB_TYPE.BARTER
+                    ? "Value"
+                    : "Amount Offered"}
+                </h3>
+                <p className="font-semibold">
+                  {collab.collab_type === COLLAB_TYPE.BARTER
+                    ? "Product Exchange"
+                    : collab.amount
+                      ? `₹${collab.amount.toLocaleString()}`
+                      : "-"}
+                </p>
+              </div>
+            </div>
+            <div className="mt-4 lg:mt-6">
+              <h3 className="text-xs font-medium text-muted-foreground mb-1">
+                Description
+              </h3>
+              <p className="text-foreground">{collab.description}</p>
+            </div>
+          </CardContent>
+        </Card>
 
-          {/* Applicants Table */}
-          {businessId && (
-            <ApplicantsDataTable
-              businessId={businessId as string}
-              collabId={collabId}
-            />
-          )}
+        {/* Applicants Table */}
+        {businessId && (
+          <ApplicantsDataTable
+            businessId={businessId as string}
+            collabId={collabId}
+          />
+        )}
 
-          {/* Close Collab Confirmation Modal */}
-          <Dialog
-            open={showCloseModal}
-            onOpenChange={open => !open && setShowCloseModal(false)}
-          >
-            <DialogContent>
-              <DialogHeader>
-                <DialogTitle>Close Collaboration</DialogTitle>
-                <DialogDescription>
-                  Are you sure you want to close this collaboration? Closed
-                  collaborations will no longer accept new applications.
-                </DialogDescription>
-              </DialogHeader>
-              <DialogFooter>
-                <Button
-                  variant="outline"
-                  onClick={() => setShowCloseModal(false)}
-                >
-                  Cancel
-                </Button>
-                <Button variant="destructive" onClick={confirmCloseCollab}>
-                  Yes, Close Collab
-                </Button>
-              </DialogFooter>
-            </DialogContent>
-          </Dialog>
-        </div>
+        {/* Close Collab Confirmation Modal */}
+        <Dialog
+          open={showCloseModal}
+          onOpenChange={open => !open && setShowCloseModal(false)}
+        >
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Close Collaboration</DialogTitle>
+              <DialogDescription>
+                Are you sure you want to close this collaboration? Closed
+                collaborations will no longer accept new applications.
+              </DialogDescription>
+            </DialogHeader>
+            <DialogFooter>
+              <Button
+                variant="outline"
+                onClick={() => setShowCloseModal(false)}
+              >
+                Cancel
+              </Button>
+              <Button variant="destructive" onClick={confirmCloseCollab}>
+                Yes, Close Collab
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
       </div>
-    </ScrollArea>
+    </div>
   );
 }
