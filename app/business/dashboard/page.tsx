@@ -1,12 +1,11 @@
-import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
-import { redirect } from "next/navigation";
-
 import { BusinessDashboard } from "@/components/business/business-dashboard";
 import { createClient } from "@/supabase/server";
 import { getQueryClient } from "@/utils/react-query";
-import { getBusinessDashboardDataOptions } from "@/utils/react-query/business/collabs";
 import { getBusinessProfileOptions } from "@/utils/react-query/business/profile";
 import { getUserOptions } from "@/utils/react-query/user";
+import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
+
+import { redirect } from "next/navigation";
 
 export default async function BusinessDashboardPage() {
   const queryClient = getQueryClient();
@@ -20,9 +19,9 @@ export default async function BusinessDashboardPage() {
     getBusinessProfileOptions(supabase, user?.id as string)
   );
 
-  await queryClient.prefetchQuery(
-    getBusinessDashboardDataOptions(supabase, businessId)
-  );
+  // await queryClient.prefetchQuery(
+  //   getBusinessDashboardDataOptions(supabase, businessId)
+  // );
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
