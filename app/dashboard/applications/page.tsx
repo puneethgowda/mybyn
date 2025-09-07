@@ -20,6 +20,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useBreakpoint } from "@/hooks/use-breakpoint";
 import { useDisclosure } from "@/hooks/useDisclosure";
 import { createClient } from "@/supabase/client";
+import { getChatRoomByApplicationId } from "@/supabase/queries/chat-queries";
 import { CollabWithBusinessProfile } from "@/types/collab";
 import { timeAgo } from "@/utils/date";
 import { APPLICATION_STATUS, COLLAB_TYPE } from "@/utils/enums";
@@ -63,10 +64,24 @@ const CollabApplicationsPage = () => {
   });
 
   // Navigate to chat for accepted applications
-  const navigateToChat = (applicationId: string) => {
-    // Use proper chat room lookup instead of direct application ID
-    // The chat room ID is the same as the application ID in the current system
-    router.push(`/dashboard/messages/${applicationId}`);
+  const navigateToChat = async (applicationId: string) => {
+    try {
+      // Get the chat room ID from the application ID
+      const chatRoom = await getChatRoomByApplicationId(
+        supabase,
+        applicationId
+      );
+
+      if (chatRoom) {
+        // Navigate to the chat room using the chat room ID
+        router.push(`/dashboard/messages/${chatRoom.id}`);
+      } else {
+        // Handle case where chat room doesn't exist yet
+        console.error("Chat room not found for application:", applicationId);
+      }
+    } catch (error) {
+      console.error("Error getting chat room:", error);
+    }
   };
 
   // Render status badge with appropriate color

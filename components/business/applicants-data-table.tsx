@@ -9,7 +9,7 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
-import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useMemo, useState } from "react";
 
 import {
@@ -47,6 +47,7 @@ import {
 } from "@/components/ui/table";
 import { cn } from "@/lib/utils";
 import { createClient } from "@/supabase/client";
+import { getChatRoomByApplicationId } from "@/supabase/queries/business/chat-queries";
 import { formatDateForDisplay, timeAgo } from "@/utils/date";
 import { APPLICATION_STATUS } from "@/utils/enums";
 import {
@@ -75,6 +76,7 @@ export default function ApplicantsDataTable({
   collabId: string;
 }) {
   const supabase = createClient();
+  const router = useRouter();
 
   const [pageIndex, setPageIndex] = useState(0);
   const [pageSize, setPageSize] = useState(10);
@@ -119,6 +121,27 @@ export default function ApplicantsDataTable({
     name: string;
     message: string;
   }>({ open: false, name: "", message: "" });
+
+  // Function to navigate to chat using application ID
+  const navigateToChat = async (applicationId: string) => {
+    try {
+      // Get the chat room ID from the application ID
+      const chatRoom = await getChatRoomByApplicationId(
+        supabase,
+        applicationId
+      );
+
+      if (chatRoom) {
+        // Navigate to the chat room using the chat room ID
+        router.push(`/business/dashboard/messages/${chatRoom.id}`);
+      } else {
+        // Handle case where chat room doesn't exist yet
+        console.error("Chat room not found for application:", applicationId);
+      }
+    } catch (error) {
+      console.error("Error getting chat room:", error);
+    }
+  };
 
   const columns: ColumnDef<CollabApplicationRow>[] = [
     {
@@ -260,11 +283,13 @@ export default function ApplicantsDataTable({
         if (app.status === APPLICATION_STATUS.ACCEPTED) {
           return (
             <div className="flex items-center justify-end gap-2">
-              <Link href={`/business/dashboard/messages/${app.id}`}>
-                <Button size="sm" variant="outline">
-                  Message
-                </Button>
-              </Link>
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={() => navigateToChat(app.id)}
+              >
+                Message
+              </Button>
             </div>
           );
         }

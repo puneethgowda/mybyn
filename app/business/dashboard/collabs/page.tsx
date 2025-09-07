@@ -287,8 +287,10 @@ export default function CollabsPage() {
                 <div className="flex items-center gap-3 pt-4 border-t border-gray-100">
                   <Link href={`/business/dashboard/collabs/${collab.id}`}>
                     <Button className="" size="sm" variant="default">
-                      <RiEyeLine className="mr-2" />
-                      View Applicants
+                      <RiEyeLine className="" />
+                      <span className="hidden md:block ml-2">
+                        View Applicants
+                      </span>
                     </Button>
                   </Link>
 
@@ -297,8 +299,10 @@ export default function CollabsPage() {
                       href={`/business/dashboard/collabs/${collab.id}/edit`}
                     >
                       <Button className="" size="sm" variant="outline">
-                        <RiEditBoxLine className="mr-2" />
-                        Edit Collab
+                        <RiEditBoxLine className="" />
+                        <span className="hidden md:block ml-2">
+                          Edit Collab
+                        </span>
                       </Button>
                     </Link>
                   )}
@@ -309,8 +313,8 @@ export default function CollabsPage() {
                       variant="destructive"
                       onClick={() => openCloseModal(collab.id)}
                     >
-                      <RiCloseLine className="mr-2" />
-                      Close Collab
+                      <RiCloseLine className="" />
+                      <span className="hidden md:block ml-2">Close Collab</span>
                     </Button>
                   )}
                 </div>
