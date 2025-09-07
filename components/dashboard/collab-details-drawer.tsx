@@ -1,12 +1,19 @@
 "use client";
 
-import { RiCheckDoubleLine } from "@remixicon/react";
+import {
+  RiCalendar2Line,
+  RiCheckDoubleLine,
+  RiInformationLine,
+  RiInstagramFill,
+  RiMapPin2Line,
+} from "@remixicon/react";
 import { useQuery } from "@tanstack/react-query";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { toast } from "sonner";
 
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+// removed Avatar imports after banner change
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -16,6 +23,11 @@ import {
   DialogHeader,
 } from "@/components/ui/dialog";
 import { Drawer, DrawerContent, DrawerHeader } from "@/components/ui/drawer";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import { Textarea } from "@/components/ui/textarea";
 import { useDisclosure } from "@/hooks/useDisclosure";
 import { createClient } from "@/supabase/client";
@@ -23,7 +35,12 @@ import { CollabWithBusinessProfile } from "@/types/collab";
 import { ValidationResult } from "@/types/validation";
 import { POINTS } from "@/utils/constants";
 import { formatDateForDisplay } from "@/utils/date";
-import { APPLICATION_STATUS, COLLAB_STATUS, COLLAB_TYPE } from "@/utils/enums";
+import {
+  APPLICATION_STATUS,
+  COLLAB_STATUS,
+  COLLAB_TYPE,
+  PLATFORM_TYPE,
+} from "@/utils/enums";
 import { handleConnectInstagram } from "@/utils/instagram-connect";
 import {
   checkUserAppliedToCollabOptions,
@@ -100,6 +117,34 @@ export function CollabDetailsDrawer({
   const validationError = getFirstValidationError(validationResults);
 
   const router = useRouter();
+
+  // Platform helpers
+  const getPlatformIcon = (platform?: string) => {
+    switch (platform) {
+      case PLATFORM_TYPE.INSTAGRAM:
+        return <RiInstagramFill className="text-pink-500" />;
+      default:
+        return <RiInformationLine />;
+    }
+  };
+
+  const getPlatformBlurb = (platform?: string) => {
+    switch (platform) {
+      case PLATFORM_TYPE.INSTAGRAM:
+        return "Instagram-focused collaboration — create engaging Reels, Stories, carousels, or posts for the brand.";
+      default:
+        return "Social content collaboration — craft platform-appropriate content for the brand.";
+    }
+  };
+
+  const getCreationHints = (platform?: string) => {
+    switch (platform) {
+      case PLATFORM_TYPE.INSTAGRAM:
+        return ["Reels", "Stories", "Carousel posts"];
+      default:
+        return ["Short-form video", "Static posts"];
+    }
+  };
 
   useEffect(() => {
     if (!!collabDetails) {
@@ -179,102 +224,158 @@ export function CollabDetailsDrawer({
     <>
       <Drawer open={isOpen} onClose={onClose}>
         <DrawerContent className=" overflow-y-auto px-6">
-          <DrawerHeader className="flex justify-between items-center ">
-            <div>
-              <h3 className="text-xl font-bold">{toTitleCase(collab.title)}</h3>
-              <p className="text-muted-foreground text-sm">
-                Posted {formatDateForDisplay(collab.created_at)}
-              </p>
-            </div>
-          </DrawerHeader>
-          <div className="mx-auto w-full container">
-            {/* Business Info */}
-            <div className="flex flex-col md:flex-row justify-between gap-3 mb-6">
-              <div className="flex items-center gap-3">
-                <Avatar className="rounded-md w-20 h-20">
-                  <AvatarImage
-                    alt="business profile"
-                    src={collab.business_profile.logo_url}
+          <DrawerHeader className="flex justify-between items-center " />
+          <div className="mx-auto w-full space-y-6 container">
+            {/* Banner - gradient bg with compact brand block */}
+            <div className="mb-6 rounded-lg border bg-gradient-to-r from-violet-600/15 via-sky-500/10 to-transparent">
+              <div className="p-4 flex items-center gap-4">
+                <div className="h-28 w-28 rounded-md overflow-hidden border bg-background">
+                  <Image
+                    alt="brand logo"
+                    className="h-full w-full object-cover"
+                    height={112}
+                    src={
+                      collab.business_profile.logo_url || "/assets/brand.png"
+                    }
+                    width={112}
                   />
-                  <AvatarFallback className=" rounded-md">
-                    {collab.business_profile.name}
-                  </AvatarFallback>
-                </Avatar>
-                <div>
-                  <h4 className="font-semibold text-lg">
+                </div>
+                <div className="min-w-0">
+                  <h4 className="text-lg font-semibold truncate">
                     {collab.business_profile.name}
                   </h4>
-                  <p className="text-muted-foreground">
-                    {collab.business_profile.location}
-                  </p>
+                  <div className="mt-1 flex items-center gap-2 text-muted-foreground text-sm">
+                    <RiMapPin2Line className="h-4 w-4" />
+                    <span className="truncate">
+                      {collab.business_profile.location}
+                    </span>
+                  </div>
                 </div>
               </div>
+            </div>
+
+            {/* Title and apply button */}
+            <div className="mb-6 flex flex-col md:flex-row md:items-center md:justify-between gap-3">
               <div>
-                <div className="w-full flex flex-col gap-2 container mx-auto">
-                  {/* Validation Error Display */}
+                <h3 className="text-xl font-bold">
+                  {toTitleCase(collab.title)}
+                </h3>
+                <p className="text-muted-foreground text-sm">
+                  Posted {formatDateForDisplay(collab.created_at)}
+                </p>
+              </div>
+              <div className="w-full md:w-auto flex flex-col gap-2">
+                {collab.status === COLLAB_STATUS.ACTIVE &&
+                  !collabApplicationDetails &&
+                  !canApply &&
+                  validationError && (
+                    <div className="text-sm text-destructive bg-destructive/10 p-2 rounded-md">
+                      {validationError?.errorMessage}
+                    </div>
+                  )}
+
+                <div className="w-full flex flex-row gap-2 items-center">
                   {collab.status === COLLAB_STATUS.ACTIVE &&
-                    !collabApplicationDetails &&
-                    !canApply &&
-                    validationError && (
-                      <div className="text-sm text-destructive bg-destructive/10 p-2 rounded-md">
-                        {validationError?.errorMessage}
-                      </div>
+                    !collabApplicationDetails && (
+                      <Button
+                        className="w-full max-w-sm"
+                        color="primary"
+                        disabled={
+                          !canApply && validationError?.field !== "profile"
+                        }
+                        onClick={
+                          !canApply
+                            ? validationError?.field === "profile"
+                              ? handleConnectInstagram
+                              : () => {}
+                            : handleApply
+                        }
+                      >
+                        {canApply
+                          ? `Apply (${POINTS.APPLY_COLLAB} credits)`
+                          : validationError
+                            ? validationError?.field === "profile"
+                              ? "Connect Instagram"
+                              : "Apply"
+                            : `Apply ${POINTS.APPLY_COLLAB} credits`}
+                      </Button>
+                    )}
+                  {collab.status === COLLAB_STATUS.ACTIVE &&
+                    collabApplicationDetails &&
+                    collabApplicationDetails?.status ===
+                      APPLICATION_STATUS.PENDING && (
+                      <Button
+                        className="w-full max-w-sm"
+                        disabled={true}
+                        size="sm"
+                        variant="secondary"
+                      >
+                        <RiCheckDoubleLine />
+                        Already Applied
+                      </Button>
                     )}
 
-                  <div className="w-full flex flex-row gap-2 items-center">
-                    {collab.status === COLLAB_STATUS.ACTIVE &&
-                      !collabApplicationDetails && (
-                        <Button
-                          className="w-full max-w-sm"
-                          color="primary"
-                          disabled={
-                            !canApply && validationError?.field !== "profile"
-                          }
-                          onClick={
-                            !canApply
-                              ? validationError?.field === "profile"
-                                ? handleConnectInstagram
-                                : () => {}
-                              : handleApply
-                          }
-                        >
-                          {canApply
-                            ? `Apply (${POINTS.APPLY_COLLAB} credits)`
-                            : validationError
-                              ? validationError?.field === "profile"
-                                ? "Connect Instagram"
-                                : "Apply"
-                              : `Apply ${POINTS.APPLY_COLLAB} credits`}
-                        </Button>
-                      )}
-                    {collab.status === COLLAB_STATUS.ACTIVE &&
-                      collabApplicationDetails &&
-                      collabApplicationDetails?.status ===
-                        APPLICATION_STATUS.PENDING && (
-                        <Button
-                          className="w-full max-w-sm"
-                          disabled={true}
-                          size="sm"
-                          variant="secondary"
-                        >
-                          <RiCheckDoubleLine />
-                          Already Applied
-                        </Button>
-                      )}
+                  {collab.status === COLLAB_STATUS.ACTIVE &&
+                    collabApplicationDetails &&
+                    collabApplicationDetails?.status ===
+                      APPLICATION_STATUS.ACCEPTED && (
+                      <Button
+                        className="w-full max-w-sm"
+                        size="sm"
+                        variant="secondary"
+                        onClick={handleMessageBusiness}
+                      >
+                        Message Business
+                      </Button>
+                    )}
+                </div>
+              </div>
+            </div>
 
-                    {collab.status === COLLAB_STATUS.ACTIVE &&
-                      collabApplicationDetails &&
-                      collabApplicationDetails?.status ===
-                        APPLICATION_STATUS.ACCEPTED && (
-                        <Button
-                          className="w-full max-w-sm"
-                          size="sm"
-                          variant="secondary"
-                          onClick={handleMessageBusiness}
-                        >
-                          Message Business
+            {/* Platform strip */}
+            <div className="px-4 pb-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                <div className="p-3 rounded-md border bg-background/60">
+                  <div className="flex items-start gap-3">
+                    <div className="h-8 w-8 flex items-center justify-center rounded-md bg-muted">
+                      {getPlatformIcon(collab.platform ?? undefined)}
+                    </div>
+                    <div className="flex-1">
+                      <p className="text-sm md:text-base font-medium">
+                        This is an {collab.platform?.toLowerCase()} job
+                      </p>
+                      <p className="text-xs md:text-sm text-muted-foreground">
+                        {getPlatformBlurb(collab.platform ?? undefined)}
+                      </p>
+                    </div>
+                    <Popover>
+                      <PopoverTrigger asChild>
+                        <Button size="icon" variant="ghost">
+                          <RiInformationLine />
                         </Button>
-                      )}
+                      </PopoverTrigger>
+                      <PopoverContent align="end" className="text-sm max-w-xs">
+                        Platform guidelines and expectations vary by brand.
+                        Clarify deliverables in chat after applying.
+                      </PopoverContent>
+                    </Popover>
+                  </div>
+                </div>
+                <div className="p-3 rounded-md border bg-background/60">
+                  <div className="flex items-start gap-3">
+                    <div className="h-8 w-8 flex items-center justify-center rounded-md bg-muted">
+                      <RiInformationLine />
+                    </div>
+                    <div className="flex-1">
+                      <p className="text-sm md:text-base font-medium">
+                        This job may have extra revenue potential
+                      </p>
+                      <p className="text-xs md:text-sm text-muted-foreground">
+                        High-performing content is sometimes licensed for
+                        additional use. Any extra usage is at the brand’s
+                        discretion and isn’t guaranteed.
+                      </p>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -312,36 +413,139 @@ export function CollabDetailsDrawer({
                   </Badge>
                 </div>
               )}
-
-              {/* Validation Status */}
-              {collab.status === COLLAB_STATUS.ACTIVE &&
-                !collabApplicationDetails && (
-                  <div className="flex items-center gap-2 mt-2">
-                    <span className="text-sm font-medium">Eligibility:</span>
-                    <Badge color={canApply ? "success" : "warning"}>
-                      {canApply ? "Eligible" : "Not Eligible"}
-                    </Badge>
-                  </div>
-                )}
             </div>
-            {/* Description */}
+            {/* About this collab */}
             <div className="mb-6">
-              <h4 className="text-md font-semibold mb-2">Description</h4>
-              <p className="text-default-700">{collab.description}</p>
+              <h4 className="text-md font-semibold mb-2">About this collab</h4>
+              <div className="p-4 rounded-md border">
+                <p className="text-default-700 text-sm md:text-base leading-relaxed">
+                  {collab.description}
+                </p>
+                <p className="text-default-700 text-sm md:text-base leading-relaxed mt-3">
+                  You’ll collaborate with{" "}
+                  <span className="font-medium">
+                    {collab.business_profile.name}
+                  </span>{" "}
+                  on {collab.platform?.toLowerCase()} content. Compensation is{" "}
+                  <span className="font-medium">₹{collab.amount}</span>.
+                  Creators with at least{" "}
+                  <span className="font-medium">
+                    {collab.min_followers?.toLocaleString() || 0}
+                  </span>{" "}
+                  followers are a strong fit. Content in{" "}
+                  {Array.isArray(collab.languages) &&
+                  collab.languages.length > 0
+                    ? collab.languages.join(", ")
+                    : "any language"}{" "}
+                  is welcome.
+                </p>
+              </div>
+            </div>
+
+            {/* Products or services being promoted */}
+            <div className="mb-6">
+              <h4 className="text-md font-semibold mb-2">
+                Products or services being promoted
+              </h4>
+              <div className="p-4 rounded-md border">
+                <p className="text-sm md:text-base text-muted-foreground leading-relaxed">
+                  Help showcase the brand’s{" "}
+                  {collab.business_profile.type?.toLowerCase()} offering in a
+                  way that feels real and useful. Speak to a common shopper
+                  behavior or problem and how choosing{" "}
+                  {collab.business_profile.name} makes the experience better.
+                </p>
+              </div>
             </div>
             {/* Details Grid */}
-            <div className="grid grid-cols-2 gap-4 mb-6">
-              <div>
-                <h4 className="text-sm font-semibold mb-1">Business type</h4>
-                <p>{collab.business_profile.type}</p>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+              <div className="p-4 rounded-md border">
+                <h4 className="text-sm font-semibold mb-1">Business</h4>
+                <p className="text-sm">{collab.business_profile.type}</p>
               </div>
-              <div>
-                <h4 className="text-sm font-semibold mb-1">Collab Type</h4>
-                <p>{COLLAB_TYPE[collab.collab_type]}</p>
+              <div className="p-4 rounded-md border">
+                <h4 className="text-sm font-semibold mb-1">Collab type</h4>
+                <p className="text-sm">{COLLAB_TYPE[collab.collab_type]}</p>
               </div>
-              <div>
-                <h4 className="text-sm font-semibold mb-1">Amount</h4>
-                <p>₹{collab.amount}</p>
+              <div className="p-4 rounded-md border md:col-span-2">
+                <h4 className="text-sm font-semibold mb-1">
+                  What you may be hired to create
+                </h4>
+                <div className="mt-2 flex flex-wrap gap-2">
+                  {getCreationHints(collab.platform ?? undefined).map(item => (
+                    <Badge key={item} variant="secondary">
+                      {item}
+                    </Badge>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* Important dates & timelines */}
+            <div className="mb-6">
+              <h4 className="text-md font-semibold mb-2">
+                Important dates & timelines
+              </h4>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="p-4 rounded-md border flex items-start gap-3">
+                  <RiCalendar2Line className="h-5 w-5 mt-0.5" />
+                  <div>
+                    <p className="text-sm font-medium">Created</p>
+                    <p className="text-sm text-muted-foreground">
+                      {formatDateForDisplay(collab.created_at)}
+                    </p>
+                  </div>
+                </div>
+                <div className="p-4 rounded-md border flex items-start gap-3">
+                  <RiCalendar2Line className="h-5 w-5 mt-0.5" />
+                  <div>
+                    <p className="text-sm font-medium">Applications close</p>
+                    <p className="text-sm text-muted-foreground">
+                      Not specified
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Ideal creator & metrics */}
+            <div className="mb-6">
+              <h4 className="text-md font-semibold mb-2">
+                The ideal creator & metrics
+              </h4>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="p-4 rounded-md border">
+                  <h5 className="text-sm font-medium mb-1">
+                    Minimum followers
+                  </h5>
+                  <p className="text-sm">
+                    {collab.min_followers?.toLocaleString() || 0}
+                  </p>
+                </div>
+                <div className="p-4 rounded-md border">
+                  <h5 className="text-sm font-medium mb-1">
+                    Preferred languages
+                  </h5>
+                  <div className="flex flex-wrap gap-2">
+                    {Array.isArray(collab.languages) &&
+                    collab.languages.length > 0 ? (
+                      collab.languages.map(lang => (
+                        <Badge key={lang}>{lang}</Badge>
+                      ))
+                    ) : (
+                      <p className="text-sm text-muted-foreground">
+                        Not specified
+                      </p>
+                    )}
+                  </div>
+                </div>
+                <div className="p-4 rounded-md border">
+                  <h5 className="text-sm font-medium mb-1">Platform</h5>
+                  <div className="flex items-center gap-2 text-sm">
+                    {getPlatformIcon(collab.platform ?? undefined)}
+                    <span>{collab.platform}</span>
+                  </div>
+                </div>
               </div>
             </div>
             {/*/!* Content Formats *!/*/}
@@ -354,12 +558,7 @@ export function CollabDetailsDrawer({
             {/*  </div>*/}
             {/*</div>*/}
             {/* Languages */}
-            <div className="mb-6">
-              <h4 className="text-md font-semibold mb-2">Languages</h4>
-              <div className="flex flex-wrap gap-2">
-                <Badge>{collab.languages}</Badge>
-              </div>
-            </div>
+
             {/* Reference Images */}
             {/*{collab.images.length > 0 && (*/}
             {/*  <div className="mb-6">*/}
