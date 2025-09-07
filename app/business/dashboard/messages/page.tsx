@@ -82,7 +82,7 @@ export default function BusinessMessagesPage() {
   );
 
   return (
-    <div className="h-full flex flex-col px-4 md:px-6 lg:px-8 md:shadow-md md:rounded-s-[inherit] min-[1024px]:rounded-e-3xl  w-full bg-background pb-20 md:pb-4">
+    <div className="flex flex-col px-4 md:px-6 lg:px-8 md:shadow-md md:rounded-s-[inherit] min-[1024px]:rounded-e-3xl  w-full bg-background pb-16 md:pb-4">
       <div className="space-y-6 max-w-3xl">
         {/* Header */}
         <div className="flex flex-1 flex-col gap-4 lg:gap-6 py-4 lg:py-6">

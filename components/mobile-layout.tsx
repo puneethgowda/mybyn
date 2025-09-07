@@ -3,6 +3,7 @@
 import { AppSidebar } from "@/components/app-sidebar";
 import { BottomNavigation } from "@/components/bottom-navigation";
 import { DashboardHeader } from "@/components/header";
+import { MobileSwitchFAB } from "@/components/mobile-switch-fab";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { useIsMobile } from "@/hooks/use-mobile";
 import * as React from "react";
@@ -18,10 +19,12 @@ export function MobileLayout({ children, view }: MobileLayoutProps) {
   if (isMobile) {
     return (
       <div className="flex flex-col h-screen bg-background">
-        {/* Main content area with bottom padding for navigation */}
-        <main className="flex-1 overflow-y-auto pb-16">{children}</main>
+        {/* Main content area with bottom padding for navigation and FAB */}
+        <main className="flex-1 overflow-y-auto pb-20">{children}</main>
         {/* Bottom navigation */}
         <BottomNavigation view={view} />
+        {/* Mobile switch FAB */}
+        <MobileSwitchFAB />
       </div>
     );
   }

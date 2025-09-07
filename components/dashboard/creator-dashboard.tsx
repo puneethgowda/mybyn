@@ -80,7 +80,7 @@ export function CreatorDashboard({ userId }: { userId: string }) {
     <div className="space-y-6">
       <div className="flex flex-1 flex-col gap-4 lg:gap-6 py-4 lg:py-6">
         {/* Page intro */}
-        <div className="flex items-center justify-between gap-4">
+        <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
           <div className="space-y-1">
             <h1 className="text-2xl font-semibold">
               Hey {user?.user_metadata?.name} 👋

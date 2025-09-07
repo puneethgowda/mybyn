@@ -33,7 +33,7 @@ export default function EditCollabPage() {
 
   if (isLoading) {
     return (
-      <div className="h-full flex flex-col px-4 md:px-6 lg:px-8 md:shadow-md md:rounded-s-[inherit] min-[1024px]:rounded-e-3xl  w-full bg-background pb-20 md:pb-4">
+      <div className="flex flex-col px-4 md:px-6 lg:px-8 md:shadow-md md:rounded-s-[inherit] min-[1024px]:rounded-e-3xl  w-full bg-background pb-16 md:pb-4">
         <div className="container max-w-3xl mx-auto px-0 md:px-4 py-6">
           <div className="space-y-6">
             <div className="space-y-2">
