@@ -28,8 +28,9 @@ import {
 } from "@/components/ui/sidebar";
 
 const brand = {
-  name: "KOLLABIT",
-  logo: "/assets/logo.png",
+  name: "kollabit",
+  logo: "/logo.png",
+  logoFull: "/logo-full.png",
 };
 
 const navData = {
@@ -101,9 +102,9 @@ export function AppSidebar({
           <div className="flex aspect-square size-9 items-center justify-center rounded-md overflow-hidden bg-sidebar-primary text-sidebar-primary-foreground relative after:rounded-[inherit] after:absolute after:inset-0 after:shadow-[0_1px_2px_0_rgb(0_0_0/.05),inset_0_1px_0_0_rgb(255_255_255/.12)] after:pointer-events-none">
             <Image alt={brand.name} height={36} src={brand.logo} width={36} />
           </div>
-          <div className="grid flex-1 text-left text-base leading-tight">
-            <span className="truncate font-medium">
-              {brand?.name ?? "Select a Team"}
+          <div className="grid flex-1 text-left text-2xl leading-tight">
+            <span className="truncate font-medium font-montserrat">
+              kollab<span className="text-[#A259FF]">it</span>
             </span>
           </div>
         </SidebarMenuButton>

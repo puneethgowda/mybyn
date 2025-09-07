@@ -5,7 +5,7 @@ import "./globals.css";
 
 import { Providers } from "./providers";
 
-import { moSans, onest } from "@/config/fonts";
+import { montserrat, moSans, onest } from "@/config/fonts";
 import { siteConfig } from "@/config/site";
 
 export const metadata: Metadata = {
@@ -45,7 +45,8 @@ export default async function RootLayout({
         className={clsx(
           "min-h-dvh text-foreground bg-background font-onest antialiased",
           onest.variable,
-          moSans.variable
+          moSans.variable,
+          montserrat.variable
         )}
       >
         <Providers themeProps={{ attribute: "class", defaultTheme: "light" }}>

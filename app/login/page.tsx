@@ -1,5 +1,6 @@
 "use client";
 import { ArrowLeft } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
@@ -122,10 +123,14 @@ export default function SignupPage() {
           {/* Header */}
           <div className="mb-8">
             <div className="flex items-center mb-6">
-              <div className="w-10 h-10 bg-gradient-to-r from-purple-600 to-blue-600 rounded-lg flex items-center justify-center mr-3">
-                <span className="text-white font-bold text-lg">K</span>
+              <div className="rounded-lg flex items-center justify-center mr-3">
+                <Image
+                  alt={"kollabit"}
+                  height={40}
+                  src="/logo-full.png"
+                  width={140}
+                />
               </div>
-              <span className="text-xl font-semibold">KOLLABIT</span>
             </div>
             <h1 className="text-4xl font-medium font-mosans">
               Sign in to KOLLABIT

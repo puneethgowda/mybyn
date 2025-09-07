@@ -2,6 +2,7 @@
 
 import clsx from "clsx";
 import { Menu } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
@@ -21,8 +22,14 @@ export const Navbar = () => {
         {/* Brand */}
         <div className="flex items-center gap-3">
           <Link className="flex items-center gap-1" href="/">
+            <Image
+              alt={"kollabit"}
+              height={36}
+              src="/logo-full.png"
+              width={148}
+            />
             {/*<Logo size={40} />*/}
-            <span className="text-xl font-bold">KOLLABIT</span>
+            {/* <span className="text-xl font-bold">KOLLABIT</span> */}
           </Link>
         </div>
 

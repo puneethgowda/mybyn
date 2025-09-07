@@ -11,7 +11,7 @@
 
 @import "tw-animate-css";
 
-@custom-variant dark (&:is(.dark *));
+ @custom-variant dark (&:is(.dark *));
 
 :root {
   --background: oklch(1 0 0);
@@ -87,6 +87,7 @@
   --font-sans:
     var(--font-sans), ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji",
     "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  --font-montserrat: var(--font-montserrat);
 
   --color-border: var(--border);
   --color-input: var(--input);
@@ -127,7 +128,7 @@
   --radius-lg: var(--radius);
   --radius-md: calc(var(--radius) - 2px);
   --radius-sm: calc(var(--radius) - 4px);
-}
+} 
 
 /*
   The default border color has changed to `currentColor` in Tailwind CSS v4,
@@ -137,7 +138,8 @@
   If we ever want to remove these styles, we need to add an explicit border
   color utility to any element that depends on these defaults.
 */
-@layer base {
+
+ @layer base {
   *,
   ::after,
   ::before,
@@ -180,4 +182,10 @@
 
 [data-vaul-drawer][data-vaul-drawer-direction="bottom"]::after {
   height: 0 !important;
-}
+} 
+
+
+
+
+
+

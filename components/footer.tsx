@@ -7,7 +7,7 @@ const Footer = () => {
   return (
     <footer className="px-6">
       <div className="px-6 w-full bg-[#141414] text-white rounded-4xl  py-8 mt-8">
-        <div className="max-w-7xl">
+        <div className="container mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             <div>
               <h3 className="font-bold text-lg mb-4">KOLLABIT</h3>
