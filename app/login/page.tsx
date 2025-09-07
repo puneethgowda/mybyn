@@ -1,7 +1,7 @@
 "use client";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
 
@@ -17,7 +17,10 @@ export default function SignupPage() {
   const [loading, setLoading] = useState(false);
   const [referralCode, setReferralCode] = useState("");
   const [acceptTerms, setAcceptTerms] = useState<boolean>(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const searchParams = useSearchParams();
+  const router = useRouter();
 
   const supabase = useMemo(() => createClient(), []);
 
@@ -53,6 +56,36 @@ export default function SignupPage() {
       if (error) {
         throw new Error(error.message || "Google sign-in failed");
       }
+    } catch (error) {
+      toast.error(
+        error instanceof Error
+          ? error.message
+          : "An unexpected error occurred. Please try again."
+      );
+      setLoading(false);
+    }
+  };
+
+  const handleEmailLogin = async () => {
+    if (!acceptTerms) {
+      toast.warning("Please accept the terms and conditions to continue.");
+
+      return;
+    }
+    setLoading(true);
+    try {
+      const { error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
+
+      if (error) {
+        throw new Error(error.message || "Email sign-in failed");
+      }
+
+      toast.success("Signed in successfully.");
+      setLoading(false);
+      router.push("/dashboard");
     } catch (error) {
       toast.error(
         error instanceof Error
@@ -114,6 +147,33 @@ export default function SignupPage() {
               />
             </div>
           )}
+          {/* Email */}
+          <div className="mb-4">
+            <Label className="text-sm font-medium" htmlFor="email">
+              Email
+            </Label>
+            <Input
+              className={cn("mt-1")}
+              id="email"
+              placeholder="Enter email"
+              value={email}
+              onChange={e => setEmail(e.target.value)}
+            />
+          </div>
+          {/* Password */}
+          <div className="mb-4">
+            <Label className="text-sm font-medium" htmlFor="password">
+              Password
+            </Label>
+            <Input
+              className={cn("mt-1")}
+              id="password"
+              placeholder="Enter password"
+              type="password"
+              value={password}
+              onChange={e => setPassword(e.target.value)}
+            />
+          </div>
 
           {/* Terms and Conditions */}
           <div className="flex items-center gap-2 mb-6">
@@ -140,6 +200,18 @@ export default function SignupPage() {
                 Privacy Policy
               </a>
             </label>
+          </div>
+          {/* Sign in with Email */}
+          <Button
+            className="w-full"
+            disabled={loading}
+            variant="default"
+            onClick={handleEmailLogin}
+          >
+            Sign in with Email
+          </Button>
+          <div className="text-center text-sm text-muted-foreground my-4">
+            or
           </div>
           {/* Google Sign Up */}
           <Button
