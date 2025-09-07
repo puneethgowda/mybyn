@@ -266,7 +266,7 @@ export default function CollabsPage() {
                         </div>
                       </div>
                       <div>
-                        {collab.collab_type !== COLLAB_TYPE.BARTER && (
+                        {collab.collab_type !== "BARTER" && (
                           <span className="font-medium">
                             ₹
                             {collab?.amount

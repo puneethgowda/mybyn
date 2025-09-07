@@ -357,7 +357,7 @@ export function BusinessDashboard({
       <Card className="shadow-none">
         <CardHeader className="flex justify-between items-center">
           <h3 className="font-bold">Your Active Collabs</h3>
-          <Link href="/dashboard/campaigns">
+          <Link href="/business/dashboard/collabs">
             <Button size="sm" variant="link">
               View All
             </Button>
@@ -415,7 +415,9 @@ export function BusinessDashboard({
                             </Button>
                           </Link>
 
-                          <Link href={`/dashboard/campaigns/${collab.id}/edit`}>
+                          <Link
+                            href={`/business/dashboard/collabs/${collab.id}/edit`}
+                          >
                             <Button
                               className="flex-1"
                               size="sm"
@@ -426,7 +428,9 @@ export function BusinessDashboard({
                           </Link>
                         </>
                       ) : (
-                        <Link href={`/dashboard/campaigns/${collab.id}/edit`}>
+                        <Link
+                          href={`/business/dashboard/collabs/${collab.id}/edit`}
+                        >
                           <Button
                             className="w-full"
                             size="sm"

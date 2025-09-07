@@ -53,9 +53,9 @@ export async function getCollabs(
     query = query.in("business_profile.type", businessTypes);
   }
 
-  if (amountRange) {
-    query = query.gte("amount", amountRange[0]).lte("amount", amountRange[1]);
-  }
+  // if (amountRange) {
+  //   query = query.gte("amount", amountRange[0]).lte("amount", amountRange[1]);
+  // }
 
   if (formats && formats.length > 0) {
     query = query.in("format", formats);

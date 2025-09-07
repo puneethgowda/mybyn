@@ -1,16 +1,10 @@
 "use client";
 
-import { RiArrowLeftLine, RiMoreLine } from "@remixicon/react";
+import { RiArrowLeftLine } from "@remixicon/react";
 import { useRouter } from "next/navigation";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { toTitleCase } from "@/utils/string";
 
 interface ChatHeaderProps {
@@ -54,7 +48,7 @@ export function ChatHeader({
           </p>
         </div>
 
-        <DropdownMenu>
+        {/* <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button size="icon" variant="secondary">
               <RiMoreLine />
@@ -65,7 +59,7 @@ export function ChatHeader({
             <DropdownMenuItem>Block</DropdownMenuItem>
             <DropdownMenuItem>Report</DropdownMenuItem>
           </DropdownMenuContent>
-        </DropdownMenu>
+        </DropdownMenu> */}
       </div>
     </div>
   );

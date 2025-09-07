@@ -190,12 +190,10 @@ export default function CollabDetailsPage() {
               </div>
               <div>
                 <h3 className="text-xs font-medium text-muted-foreground mb-1">
-                  {collab.collab_type === COLLAB_TYPE.BARTER
-                    ? "Value"
-                    : "Amount Offered"}
+                  {collab.collab_type === "BARTER" ? "Value" : "Amount Offered"}
                 </h3>
                 <p className="font-semibold">
-                  {collab.collab_type === COLLAB_TYPE.BARTER
+                  {collab.collab_type === "BARTER"
                     ? "Product Exchange"
                     : collab.amount
                       ? `₹${collab.amount.toLocaleString()}`

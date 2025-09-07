@@ -67,17 +67,25 @@ const CollabCard = ({ collab, handleClick }: CollabCardProps) => {
         <div className="flex justify-between items-center">
           <div>
             <p className="text-xs text-muted-foreground">Amount Offered</p>
-            <p className="font-semibold">
-              ₹{collab.amount && collab.amount.toLocaleString()}
-            </p>
+            {/* if collab type is barter show minus sign instead of amount */}
+            {collab.collab_type === "BARTER" ? (
+              <p className="font-semibold">-</p>
+            ) : (
+              <p className="font-semibold">
+                ₹{collab.amount && collab.amount.toLocaleString()}
+              </p>
+            )}
           </div>
           <Badge variant="outline">{COLLAB_TYPE[collab.collab_type]}</Badge>
         </div>
 
         <div className="flex items-center justify-between flex-wrap gap-2">
           <div className="flex gap-1">
-            <Badge variant="secondary">
-              <span>{collab.platform}</span>
+            <Badge
+              className={`text-white ${collab.platform === "INSTAGRAM" ? "bg-gradient-to-r from-[#833ab4] via-[#fd1d1d] to-[#fcb045]" : "bg-gray-200"}`}
+              variant="secondary"
+            >
+              <span>{toTitleCase(collab?.platform?.toLowerCase() ?? "")}</span>
             </Badge>
             <Badge variant="secondary">
               {`Min: ${collab.min_followers} ${

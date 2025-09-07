@@ -69,20 +69,20 @@ export function BottomNavigation({ view }: BottomNavigationProps) {
           return (
             <Link
               key={item.title}
-              href={item.href}
               className={cn(
                 "flex flex-col items-center justify-center min-w-0 flex-1 h-full px-2 py-1 transition-colors",
                 isActive
                   ? "text-primary"
                   : "text-muted-foreground hover:text-foreground"
               )}
+              href={item.href}
             >
               <Icon
-                size={20}
                 className={cn(
                   "mb-1 transition-colors",
                   isActive ? "text-primary" : "text-muted-foreground"
                 )}
+                size={20}
               />
               <span
                 className={cn(

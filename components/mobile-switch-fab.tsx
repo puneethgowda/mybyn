@@ -46,13 +46,13 @@ export function MobileSwitchFAB() {
       <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
         <DropdownMenuTrigger asChild>
           <Button
-            size="lg"
             className="h-14 w-14 rounded-full shadow-lg bg-primary hover:bg-primary/90 text-primary-foreground"
+            size="lg"
           >
             <RiUser3Line size={20} />
           </Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent align="end" side="top" className="w-64 mb-2 mr-2">
+        <DropdownMenuContent align="end" className="w-64 mb-2 mr-2" side="top">
           {/* Credits Display */}
           <div className="px-3 py-2 border-b">
             <div className="flex items-center gap-2">
@@ -73,8 +73,8 @@ export function MobileSwitchFAB() {
               !!businessProfile ? (
                 <DropdownMenuItem asChild>
                   <Link
-                    href="/business/dashboard"
                     className="flex items-center gap-2 w-full"
+                    href="/business/dashboard"
                     onClick={() => setIsOpen(false)}
                   >
                     <RiUser3Line size={16} />
@@ -84,8 +84,8 @@ export function MobileSwitchFAB() {
               ) : (
                 <DropdownMenuItem asChild>
                   <Link
-                    href="/business/onboarding"
                     className="flex items-center gap-2 w-full"
+                    href="/business/onboarding"
                     onClick={() => setIsOpen(false)}
                   >
                     <RiAddBoxLine size={16} />
@@ -96,8 +96,8 @@ export function MobileSwitchFAB() {
             ) : (
               <DropdownMenuItem asChild>
                 <Link
-                  href="/dashboard"
                   className="flex items-center gap-2 w-full"
+                  href="/dashboard"
                   onClick={() => setIsOpen(false)}
                 >
                   <RiUser3Line size={16} />

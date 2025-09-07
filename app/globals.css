@@ -178,7 +178,6 @@
   }
 }
 
-
-[data-vaul-drawer][data-vaul-drawer-direction=bottom]::after{
-  height: 0 !important
+[data-vaul-drawer][data-vaul-drawer-direction="bottom"]::after {
+  height: 0 !important;
 }

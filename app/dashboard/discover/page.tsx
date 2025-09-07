@@ -15,7 +15,6 @@ import {
   FilterPanel,
   FilterPanelTrigger,
 } from "@/components/dashboard/filter-panel";
-import PriceSlider from "@/components/price-slider";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
@@ -356,7 +355,7 @@ export default function DiscoverPage() {
             </div>
 
             {/* Content group */}
-            <div className="py-5 relative before:absolute before:inset-x-0 before:top-0 before:h-px before:bg-gradient-to-r before:from-black/[0.06] before:via-black/10 before:to-black/[0.06]">
+            {/* <div className="py-5 relative before:absolute before:inset-x-0 before:top-0 before:h-px before:bg-gradient-to-r before:from-black/[0.06] before:via-black/10 before:to-black/[0.06]">
               <h3 className="text-xs font-medium uppercase text-muted-foreground/80 mb-4">
                 Amount Range
               </h3>
@@ -367,23 +366,8 @@ export default function DiscoverPage() {
                   step={500}
                   onChange={value => setAmountRange(value as [number, number])}
                 />
-
-                {/*<Slider*/}
-                {/*  className="max-w-md"*/}
-                {/*  formatOptions={{ style: "currency", currency: "INR" }}*/}
-                {/*  label="Range"*/}
-                {/*  maxValue={10000}*/}
-                {/*  minValue={0}*/}
-                {/*  showSteps={true}*/}
-                {/*  showTooltip={true}*/}
-                {/*  step={500}*/}
-                {/*  value={amountRange}*/}
-                {/*  onChange={(value) =>*/}
-                {/*    setAmountRange(value as [number, number])*/}
-                {/*  }*/}
-                {/*/>*/}
               </div>
-            </div>
+            </div> */}
           </div>
         </>
       </FilterPanel>
