@@ -1,7 +1,12 @@
 "use client";
 
-import { RiErrorWarningLine, RiInstagramLine } from "@remixicon/react";
+import {
+  RiErrorWarningLine,
+  RiInstagramLine,
+  RiLogoutCircleLine,
+} from "@remixicon/react";
 import { useQuery } from "@tanstack/react-query";
+import { useRouter } from "next/navigation";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
@@ -16,6 +21,7 @@ import {
 
 export default function InfluencerProfilePage() {
   const supabase = createClient();
+  const router = useRouter();
 
   const { data: userData } = useQuery(getUserOptions(supabase));
   const user = userData?.user;
@@ -25,6 +31,11 @@ export default function InfluencerProfilePage() {
   );
 
   const instagramConnected = !!creatorProfile?.instagram_handle;
+
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
+    router.push("/login");
+  };
 
   return (
     <div className="flex flex-col px-4 md:px-6 lg:px-8 md:shadow-md md:rounded-s-[inherit] min-[1024px]:rounded-e-3xl  w-full bg-background pb-16 md:pb-4">
@@ -156,6 +167,22 @@ export default function InfluencerProfilePage() {
                     />
                   </div>
                 </div>
+              </CardContent>
+            </Card>
+
+            <Card className="shadow-none">
+              <CardHeader>
+                <h2 className="font-semibold">Account Actions</h2>
+              </CardHeader>
+              <CardContent>
+                <Button
+                  className="w-full md:w-auto gap-2"
+                  variant="outline"
+                  onClick={handleLogout}
+                >
+                  <RiLogoutCircleLine size={16} />
+                  Log out
+                </Button>
               </CardContent>
             </Card>
           </div>

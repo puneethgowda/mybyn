@@ -1,7 +1,9 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import { RiLogoutCircleLine } from "@remixicon/react";
 import { useQuery } from "@tanstack/react-query";
+import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -77,7 +79,8 @@ type FormValues = z.infer<typeof formSchema>;
 
 export default function BusinessProfilePage() {
   const supabase = createClient();
-  const [_profile, setProfile] = useState<BusinessProfileFormValues>({
+  const router = useRouter();
+  const [, setProfile] = useState<BusinessProfileFormValues>({
     name: "",
     location: "",
     website: "",
@@ -191,9 +194,14 @@ export default function BusinessProfilePage() {
       const logoUrl = getStoragePublicUrlBase(data?.fullPath);
 
       form.setValue("logo_url", logoUrl);
-    } catch (_error) {
+    } catch {
       toast.error("Failed to upload logo");
     }
+  };
+
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
+    router.push("/login");
   };
 
   if (isLoading) {
@@ -464,6 +472,22 @@ export default function BusinessProfilePage() {
             </Card>
           </form>
         </Form>
+
+        <Card className="shadow-none">
+          <CardHeader>
+            <h2 className="font-semibold">Account Actions</h2>
+          </CardHeader>
+          <CardContent>
+            <Button
+              className="w-full md:w-auto gap-2"
+              variant="outline"
+              onClick={handleLogout}
+            >
+              <RiLogoutCircleLine size={16} />
+              Log out
+            </Button>
+          </CardContent>
+        </Card>
       </div>
     </div>
   );
